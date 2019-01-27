@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import com.arkrud.Shareware.SpringUtilities;
+import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
@@ -27,6 +28,7 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
  *
  */
 public class ManageTreesDialog extends JDialog implements ActionListener {
+	private Dashboard dash;
 	private JButton applyButton, cancelButton;
 	private JPanel manageTreesPanel;
 	private JLabel treeLabel, treeStateLabel;
@@ -42,7 +44,8 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 	/**
 	 * 
 	 */
-	public ManageTreesDialog() {
+	public ManageTreesDialog(Dashboard dash) {
+		this.dash = dash;
 		setModal(true);
 		manageTreesPanel = new JPanel(new SpringLayout());
 		treeLabel = new JLabel();
@@ -100,10 +103,28 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 				System.out.println(((JTextField)entry.getKey()).getText() + " - " + ((JCheckBox)entry.getValue()).isSelected());
 				INIFilesFactory.removeINIItemsWithValues(UtilMethodsFactory.getConsoleConfig(), "Applications", itemValues);
 			}
-			while (itr.hasNext()) {
-				Map.Entry<JTextField, JCheckBox> entry = itr.next();
+			Iterator<Map.Entry<JTextField, JCheckBox>> itr1 = feldsMap.entrySet().iterator();
+			while (itr1.hasNext()) {
+				Map.Entry<JTextField, JCheckBox> entry = itr1.next();
 				INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", ((JTextField)entry.getKey()).getText(), String.valueOf(((JCheckBox)entry.getValue()).isSelected()));
 			}
+			Iterator<Map.Entry<JTextField, JCheckBox>> itr2 = feldsMap.entrySet().iterator();
+			while (itr2.hasNext()) {
+				Map.Entry<JTextField, JCheckBox> entry = itr2.next();
+				if (entry.getValue().isSelected()) {
+					System.out.println(entry.getKey().getText());
+					dash.addTreeTabPaneTab(entry.getKey().getText());
+				} 
+			}
+			Iterator<Map.Entry<JTextField, JCheckBox>> itr3 = feldsMap.entrySet().iterator();
+			while (itr3.hasNext()) {
+				Map.Entry<JTextField, JCheckBox> entry = itr3.next();
+				if (!entry.getValue().isSelected()) {
+					System.out.println(entry.getKey().getText());
+					dash.removeTreeTabPaneTab(entry.getKey().getText());
+				} 
+			}
+			
 			
 			this.dispose();
 		} else {

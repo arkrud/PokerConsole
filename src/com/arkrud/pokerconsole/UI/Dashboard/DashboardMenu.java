@@ -58,7 +58,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (menuText.contains("Add Tree")) {
 			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash);
 		} else if (menuText.contains("Manage Trees")) {
-			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), null);
+			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash);
 		} else if (menuText.contains("Update User")) {
 			showConsoleLoginAccountFrame(addDashboardUser);
 		} else if (menuText.contains("Clear Security")) {

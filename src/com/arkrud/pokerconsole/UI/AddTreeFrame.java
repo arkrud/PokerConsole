@@ -41,6 +41,7 @@ public class AddTreeFrame extends JDialog implements ActionListener {
 			}
 		});
 		treeStateCheckBox = new JCheckBox();
+		treeStateCheckBox.setSelected(true);
 		treeStateCheckBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

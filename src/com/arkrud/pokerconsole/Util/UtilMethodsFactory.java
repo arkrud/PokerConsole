@@ -127,7 +127,7 @@ public class UtilMethodsFactory {
 			dialog = new AddTreeFrame(dash);
 			break;
 		case "ManageTreesDialog":
-			dialog = new ManageTreesDialog();
+			dialog = new ManageTreesDialog(dash);
 			break;
 		default:
 			break;

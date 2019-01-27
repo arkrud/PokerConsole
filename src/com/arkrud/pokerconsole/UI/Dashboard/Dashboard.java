@@ -98,18 +98,37 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		tree.expandTwoDeep();
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
-		treeTabbedPane.addTab(appName, null, jScrollPane, null);
+		if (!hasTab(appName)) {
+			treeTabbedPane.addTab(appName, null, jScrollPane, null);
+			}
+	}
+	
+	private boolean hasTab (String appName) {
+		int count = treeTabbedPane.getTabCount();
+		for (int i = 0; i < count; i++) {
+			String label = treeTabbedPane.getTitleAt(i);
+			if (label.equals(appName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void removeTreeTabPaneTab(String appName) {
 		int count = treeTabbedPane.getTabCount();
 		for (int i = 0; i < count; i++) {
-			String label = treeTabbedPane.getTitleAt(i);
-			if (label.equals(appName)) {
-				treeTabbedPane.remove(i);
+			try {
+				String label = treeTabbedPane.getTitleAt(i);
+				if (label.equals(appName)) {
+					treeTabbedPane.remove(i);
+				}
+			} catch (Exception e) {
+				System.out.println("Expected");
 			}
 		}
 	}
+	
+	
 	
 	public void hideTreeTabPaneTab(String appName) {
 		int count = treeTabbedPane.getTabCount();
