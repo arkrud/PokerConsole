@@ -232,4 +232,21 @@ public class INIFilesFactory {
 		}
 		return map;
 	}
+	
+	public static HashMap<String, HashMap<String, String>> getItemValuesFromINI(File iniFile) {
+		HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
+		IniFile ini = readINI(iniFile);
+		Iterator<IniSection> its = ini.getSections().iterator();
+		while (its.hasNext()) {
+			IniSection section = (IniSection) its.next();
+			Iterator<IniItem> iti = section.getItems().iterator();
+			HashMap<String, String> itemsMap = new HashMap<String, String>();
+			while (iti.hasNext()) {
+				IniItem iniItem = (IniItem) iti.next();
+				itemsMap.put(iniItem.getName(), iniItem.getValue());
+			}
+			data.put(section.getName(), itemsMap);
+		}
+		return data;
+	}
 }

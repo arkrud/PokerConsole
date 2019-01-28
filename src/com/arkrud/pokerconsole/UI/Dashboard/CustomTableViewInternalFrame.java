@@ -37,7 +37,7 @@ public class CustomTableViewInternalFrame extends BaseInternalFrame implements I
 			ChartPanel chartPanel = (ChartPanel) contents;
 			chartPanel.setTheTableViewInternalFrame(this);
 			contentPanel.add(getPane(title, chartPanel));
-			setSize(520, 530);
+			setSize(540, 550);
 		}
 		setContentPane(contentPanel);
 		setVisible(true);

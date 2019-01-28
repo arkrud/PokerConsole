@@ -166,7 +166,7 @@ public class FramePositioning implements DesktopConstants {
 					while (frames[i].isIcon()) { // find the next visible frame
 						i++;
 					}
-					frames[i].setBounds(curCol * 400, curRow * 410, 400, 410);
+					frames[i].setBounds(curCol * 430, curRow * 440, 430, 440);
 					//System.out.println(frameWidth);
 					//System.out.println(frameHeight);
 					i++;

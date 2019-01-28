@@ -3,6 +3,7 @@ package com.arkrud.pokerconsole.Util;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class UtilMethodsFactory {
 	}
 
 	// Retrieve the path of the root of the solution - src\
-	private static String getConfigPath() {
+	public static String getConfigPath() {
 		String binPath = UtilMethodsFactory.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		String configPath = binPath.substring(0, binPath.indexOf(binPath.split("/")[binPath.split("/").length - 1]));
 		return configPath;
@@ -144,4 +145,18 @@ public class UtilMethodsFactory {
 		dialog.setLocation(x, y);
 		dialog.setVisible(true);
 	}
+	
+	public static void createChartINIFile(File file) {
+		// Create the file
+		try {
+			if (file.createNewFile()) {
+				System.out.println("File is created!");
+			} else {
+				System.out.println("File already exists.");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
