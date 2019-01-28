@@ -127,7 +127,6 @@ public class CustomTableModel extends AbstractTableModel {
 					iniCellDta.put("BlueRGB", Integer.toString(blue));
 					iniData.put(pokerHands[y][x], iniCellDta);
 				}
-				// System.out.println(ystart + "-" + xstart + " --- " + alpha + " - " + red + " - " + green + " - " + blue);
 				JTextField cell = new JTextField(cellText);
 				cell.setBackground(color);
 				objects.add(cell);
