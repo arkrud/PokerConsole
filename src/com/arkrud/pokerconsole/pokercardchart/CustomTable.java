@@ -12,7 +12,7 @@ public class CustomTable extends JTable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Class<?>[] renderedClasses = { JTextField.class, Object.class };
-	private Color currentSelectionColor = Color.RED;
+	private Color currentSelectionColor = new Color(245, 245, 245);
 
 	public CustomTable(String imagePath) {
 		CustomTableModel tableModel = (new CustomTableModel());

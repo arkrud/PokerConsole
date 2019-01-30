@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.Iterator;
 
 import javax.swing.JOptionPane;
@@ -83,6 +84,29 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						}
 					}
 				}
+			} else if (ac.equals("ADD CUSTOM GROUP")) {
+				String s = (String) JOptionPane.showInputDialog(dash, "Custom Group Name", "Add Custom Group", JOptionPane.PLAIN_MESSAGE, null, null, null);
+				if (checkForGroupName(s)) {
+					JOptionPane.showConfirmDialog(null, "The selected Group name is Duplicated!", "Duplicated Group Name Warning",
+							JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					if (!checkIfGroupNameHasLettersOnly(s)) {
+						JOptionPane.showConfirmDialog(null, "The selected Group name must have only Letters!", "Formatting Warning",
+								JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						if ((s != null) && (s.length() > 0)) {
+							PokerGroup group = new PokerGroup(s);
+							File groupDir = new File(UtilMethodsFactory.getConfigPath() + "CustomGroups/" + s);
+							UtilMethodsFactory.createGRoupFolder(groupDir);
+							DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group);
+							DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+							DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+							((DefaultTreeModel) tree.getModel()).insertNodeInto(groupNode, root, root.getChildCount());
+							dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+							addGroup(node, s, groupNode);
+						}
+					}
+				}
 			} else if (ac.equals("REFRESH")) {
 				theTree.refreshTreeNode(node);
 			} else if (ac.equals("RENAME")) {
@@ -146,6 +170,8 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					theTree.renameNode(node, s);
 					return;
 				}
+			}  else if (ac.equals("ADD CHART")) {
+				String s = (String) JOptionPane.showInputDialog(dash, "Custom Chart Name", "Add Chart", JOptionPane.PLAIN_MESSAGE, null, null, null);
 			}
 		} else {
 		}

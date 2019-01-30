@@ -4,6 +4,7 @@ import com.arkrud.pokerconsole.TreeInterface.TreeNodeState;
 
 public class PokerGroup implements TreeNodeState {
 	private String nodeText;
+	private String iniFilePath;
 
 	public PokerGroup(String nodeText) {
 		super();
@@ -56,4 +57,14 @@ public class PokerGroup implements TreeNodeState {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public String getIniFilePath() {
+		return iniFilePath;
+	}
+
+	public void setIniFilePath(String iniFilePath) {
+		this.iniFilePath = iniFilePath;
+	}
+	
+	
 }

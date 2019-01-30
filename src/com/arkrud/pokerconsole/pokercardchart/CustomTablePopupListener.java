@@ -21,7 +21,7 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 	private JPopupMenu popupMenu;
 	private String iniPath;
 	private CustomTable table;
-	private String[] menus = { "Red(always bet/raise)", "Orange(Mostly bet/raise and otherwise call)", "Yellow(Sometimes bet/raise and sometimes call)", "Purple(Mostly fold otherwise raise)", "Blue(Fold/call/raise equally)",
+	private String[] menus = { "Red(always bet/raise)", "Orange(Mostly bet/raise and otherwise call)", "Green(Always call)", "Yellow(Sometimes bet/raise and sometimes call)", "Purple(Mostly fold otherwise raise)", "Blue(Fold/call/raise equally)",
 			"White(Sometimes call sometimes fold)", "Dark gray(Always fold)", "Light gray(Not in range)", "Save Chart" };
 
 	public CustomTablePopupListener(JPopupMenu popupMenu, String iniPath) {

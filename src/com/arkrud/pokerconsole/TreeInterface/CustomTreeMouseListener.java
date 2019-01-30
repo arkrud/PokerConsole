@@ -61,6 +61,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				if (treeObject instanceof PokerStrategy) {
 					if (theTree.getTreeType().equals("config")) {
 						dropDownMenus.put("Add Group", true);
+						dropDownMenus.put("Add Custom Group", true);
 					} else {
 						dropDownMenus.put("Refresh", true);
 						dropDownMenus.put("Remove", true);
@@ -70,6 +71,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					if (theTree.getTreeType().equals("config")) {
 						dropDownMenus.put("Delete", true);
 						dropDownMenus.put("Rename", true);
+						dropDownMenus.put("Add Chart", true);
 					} else {
 					}
 				} else {
