@@ -90,7 +90,6 @@ public class CustomTableModel extends AbstractTableModel {
 		File inifile = new File(UtilMethodsFactory.getConfigPath() + imagePath.substring(0, imagePath.length() - 3) + "ini");
 		if (inifile.exists()) {
 			colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
-			System.out.println("INI is used");
 		} else {
 			useINI = false;
 		}
@@ -147,7 +146,6 @@ public class CustomTableModel extends AbstractTableModel {
 
 	public void generateChartINIFile(String filePath) {
 		File inifile = new File(UtilMethodsFactory.getConfigPath() + filePath);
-		System.out.println(inifile);
 		UtilMethodsFactory.createChartINIFile(inifile);
 		for (Map.Entry<String, HashMap<String, String>> entry : iniData.entrySet())
 			INIFilesFactory.addINIFileSection(inifile, entry.getKey(), entry.getValue());

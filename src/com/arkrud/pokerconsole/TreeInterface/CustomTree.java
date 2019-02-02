@@ -196,13 +196,15 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			pokerHandSizingTreeNode.add(pokerPositionTreeNode);
 		} else if (level == 4) {
 			PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-			pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
-			pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
-			pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
-			pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-			pokerOpponentPosition.setChartImagePath("Images/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
-			pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
-			pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
+			if (!node.getName().contains("ini")) {
+				pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+				pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
+				pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
+				pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+				pokerOpponentPosition.setChartImagePath("Images/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+				pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+				pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
+			}
 		} else {
 		}
 		if (node.isDirectory()) {
@@ -274,6 +276,10 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * Expand nodes below selected node after tree refresh. <br>
 	 */
 	private void expandNodesBelow(DefaultMutableTreeNode node) {
+		cloudTree.expandPath(new TreePath(((DefaultTreeModel) cloudTree.getModel()).getPathToRoot(node)));
+	}
+	
+	public void expandNodesBelow(DefaultMutableTreeNode node, JTree cloudTree) {
 		cloudTree.expandPath(new TreePath(((DefaultTreeModel) cloudTree.getModel()).getPathToRoot(node)));
 	}
 
@@ -390,7 +396,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 										path = new TreePath(childNode2.getPath());
 										cloudTree.setSelectionPath(path);
 										cloudTree.scrollPathToVisible(path);
-										//cloudTree.expandPath(path);
+										// cloudTree.expandPath(path);
 										return path;
 									}
 								}

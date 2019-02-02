@@ -34,8 +34,7 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 	private JLabel treeLabel, treeStateLabel;
 	private JTextField treeTextField;
 	private JCheckBox treeStateCheckBox;
-	private HashMap<JTextField, JCheckBox> feldsMap= new HashMap<JTextField, JCheckBox>();
-	
+	private HashMap<JTextField, JCheckBox> feldsMap = new HashMap<JTextField, JCheckBox>();
 	/**
 	 * 
 	 */
@@ -63,7 +62,6 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 				public void actionPerformed(ActionEvent e) {
 					treeStateCheckBox.requestFocusInWindow();
 				}
-				
 			});
 			treeStateCheckBox = new JCheckBox();
 			treeStateCheckBox.setSelected(entry.getValue());
@@ -95,37 +93,31 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();
-		String[] itemValues = {"true", "false"};
+		String[] itemValues = { "true", "false" };
 		if (theButton.getText().equals("Apply")) {
 			Iterator<Map.Entry<JTextField, JCheckBox>> itr = feldsMap.entrySet().iterator();
 			while (itr.hasNext()) {
-				Map.Entry<JTextField, JCheckBox> entry = itr.next();
-				System.out.println(((JTextField)entry.getKey()).getText() + " - " + ((JCheckBox)entry.getValue()).isSelected());
 				INIFilesFactory.removeINIItemsWithValues(UtilMethodsFactory.getConsoleConfig(), "Applications", itemValues);
 			}
 			Iterator<Map.Entry<JTextField, JCheckBox>> itr1 = feldsMap.entrySet().iterator();
 			while (itr1.hasNext()) {
 				Map.Entry<JTextField, JCheckBox> entry = itr1.next();
-				INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", ((JTextField)entry.getKey()).getText(), String.valueOf(((JCheckBox)entry.getValue()).isSelected()));
+				INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", ((JTextField) entry.getKey()).getText(), String.valueOf(((JCheckBox) entry.getValue()).isSelected()));
 			}
 			Iterator<Map.Entry<JTextField, JCheckBox>> itr2 = feldsMap.entrySet().iterator();
 			while (itr2.hasNext()) {
 				Map.Entry<JTextField, JCheckBox> entry = itr2.next();
 				if (entry.getValue().isSelected()) {
-					System.out.println(entry.getKey().getText());
 					dash.addTreeTabPaneTab(entry.getKey().getText());
-				} 
+				}
 			}
 			Iterator<Map.Entry<JTextField, JCheckBox>> itr3 = feldsMap.entrySet().iterator();
 			while (itr3.hasNext()) {
 				Map.Entry<JTextField, JCheckBox> entry = itr3.next();
 				if (!entry.getValue().isSelected()) {
-					System.out.println(entry.getKey().getText());
 					dash.removeTreeTabPaneTab(entry.getKey().getText());
-				} 
+				}
 			}
-			
-			
 			this.dispose();
 		} else {
 			this.dispose();

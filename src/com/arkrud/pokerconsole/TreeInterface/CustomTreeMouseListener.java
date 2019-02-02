@@ -71,8 +71,11 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					if (theTree.getTreeType().equals("config")) {
 						dropDownMenus.put("Delete", true);
 						dropDownMenus.put("Rename", true);
-						dropDownMenus.put("Add Chart", true);
 					} else {
+					}
+				} else if (treeObject instanceof PokerAction) {
+					if (!theTree.getTreeType().equals("config")) {
+						dropDownMenus.put("Add Sizing", true);
 					}
 				} else {
 				}

@@ -123,7 +123,6 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 					treeTabbedPane.remove(i);
 				}
 			} catch (Exception e) {
-				System.out.println("Expected");
 			}
 		}
 	}
