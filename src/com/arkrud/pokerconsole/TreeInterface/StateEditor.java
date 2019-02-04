@@ -53,11 +53,16 @@ public class StateEditor extends AbstractCellEditor implements TreeCellEditor {
 			JTree tree = (JTree) event.getSource();
 			TreePath path = tree.getPathForLocation(mouseEvent.getX(), mouseEvent.getY());
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-			if (node.getUserObject() instanceof String) {
-				return false;
+			if (node.isLeaf()) {
+				if (node.getUserObject() instanceof String) {
+					return false;
+				} else {
+					return true;
+				}
 			} else {
-				return true;
+				return false;
 			}
+			
 		} else {
 			return false;
 		}

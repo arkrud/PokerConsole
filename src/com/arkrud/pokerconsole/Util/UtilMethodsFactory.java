@@ -27,7 +27,7 @@ import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Add Custom Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing" };
+	public static String[] dropDownsNames = { "Add Group", "Add Custom Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Apply Template" };
 
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
 		if (Dashboard.INTERNAL_FRAMES.get(frameTitle) == null) {
@@ -152,7 +152,7 @@ public class UtilMethodsFactory {
 			if (file.createNewFile()) {
 				System.out.println("File is created!");
 			} else {
-				System.out.println("File already exists.");
+				//System.out.println("File already exists.");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

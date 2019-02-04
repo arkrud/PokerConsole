@@ -32,6 +32,7 @@ public class CustomTable extends JTable {
 		}
 		tableModel.adjustColumnPreferredWidths(this);
 		JPopupMenu tablePopup = new JPopupMenu();
+		
 		addMouseListener(new CustomTablePopupListener(tablePopup, imagePath.substring(0, imagePath.length() - 3) + "ini"));
 	}
 

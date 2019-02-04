@@ -7,8 +7,12 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
@@ -41,7 +45,8 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 	private CustomTree theTree;
 	private int groupItemUniqueCaracter = 0;
 	private String[] defaultPositions = { "BB", "BU", "CO", "HJ", "LJ", "SB", "UTG1", "UTG2" };
-	private String[] defaultOpponetPositions = { "SB", "BU", "CO", "HJ", "LJ", "UTG2", "UTG1", "UTG" };
+	private String[] defaultOpponetPositions = { "0SB", "1BU", "2CO", "3HJ", "4LJ", "5UTG2", "6UTG1", "7UTG" };
+	final JFileChooser fc = new JFileChooser();
 
 	public CustomTreePopupHandler(JTree tree, JPopupMenu popup, Dashboard dash, CustomTree theTree) {
 		// Pass variables values into the class
@@ -168,27 +173,56 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					theTree.renameNode(node, s);
 					return;
 				}
-			} 
+			}
+		} else if (obj instanceof PokerOpponentPosition) {
+			String templatePath = "";
+			File file = null;
+			if (ac.equals("APPLY TEMPLATE")) {
+				fc.setCurrentDirectory(new File(UtilMethodsFactory.getConfigPath() + "Images/"));
+				int returnVal = fc.showOpenDialog(null);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					file = fc.getSelectedFile();
+					templatePath = file.getAbsolutePath();
+					templatePath = templatePath.substring(templatePath.indexOf("Images"), templatePath.length());
+					templatePath = templatePath.replace("\\", "/");
+				} else {
+				}
+				ChartPanel chartPanel = new ChartPanel(templatePath);
+				dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
+				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), dash.getJScrollableDesktopPane(), theFrame);
+				Path from = file.toPath(); // convert from File to Path
+				String toPath = UtilMethodsFactory.getConfigPath() + ((PokerOpponentPosition) obj).getChartImagePath();
+				toPath = toPath.replace("/", "\\\\");
+				toPath = toPath.substring(2, toPath.length());
+				toPath = toPath.replace("jpg", "ini");
+				Path to = Paths.get(toPath); // convert from String to Path
+				try {
+					Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 		} else if (obj instanceof PokerAction) {
 			if (ac.equals("ADD SIZING")) {
 				String s = (String) JOptionPane.showInputDialog(dash, "New Sizing", "Add Sizing", JOptionPane.PLAIN_MESSAGE, null, null, null);
 				if (s != null) {
-				if (checkForGroupName(s)) {
-					JOptionPane.showConfirmDialog(null, "The sizing is Already there", "Duplicated Sizing Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
-				} else {
-					if ((s != null) && (s.length() > 0)) {
-						PokerHandSizing sizing = new PokerHandSizing(s, ((PokerAction) obj));
-						File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerAction) obj).getNodeText() + "/" + s);
-						UtilMethodsFactory.createGRoupFolder(sizingDir);
-						DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
-						((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, node, sizingNode.getChildCount());
-						dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
-						addSizing(s, sizingNode);
-						theTree.expandNodesBelow(sizingNode, tree);
+					if (checkForGroupName(s)) {
+						JOptionPane.showConfirmDialog(null, "The sizing is Already there", "Duplicated Sizing Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						if ((s != null) && (s.length() > 0)) {
+							PokerHandSizing sizing = new PokerHandSizing(s, ((PokerAction) obj));
+							File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerAction) obj).getNodeText() + "/" + s);
+							UtilMethodsFactory.createGRoupFolder(sizingDir);
+							DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
+							((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, node, sizingNode.getChildCount());
+							dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+							addSizing(s, sizingNode);
+							theTree.expandNodesBelow(sizingNode, tree);
+						}
 					}
-				}
 				} else {
-					
 				}
 			}
 		} else {

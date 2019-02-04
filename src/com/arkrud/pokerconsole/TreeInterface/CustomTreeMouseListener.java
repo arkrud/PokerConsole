@@ -73,6 +73,11 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 						dropDownMenus.put("Rename", true);
 					} else {
 					}
+				} else if (treeObject instanceof PokerOpponentPosition) {
+					if (!theTree.getTreeType().equals("config")) {
+						dropDownMenus.put("Apply Template", true);
+					} else {
+					}
 				} else if (treeObject instanceof PokerAction) {
 					if (!theTree.getTreeType().equals("config")) {
 						dropDownMenus.put("Add Sizing", true);
@@ -103,7 +108,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		TreePath path = tree.getPathForLocation(e.getX(), e.getY());
 		if (path != null) {
 			Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-			if (path != null) {
+			if (path != null && !theTree.getTreeType().equals("config")) {
 				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
 					ChartPanel chartPanel = new ChartPanel(((PokerOpponentPosition) obj).getChartImagePath());
 					dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
