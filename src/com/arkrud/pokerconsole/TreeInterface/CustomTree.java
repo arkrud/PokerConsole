@@ -170,7 +170,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	}
 
 	private void buildTreeNodes(File node, DefaultMutableTreeNode treeNode) {
-		int level = node.getAbsoluteFile().getPath().split("\\\\").length - 4;
+		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
 		if (level == 0) {
 		} else if (level == 1) {
 			pokerAction = new PokerAction(node.getName());

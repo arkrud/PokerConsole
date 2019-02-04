@@ -81,8 +81,6 @@ public class CustomTableModel extends AbstractTableModel {
 	public void generateTableData(String imagePath) {
 		BufferedImage image = null;
 		try {
-			//String binPath = UtilMethodsFactory.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-			//String configPath = binPath.substring(0, binPath.indexOf(binPath.split("/")[binPath.split("/").length - 1])) + imagePath;
 			image = ImageIO.read(new File(UtilMethodsFactory.getConfigPath() + imagePath));
 		} catch (IOException ex) {
 			// handle exception...
