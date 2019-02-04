@@ -177,14 +177,14 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			pokerActionTreeNode = new DefaultMutableTreeNode(pokerAction);
 			treeNode.add(pokerActionTreeNode);
 		} else if (level == 2) {
-			if (node.getAbsoluteFile().getPath().split("\\\\")[level + 2].equals("RFI")) {
+			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2].equals("RFI")) {
 				if (!node.getName().contains("ini")) {
-				PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-				pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
-				pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-				pokerOpponentPosition.setChartImagePath("Images/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
-				DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
-				pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
+					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
+					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+					pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+					pokerOpponentPosition.setChartImagePath("Images/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+					DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+					pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
 				}
 			} else {
 				pokerHandSizing = new PokerHandSizing(node.getName(), pokerAction);
@@ -280,7 +280,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	private void expandNodesBelow(DefaultMutableTreeNode node) {
 		cloudTree.expandPath(new TreePath(((DefaultTreeModel) cloudTree.getModel()).getPathToRoot(node)));
 	}
-	
+
 	public void expandNodesBelow(DefaultMutableTreeNode node, JTree cloudTree) {
 		cloudTree.expandPath(new TreePath(((DefaultTreeModel) cloudTree.getModel()).getPathToRoot(node)));
 	}

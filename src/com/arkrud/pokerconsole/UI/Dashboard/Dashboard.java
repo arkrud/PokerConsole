@@ -102,7 +102,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
 		if (!hasTab(appName)) {
-			treeTabbedPane.addTab(appName, null, jScrollPane, null);
+			treeTabbedPane.insertTab(appName, null, jScrollPane, null,0);
 			}
 	}
 	
