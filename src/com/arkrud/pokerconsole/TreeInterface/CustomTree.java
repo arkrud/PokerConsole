@@ -261,7 +261,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 *
 	 */
 	private void createNodes(DefaultMutableTreeNode top) throws Exception {
-		buildTreeNodes(new File("Images"), top);
+		buildTreeNodes(new File(UtilMethodsFactory.getConfigPath() + "Images"), top);
 		buildSavedGroupNodes(top);
 		expandTwoDeep();
 	}

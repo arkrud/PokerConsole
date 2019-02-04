@@ -97,9 +97,7 @@ public class UtilMethodsFactory {
 	}
 
 	private static String[] getFileNames(String location) {
-		String binPath = UtilMethodsFactory.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		String configPath = binPath.substring(0, binPath.indexOf(binPath.split("/")[binPath.split("/").length - 1])) + "/" + location;
-		File folder = new File(configPath);
+		File folder = new File(getConfigPath() +  location);
 		String[] files = folder.list();
 		return files;
 	}
