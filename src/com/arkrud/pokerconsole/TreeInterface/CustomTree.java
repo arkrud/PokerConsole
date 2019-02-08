@@ -133,7 +133,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		while (iterator.hasNext()) {
 			IniItem iniItem = iterator.next();
 			groupNames.add(iniItem.getName().substring(0, UtilMethodsFactory.getIndexOfFirstIntInString(iniItem.getName())));
-			// groupNames.add(iniItem.getName().substring(0, iniItem.getName().indexOf("-")));
 		}
 		Iterator<String> it = groupNames.iterator();
 		while (it.hasNext()) {

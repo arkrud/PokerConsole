@@ -15,6 +15,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
@@ -27,6 +28,7 @@ public class CustomTableModel extends AbstractTableModel {
 	private ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 	private HashMap<String, HashMap<String, String>> iniData = new HashMap<String, HashMap<String, String>>();
 	private ArrayList<String> columns = new ArrayList<String>();
+	private ChartPanel chart;
 	private String[][] pokerHands = { { "AA", "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s" }, { "AKo", "KK", "KQs", "KJs", "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s" },
 			{ "AQo", "KQo", "QQ", "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s", "Q4s", "Q3s", "Q2s" }, { "AJo", "KJO", "QJO", "JJ", "JTs", "J9s", "J8s", "J7s", "J6s", "J5s", "J4s", "J3s", "J2s" },
 			{ "ATo", "KTo", "QTO", "JTo", "TT", "T9s", "T8s", "T7s", "T6s", "T5s", "T4s", "T3s", "T2s" }, { "A9o", "K9o", "Q9o", "J9o", "T9o", "99", "98s", "97s", "96s", "95s", "94s", "93s", "92s" },
@@ -36,6 +38,11 @@ public class CustomTableModel extends AbstractTableModel {
 			{ "A2o", "K2o", "Q2o", "J2o", "T2o", "92o", "82o", "72o", "62o", "52o", "42o", "32o", "22" } };
 	private HashMap<String, HashMap<String, String>> colorsMap;
 	private boolean useINI = true;
+
+	public CustomTableModel(ChartPanel chart) {
+		this.chart = chart;
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public int getColumnCount() {
@@ -88,7 +95,11 @@ public class CustomTableModel extends AbstractTableModel {
 		}
 		File inifile = new File(UtilMethodsFactory.getConfigPath() + imagePath.substring(0, imagePath.length() - 3) + "ini");
 		if (inifile.exists()) {
-			colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
+			if (!UtilMethodsFactory.hasChart(imagePath.substring(0, imagePath.length() - 3) + "jpg") || UtilMethodsFactory.getChart(imagePath.substring(0, imagePath.length() - 3) + "jpg").getIniData().isEmpty()) {
+				colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
+			} else {
+				colorsMap = UtilMethodsFactory.getChart(imagePath.substring(0, imagePath.length() - 3) + "jpg").getIniData();
+			}
 		} else {
 			useINI = false;
 		}
@@ -111,6 +122,8 @@ public class CustomTableModel extends AbstractTableModel {
 					int green = Integer.parseInt(itemMap.get("GreenRGB"));
 					int blue = Integer.parseInt(itemMap.get("BlueRGB"));
 					color = new java.awt.Color(red, green, blue, alpha);
+					chart.setIniData(colorsMap);
+					UtilMethodsFactory.addToCharts(imagePath.substring(0, imagePath.length() - 3) + "jpg", chart);
 				} else {
 					HashMap<String, String> iniCellDta = new HashMap<String, String>();
 					int clr = image.getRGB(ystart, xstart);
@@ -124,9 +137,7 @@ public class CustomTableModel extends AbstractTableModel {
 					iniCellDta.put("GreenRGB", Integer.toString(green));
 					iniCellDta.put("BlueRGB", Integer.toString(blue));
 					iniData.put(pokerHands[y][x], iniCellDta);
-					
 				}
-				
 				JTextField cell = new JTextField(cellText);
 				cell.setBackground(color);
 				objects.add(cell);
@@ -135,7 +146,6 @@ public class CustomTableModel extends AbstractTableModel {
 			data.add(objects);
 			y++;
 		}
-		
 	}
 
 	public void adjustColumnPreferredWidths(JTable table) {

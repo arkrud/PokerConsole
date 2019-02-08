@@ -17,6 +17,7 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
+import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
@@ -28,6 +29,7 @@ import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
  */
 public class UtilMethodsFactory {
 	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Apply Template" };
+	private static HashMap<String, ChartPanel> charts = new HashMap<String, ChartPanel>();
 
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
 		if (Dashboard.INTERNAL_FRAMES.get(frameTitle) == null) {
@@ -40,7 +42,20 @@ public class UtilMethodsFactory {
 			Dashboard.INTERNAL_FRAMES.put(frameTitle, theFrame);
 		}
 	}
+	
+	public static void addToCharts (String path, ChartPanel chartPanel) {
+		charts.put(path, chartPanel);
+	}
+	
+	public static ChartPanel getChart (String path) {
+		return charts.get(path);
+	}
+	
+	public static boolean hasChart (String path) {
+		return charts.containsKey(path);
+	}
 
+	
 	/**
 	 * Create image icon for tree nodes. <br>
 	 *
