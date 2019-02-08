@@ -6,6 +6,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
+
 public class CustomTable extends JTable {
 	/**
 	 * 
@@ -18,7 +20,8 @@ public class CustomTable extends JTable {
 		CustomTableModel tableModel = (new CustomTableModel());
 		tableModel.generateTableHeaders();
 		tableModel.generateTableData(imagePath);
-		tableModel.generateChartINIFile(imagePath.substring(0, imagePath.length() - 3) + "ini");
+		String path = imagePath.substring(0, imagePath.length() - 3) + "ini";
+		tableModel.generateChartINIFile(path);
 		setModel(tableModel);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		setFillsViewportHeight(true);
@@ -32,8 +35,7 @@ public class CustomTable extends JTable {
 		}
 		tableModel.adjustColumnPreferredWidths(this);
 		JPopupMenu tablePopup = new JPopupMenu();
-		
-		addMouseListener(new CustomTablePopupListener(tablePopup, imagePath.substring(0, imagePath.length() - 3) + "ini"));
+		addMouseListener(new CustomTablePopupListener(tablePopup, path));
 	}
 
 	public Color getCurrentSelectionColor() {

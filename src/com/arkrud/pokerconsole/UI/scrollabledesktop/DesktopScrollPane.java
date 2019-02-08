@@ -148,7 +148,16 @@ public class DesktopScrollPane extends JScrollPane {
      * @return a JInternalFrame array containing references to the internal frames
      */
       public JInternalFrame[] getAllFrames() {
-            return desktopPane.getAllFrames();
+    	  
+    	  JInternalFrame[] frames = {};
+		try {
+			frames = desktopPane.getAllFrames();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+    	  
+          return frames;
       }
 
     /**

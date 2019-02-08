@@ -7,6 +7,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -49,6 +50,8 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		super.addWindowListener(this);
 		initialize();
 	}
+	
+   
 
 	// Initialization of the visual interface
 	private void initialize() throws Exception {
@@ -60,13 +63,13 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		JPanel jContentPane = new JPanel();
 		jContentPane.setLayout(new BorderLayout());
 		JSplitPane jSplitPane = new JSplitPane();
-		jSplitPane.setDividerLocation(300);
+		jSplitPane.setDividerLocation(175);
 		jSplitPane.setRightComponent(getJScrollableDesktopPane());
 		jScrollPane = new JScrollPane();
 		treeTabbedPane = new JTabbedPane();
 		treeTabbedPane.addChangeListener(this);
 		configTree = getCustomTree("config");
-		configTree.expandTwoDeep();
+		//configTree.expandTwoDeep();
 		jScrollPane.setViewportView(configTree);
 		treeTabbedPane.addTab("Configuration", null, jScrollPane, null);
 		ArrayList<String> trees = new ArrayList<String>();
@@ -82,13 +85,11 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			JScrollPane treeScroll = new JScrollPane();
 			customTree = getCustomTree(trees.get(x));
 			treeScroll.setViewportView(customTree);
-			customTree.expandTwoDeep();
-			//treeTabbedPane.addTab(trees.get(x), null, treeScroll, null);
-			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null,0);
+			//customTree.expandTwoDeep();
+			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
 			treeTabbedPane.setSelectedIndex(0);
 			x++;
 		}
-		
 		jSplitPane.setLeftComponent(treeTabbedPane);
 		jContentPane.add(jSplitPane, BorderLayout.CENTER);
 		this.setContentPane(jContentPane);
@@ -98,15 +99,15 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	public void addTreeTabPaneTab(String appName) {
 		CustomTree tree = getCustomTree(appName);
-		tree.expandTwoDeep();
+		//tree.expandTwoDeep();
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
 		if (!hasTab(appName)) {
-			treeTabbedPane.insertTab(appName, null, jScrollPane, null,0);
-			}
+			treeTabbedPane.insertTab(appName, null, jScrollPane, null, 0);
+		}
 	}
-	
-	private boolean hasTab (String appName) {
+
+	private boolean hasTab(String appName) {
 		int count = treeTabbedPane.getTabCount();
 		for (int i = 0; i < count; i++) {
 			String label = treeTabbedPane.getTitleAt(i);
@@ -129,9 +130,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			}
 		}
 	}
-	
-	
-	
+
 	public void hideTreeTabPaneTab(String appName) {
 		int count = treeTabbedPane.getTabCount();
 		for (int i = 0; i < count; i++) {

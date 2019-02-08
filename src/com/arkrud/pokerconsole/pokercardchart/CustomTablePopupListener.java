@@ -21,8 +21,8 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 	private JPopupMenu popupMenu;
 	private String iniPath;
 	private CustomTable table;
-	private String[] menus = { "Red(always bet/raise)", "Orange(Mostly bet/raise and otherwise call)", "Green(Always call)", "Yellow(Sometimes bet/raise and sometimes call)", "Purple(Mostly fold otherwise raise)", "Blue(Fold/call/raise equally)",
-			"White(Sometimes call sometimes fold)", "Dark gray(Always fold)", "Light gray(Not in range)", "Save Chart" };
+	private String[] menus = { "Clear all", "Red(always bet/raise)", "Orange(Mostly bet/raise and otherwise call)", "Green(Always call)", "Yellow(Sometimes bet/raise and sometimes call)", "Purple(Mostly fold otherwise raise)",
+			"Blue(Fold/call/raise equally)", "White(Sometimes call sometimes fold)", "Dark gray(Always fold)", "Light gray(Not in range)", "Save Chart" };
 
 	public CustomTablePopupListener(JPopupMenu popupMenu, String iniPath) {
 		this.popupMenu = popupMenu;
@@ -54,6 +54,19 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 			File file = new File(UtilMethodsFactory.getConfigPath() + iniPath);
 			UtilMethodsFactory.createChartINIFile(file);
 			updateChartINIFile(table, file);
+		} else if (menuText.contains("Clear all")) {
+			setDefaultColor();
+			File file = new File(UtilMethodsFactory.getConfigPath() + iniPath);
+			updateChartINIFile(table, file);
+		}
+	}
+
+	private void setDefaultColor() {
+		table.setBackground(new Color(245, 245, 245));
+		for (int i = 0; i < table.getRowCount(); i++) {
+			for (int j = 0; j < table.getColumnCount(); j++) {
+				((JTextField) table.getModel().getValueAt(i, j)).setBackground(new Color(245, 245, 245));
+			}
 		}
 	}
 

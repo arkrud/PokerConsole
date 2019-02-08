@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 
 import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
+import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.pokercardchart.CustomTable;
 
 public class ChartPanel extends JPanel {

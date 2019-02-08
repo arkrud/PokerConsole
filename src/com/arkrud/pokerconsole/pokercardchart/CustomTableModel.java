@@ -15,6 +15,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
@@ -123,7 +124,9 @@ public class CustomTableModel extends AbstractTableModel {
 					iniCellDta.put("GreenRGB", Integer.toString(green));
 					iniCellDta.put("BlueRGB", Integer.toString(blue));
 					iniData.put(pokerHands[y][x], iniCellDta);
+					
 				}
+				
 				JTextField cell = new JTextField(cellText);
 				cell.setBackground(color);
 				objects.add(cell);
@@ -132,6 +135,7 @@ public class CustomTableModel extends AbstractTableModel {
 			data.add(objects);
 			y++;
 		}
+		
 	}
 
 	public void adjustColumnPreferredWidths(JTable table) {

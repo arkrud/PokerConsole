@@ -27,7 +27,7 @@ import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Add Custom Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Apply Template" };
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Apply Template" };
 
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
 		if (Dashboard.INTERNAL_FRAMES.get(frameTitle) == null) {
@@ -45,8 +45,7 @@ public class UtilMethodsFactory {
 	 * Create image icon for tree nodes. <br>
 	 *
 	 * @return <code>ImageIcon</code> of tree user objects
-	 * @param path
-	 *            reference to image file name
+	 * @param path reference to image file name
 	 */
 	public static ImageIcon createImageIcon(String path) {
 		URL imgURL = null;
@@ -97,7 +96,7 @@ public class UtilMethodsFactory {
 	}
 
 	private static String[] getFileNames(String location) {
-		File folder = new File(getConfigPath() +  location);
+		File folder = new File(getConfigPath() + location);
 		String[] files = folder.list();
 		return files;
 	}
@@ -143,20 +142,20 @@ public class UtilMethodsFactory {
 		dialog.setLocation(x, y);
 		dialog.setVisible(true);
 	}
-	
+
 	public static void createChartINIFile(File file) {
 		// Create the file
 		try {
 			if (file.createNewFile()) {
 				System.out.println("File is created!");
 			} else {
-				//System.out.println("File already exists.");
+				// System.out.println("File already exists.");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void createGRoupFolder(File file) {
 		if (file.mkdir()) {
 			System.out.println("Dir is created!");
@@ -164,5 +163,4 @@ public class UtilMethodsFactory {
 			System.out.println("Dir already exists.");
 		}
 	}
-	
 }

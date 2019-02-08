@@ -6,6 +6,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -178,6 +179,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			treeNode.add(pokerActionTreeNode);
 		} else if (level == 2) {
 			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2].equals("RFI")) {
+				
 				if (!node.getName().contains("ini")) {
 					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
@@ -185,11 +187,12 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 					pokerOpponentPosition.setChartImagePath("Images/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
 					DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 					pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
-				}
+				} 
 			} else {
 				pokerHandSizing = new PokerHandSizing(node.getName(), pokerAction);
 				pokerHandSizingTreeNode = new DefaultMutableTreeNode(pokerHandSizing);
 				pokerActionTreeNode.add(pokerHandSizingTreeNode);
+				
 			}
 		} else if (level == 3) {
 			pokerPosition = new PokerPosition(node.getName().split("\\.")[0]);
@@ -215,6 +218,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				buildTreeNodes(new File(node, filename), treeNode);
 			}
 		}
+		
 	}
 
 	public Integer checkIfAnythingIsSelected(DefaultMutableTreeNode node) {
@@ -269,12 +273,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	}
 
 	/**
-	 * Expand all tree nodes. <br>
-	 */
-	/*
-	 * public void expandAllNodes() { for (int i = 0; i < cloudTree.getRowCount(); i++) { cloudTree.expandRow(i); } }
-	 */
-	/**
 	 * Expand nodes below selected node after tree refresh. <br>
 	 */
 	private void expandNodesBelow(DefaultMutableTreeNode node) {
@@ -318,7 +316,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			popup.setInvoker(servicesTree);
 			// Instantiate Pop-up Menu handler class instance
 			CustomTreePopupHandler handler = new CustomTreePopupHandler(servicesTree, popup, dash, this);
-			// treeTabbedPane.addTab("Services", null, servicesTree, null);
 			for (String dropDownMenuName : UtilMethodsFactory.dropDownsNames) {
 				popup.add(getMenuItem(dropDownMenuName, handler));
 			}
@@ -398,7 +395,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 										path = new TreePath(childNode2.getPath());
 										cloudTree.setSelectionPath(path);
 										cloudTree.scrollPathToVisible(path);
-										// cloudTree.expandPath(path);
 										return path;
 									}
 								}
