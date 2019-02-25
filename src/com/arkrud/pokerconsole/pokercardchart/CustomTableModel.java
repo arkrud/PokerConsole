@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JTable;
@@ -16,8 +16,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import com.arkrud.pokerconsole.UI.ChartPanel;
-import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
+import com.arkrud.pokerconsole.Util.MongoDBFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class CustomTableModel extends AbstractTableModel {
@@ -41,7 +41,6 @@ public class CustomTableModel extends AbstractTableModel {
 
 	public CustomTableModel(ChartPanel chart) {
 		this.chart = chart;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -94,11 +93,17 @@ public class CustomTableModel extends AbstractTableModel {
 			// handle exception...
 		}
 		File inifile = new File(UtilMethodsFactory.getConfigPath() + imagePath.substring(0, imagePath.length() - 3) + "ini");
+		String path = imagePath.substring(0, imagePath.length() - 3) + "jpg";
 		if (inifile.exists()) {
-			if (!UtilMethodsFactory.hasChart(imagePath.substring(0, imagePath.length() - 3) + "jpg") || UtilMethodsFactory.getChart(imagePath.substring(0, imagePath.length() - 3) + "jpg").getIniData().isEmpty()) {
-				colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
+			if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "mongo").equals("true")) {
+				MongoDBFactory.crateMongoConnection();
+				colorsMap = MongoDBFactory.getColorMap(imagePath.split("\\.")[0]);
 			} else {
-				colorsMap = UtilMethodsFactory.getChart(imagePath.substring(0, imagePath.length() - 3) + "jpg").getIniData();
+				if (!UtilMethodsFactory.hasChart(path) || UtilMethodsFactory.getChart(path).getIniData().isEmpty()) {
+					colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
+				} else {
+					colorsMap = UtilMethodsFactory.getChart(path).getIniData();
+				}
 			}
 		} else {
 			useINI = false;
@@ -146,6 +151,9 @@ public class CustomTableModel extends AbstractTableModel {
 			data.add(objects);
 			y++;
 		}
+		if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "mongo").equals("true")) {
+			MongoDBFactory.closeMongoConnection();
+		}
 	}
 
 	public void adjustColumnPreferredWidths(JTable table) {
@@ -161,5 +169,8 @@ public class CustomTableModel extends AbstractTableModel {
 		UtilMethodsFactory.createChartINIFile(inifile);
 		for (Map.Entry<String, HashMap<String, String>> entry : iniData.entrySet())
 			INIFilesFactory.addINIFileSection(inifile, entry.getKey(), entry.getValue());
+		HashMap<String, String> sectionKeys = new HashMap<String, String>();
+		sectionKeys.put("latest", "false");
+		INIFilesFactory.addINIFileSection(inifile, "Update", sectionKeys);
 	}
 }

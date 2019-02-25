@@ -51,13 +51,14 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 		} else if (menuText.contains("Light gray(Not in range)")) {
 			table.setCurrentSelectionColor(new Color(245, 245, 245));
 		} else if (menuText.contains("Save Chart")) {
+			UtilMethodsFactory.removeFromCharts(iniPath.substring(0, iniPath.length() - 3) + "jpg"); // Remove Chart object from static collection to have chart to be build from updated INI file
 			File file = new File(UtilMethodsFactory.getConfigPath() + iniPath);
-			UtilMethodsFactory.createChartINIFile(file);
-			updateChartINIFile(table, file);
+			UtilMethodsFactory.createChartINIFile(file); // Create chart INI file if does not exist
+			updateChartINIFile(table, file); // Update file with changed coloring
 		} else if (menuText.contains("Clear all")) {
-			setDefaultColor();
+			setDefaultColor(); // Set editing color to light gray
 			File file = new File(UtilMethodsFactory.getConfigPath() + iniPath);
-			updateChartINIFile(table, file);
+			updateChartINIFile(table, file); // Clear all colors and have all cells light gray
 		}
 	}
 
@@ -82,6 +83,9 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 				INIFilesFactory.addINIFileSection(file, field.getText(), sectionKeys);
 			}
 		}
+		HashMap<String, String> sectionKeys = new HashMap<String, String>();
+		sectionKeys.put("latest", "true");
+		INIFilesFactory.addINIFileSection(file, "Update", sectionKeys);
 	}
 
 	@Override

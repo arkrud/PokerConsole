@@ -121,7 +121,7 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	private static void showDashboard() {
 		Dashboard dash = null;
 		try {
-			dash = new Dashboard();
+			dash = new Dashboard(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -135,25 +135,24 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	public static void main(String[] args) throws Exception {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			if (INIFilesFactory.hasINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security")) {
+			// Show login prompt if security enabled or open Dashboard directly
+			if (INIFilesFactory.hasINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security")) { // Check in INI file if secure login is enabled 
 				LoginFrame frame = new LoginFrame();
 				frame.setSize(400, 150);
 				frame.setResizable(false);
-				// Get the size of the screen
+				// Set login prompt window in the center of the desktop
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-				// Determine the new location of the window
 				int w = frame.getSize().width;
 				int h = frame.getSize().height;
 				int x = (dim.width - w) / 2;
 				int y = (dim.height - h) / 2;
-				// Move the window
 				frame.setLocation(x, y);
 				frame.setVisible(true);
 			} else {
 				showDashboard();
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			JOptionPane.showMessageDialog(null, "Something Went Wrong!!!");
 		}
 	}
 }

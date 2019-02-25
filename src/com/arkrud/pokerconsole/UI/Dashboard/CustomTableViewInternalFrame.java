@@ -9,6 +9,7 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
 import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.ImageChartPanel;
 //import com.arkrud.TableInterface.CustomTable;
 //import com.arkrud.UI.PropertiesTabbedPane;
 //import com.arkrud.UI.PropertyPanel;
@@ -37,6 +38,11 @@ public class CustomTableViewInternalFrame extends BaseInternalFrame implements I
 			ChartPanel chartPanel = (ChartPanel) contents;
 			chartPanel.setTheTableViewInternalFrame(this);
 			contentPanel.add(getPane(title, chartPanel));
+			setSize(540, 550);
+		} else if (contents instanceof ImageChartPanel) {
+			ImageChartPanel imageChartPanel = (ImageChartPanel) contents;
+			imageChartPanel.setTheTableViewInternalFrame(this);
+			contentPanel.add(getPane(title, imageChartPanel));
 			setSize(540, 550);
 		}
 		setContentPane(contentPanel);

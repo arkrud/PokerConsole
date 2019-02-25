@@ -6,7 +6,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -84,7 +83,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * @param dash reference to the Dashboard object
 	 * @param treeType tree usage identifier (OT or OCT)
 	 */
-	public CustomTree(Dashboard dash, String treeType) {
+	public CustomTree(Dashboard dash, String treeType, boolean editable) {
 		this.dash = dash;
 		this.treeType = treeType;
 		if (treeType.equals("config")) {
@@ -116,7 +115,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			cloudTree.setCellRenderer(new CustomTreeCellRenderer());
 		}
 		try {
-			getTreePopUpMenu(cloudTree);
+			getTreePopUpMenu(cloudTree, editable);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -178,20 +177,18 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			treeNode.add(pokerActionTreeNode);
 		} else if (level == 2) {
 			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2].equals("RFI")) {
-				
-				if (!node.getName().contains("ini")) {
+				if (!node.getName().contains("ini") && !node.getName().contains("png")) {
 					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
 					pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 					pokerOpponentPosition.setChartImagePath("Images/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
 					DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 					pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
-				} 
+				}
 			} else {
 				pokerHandSizing = new PokerHandSizing(node.getName(), pokerAction);
 				pokerHandSizingTreeNode = new DefaultMutableTreeNode(pokerHandSizing);
 				pokerActionTreeNode.add(pokerHandSizingTreeNode);
-				
 			}
 		} else if (level == 3) {
 			pokerPosition = new PokerPosition(node.getName().split("\\.")[0]);
@@ -200,7 +197,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			pokerHandSizingTreeNode.add(pokerPositionTreeNode);
 		} else if (level == 4) {
 			PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-			if (!node.getName().contains("ini")) {
+			if (!node.getName().contains("ini") && !node.getName().contains("png")) {
 				pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
 				pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
 				pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
@@ -217,7 +214,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				buildTreeNodes(new File(node, filename), treeNode);
 			}
 		}
-		
 	}
 
 	public Integer checkIfAnythingIsSelected(DefaultMutableTreeNode node) {
@@ -308,15 +304,17 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	/**
 	 * Add PopUp menu to cluster icons in the tree to initiate actions on them. <br>
 	 */
-	private void getTreePopUpMenu(JTree servicesTree) throws Exception {
+	private void getTreePopUpMenu(JTree servicesTree, boolean editable) throws Exception {
 		JPopupMenu popup = null;
 		if (popup == null) {
 			popup = new JPopupMenu();
 			popup.setInvoker(servicesTree);
 			// Instantiate Pop-up Menu handler class instance
-			CustomTreePopupHandler handler = new CustomTreePopupHandler(servicesTree, popup, dash, this);
-			for (String dropDownMenuName : UtilMethodsFactory.dropDownsNames) {
-				popup.add(getMenuItem(dropDownMenuName, handler));
+			CustomTreePopupHandler handler = new CustomTreePopupHandler(servicesTree, popup, dash, this, editable);
+			if (editable) {
+				for (String dropDownMenuName : UtilMethodsFactory.dropDownsNames) {
+					popup.add(getMenuItem(dropDownMenuName, handler));
+				}
 			}
 		}
 	}

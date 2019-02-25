@@ -23,6 +23,7 @@ import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
@@ -38,8 +39,10 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 	private CustomTree theTree;
 	private Point loc;
 	private HashMap<String, Boolean> dropDownMenus = new HashMap<String, Boolean>();
+	private boolean editable;
 
-	public CustomTreeMouseListener(JPopupMenu popup, JTree tree, Dashboard dash, CustomTree theTree) { // NO_UCD (use default)
+	public CustomTreeMouseListener(JPopupMenu popup, JTree tree, Dashboard dash, CustomTree theTree, boolean editable) { // NO_UCD (use default)
+		this.editable = editable;
 		this.popup = popup;
 		this.tree = tree;
 		this.dash = dash;
@@ -109,7 +112,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 			if (path != null && !theTree.getTreeType().equals("config")) {
 				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
-					ChartPanel chartPanel = new ChartPanel(((PokerOpponentPosition) obj).getChartImagePath());
+					ChartPanel chartPanel = new ChartPanel(((PokerOpponentPosition) obj).getChartImagePath(), true);
 					dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
 					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), pane, theFrame);
@@ -122,20 +125,29 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					}
 				}
 			}
+		} else {
+			//System.out.println("single");
 		}
 	}
 
 	private void showDiagrams(TreePath path, JScrollableDesktopPane pane) {
 		dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 		ChartPanel chartPanel;
+		ImageChartPanel imageChartPanel;
 		Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 		@SuppressWarnings("unchecked")
 		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
 		for (DefaultMutableTreeNode s : reversed(list)) {
 			PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-			chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath());
-			BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
-			UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), pane, theFrame);
+			if (editable) {
+				chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), true);
+				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
+				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), pane, theFrame);
+			} else {
+				imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
+				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
+				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), pane, theFrame);
+			}
 		}
 		Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 		String iniItemName = "";

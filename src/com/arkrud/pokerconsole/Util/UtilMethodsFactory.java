@@ -1,7 +1,9 @@
 package com.arkrud.pokerconsole.Util;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 
@@ -22,6 +25,7 @@ import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
+import com.arkrud.pokerconsole.pokercardchart.CustomTable;
 
 /**
  * Static methods and constants accessed across application code.<br>
@@ -30,6 +34,7 @@ import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 public class UtilMethodsFactory {
 	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Apply Template" };
 	private static HashMap<String, ChartPanel> charts = new HashMap<String, ChartPanel>();
+	
 
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
 		if (Dashboard.INTERNAL_FRAMES.get(frameTitle) == null) {
@@ -42,20 +47,23 @@ public class UtilMethodsFactory {
 			Dashboard.INTERNAL_FRAMES.put(frameTitle, theFrame);
 		}
 	}
-	
-	public static void addToCharts (String path, ChartPanel chartPanel) {
+
+	public static void addToCharts(String path, ChartPanel chartPanel) {
 		charts.put(path, chartPanel);
 	}
 	
-	public static ChartPanel getChart (String path) {
+	public static void removeFromCharts(String path) {
+		charts.remove(path);
+	}
+
+	public static ChartPanel getChart(String path) {
 		return charts.get(path);
 	}
-	
-	public static boolean hasChart (String path) {
+
+	public static boolean hasChart(String path) {
 		return charts.containsKey(path);
 	}
 
-	
 	/**
 	 * Create image icon for tree nodes. <br>
 	 *
@@ -176,6 +184,22 @@ public class UtilMethodsFactory {
 			System.out.println("Dir is created!");
 		} else {
 			System.out.println("Dir already exists.");
+		}
+	}
+
+	public static void tableToImage(CustomTable table, String imagePath) {
+		int w = Math.max(table.getWidth(), table.getTableHeader().getWidth());
+		int h = table.getHeight() + table.getTableHeader().getHeight();
+		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2 = bi.createGraphics();
+		table.getTableHeader().paint(g2);
+		g2.translate(0, table.getTableHeader().getHeight());
+		table.paint(g2);
+		g2.dispose();
+		try {
+			ImageIO.write(bi, "png", new File(imagePath + ".png"));
+		} catch (IOException ioe) {
+			System.out.println("write: " + ioe.getMessage());
 		}
 	}
 }

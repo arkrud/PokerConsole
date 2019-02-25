@@ -48,13 +48,13 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 	private String[] defaultOpponetPositions = { "0SB", "1BU", "2CO", "3HJ", "4LJ", "5UTG2", "6UTG1", "7UTG" };
 	final JFileChooser fc = new JFileChooser();
 
-	public CustomTreePopupHandler(JTree tree, JPopupMenu popup, Dashboard dash, CustomTree theTree) {
+	public CustomTreePopupHandler(JTree tree, JPopupMenu popup, Dashboard dash, CustomTree theTree, boolean editable) {
 		// Pass variables values into the class
 		this.tree = tree;
 		this.dash = dash;
 		this.theTree = theTree;
 		// Add Mouse listener to control which menu items will show up in drop-down menu
-		cml = new CustomTreeMouseListener(popup, tree, dash, theTree);
+		cml = new CustomTreeMouseListener(popup, tree, dash, theTree, editable);
 		tree.addMouseListener(cml);
 	}
 
@@ -166,7 +166,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					templatePath = templatePath.replace("\\", "/");
 				} else {
 				}
-				ChartPanel chartPanel = new ChartPanel(templatePath);
+				ChartPanel chartPanel = new ChartPanel(templatePath, true);
 				dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
 				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), dash.getJScrollableDesktopPane(), theFrame);
@@ -243,7 +243,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						newPokerOpponentPosition.setChartPaneTitle(pokerOpponentPosition.getChartPaneTitle());
 						DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(newPokerOpponentPosition);
 						((DefaultTreeModel) tree.getModel()).insertNodeInto(newNode, groupNode, groupNode.getChildCount());
-						ChartPanel chartPanel = new ChartPanel(newPokerOpponentPosition.getChartImagePath());
+						ChartPanel chartPanel = new ChartPanel(newPokerOpponentPosition.getChartImagePath(), true);
 						BaseInternalFrame theFrame = new CustomTableViewInternalFrame(newPokerOpponentPosition.getChartPaneTitle(), chartPanel);
 						UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(newPokerOpponentPosition.getChartPaneTitle(), dash.getJScrollableDesktopPane(), theFrame);
 					}

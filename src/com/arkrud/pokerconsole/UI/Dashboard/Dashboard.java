@@ -7,7 +7,6 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +27,7 @@ import javax.swing.tree.TreePath;
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
@@ -43,68 +43,48 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	private CustomTree configTree;
 	private JTabbedPane treeTabbedPane;
 	private JScrollPane jScrollPane;
+	private boolean editable;
 
-	//// Constructor
-	public Dashboard() throws Exception {
-		super();
+	// Constructor
+	public Dashboard(boolean editable) throws Exception {
+		this.editable = editable;
 		super.addWindowListener(this);
-		initialize();
-	}
-	
-   
-
-	// Initialization of the visual interface
-	private void initialize() throws Exception {
-		// Create dashboard menu items and add menu to dashboard
-		jJMenuBar = new JMenuBar();
-		jJMenuBar.add(new DashboardMenu(this));
-		this.setJMenuBar(jJMenuBar);
-		// Create dashboard interface
-		JPanel jContentPane = new JPanel();
-		jContentPane.setLayout(new BorderLayout());
-		JSplitPane jSplitPane = new JSplitPane();
-		jSplitPane.setDividerLocation(175);
-		jSplitPane.setRightComponent(getJScrollableDesktopPane());
-		jScrollPane = new JScrollPane();
-		treeTabbedPane = new JTabbedPane();
-		treeTabbedPane.addChangeListener(this);
-		configTree = getCustomTree("config");
-		//configTree.expandTwoDeep();
-		jScrollPane.setViewportView(configTree);
-		treeTabbedPane.addTab("Configuration", null, jScrollPane, null);
-		ArrayList<String> trees = new ArrayList<String>();
-		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
-		while (it.hasNext()) {
-			ArrayList<Object> appData = it.next();
-			if (((Boolean) appData.get(1))) {
-				trees.add((String) appData.get(0));
-			}
-		}
-		int x = 0;
-		while (x < trees.size()) {
-			JScrollPane treeScroll = new JScrollPane();
-			customTree = getCustomTree(trees.get(x));
-			treeScroll.setViewportView(customTree);
-			//customTree.expandTwoDeep();
-			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
-			treeTabbedPane.setSelectedIndex(0);
-			x++;
-		}
-		jSplitPane.setLeftComponent(treeTabbedPane);
-		jContentPane.add(jSplitPane, BorderLayout.CENTER);
-		this.setContentPane(jContentPane);
-		this.setTitle("Dashboard");
-		this.setBounds(new Rectangle(0, 0, 1500, 850));
+		initialize(editable);
 	}
 
 	public void addTreeTabPaneTab(String appName) {
-		CustomTree tree = getCustomTree(appName);
-		//tree.expandTwoDeep();
+		CustomTree tree = getCustomTree(appName, true);
+		// tree.expandTwoDeep();
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
 		if (!hasTab(appName)) {
 			treeTabbedPane.insertTab(appName, null, jScrollPane, null, 0);
 		}
+	}
+
+	// Get reference to CustomTree navigation object to manipulate tree nodes from other interface objects
+	private CustomTree getCustomTree(String type, boolean editable) {
+		if (type.equals("config")) {
+			if (customTree == null) {
+				customTree = new CustomTree(this, type, editable);
+			}
+			return customTree;
+		} else {
+			configTree = new CustomTree(this, type, editable);
+			return configTree;
+		}
+	}
+
+	// Get reference to JScrollableDesktopPane object
+	public JScrollableDesktopPane getJScrollableDesktopPane() {
+		if (jScrollableDesktopPane == null) {
+			jScrollableDesktopPane = new JScrollableDesktopPane(jJMenuBar);
+		}
+		return jScrollableDesktopPane;
+	}
+
+	public JTabbedPane getTreeTabbedPane() {
+		return treeTabbedPane;
 	}
 
 	private boolean hasTab(String appName) {
@@ -118,19 +98,6 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		return false;
 	}
 
-	public void removeTreeTabPaneTab(String appName) {
-		int count = treeTabbedPane.getTabCount();
-		for (int i = 0; i < count; i++) {
-			try {
-				String label = treeTabbedPane.getTitleAt(i);
-				if (label.equals(appName)) {
-					treeTabbedPane.remove(i);
-				}
-			} catch (Exception e) {
-			}
-		}
-	}
-
 	public void hideTreeTabPaneTab(String appName) {
 		int count = treeTabbedPane.getTabCount();
 		for (int i = 0; i < count; i++) {
@@ -141,33 +108,50 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		}
 	}
 
-	// Get reference to JScrollableDesktopPane object
-	public JScrollableDesktopPane getJScrollableDesktopPane() {
-		if (jScrollableDesktopPane == null) {
-			jScrollableDesktopPane = new JScrollableDesktopPane(jJMenuBar);
+	// Initialization of the visual interface
+	private void initialize(boolean editable) throws Exception {
+		// Create dashboard menu items and add menu to dashboard
+		jJMenuBar = new JMenuBar();
+		jJMenuBar.add(new DashboardMenu(this, editable));
+		this.setJMenuBar(jJMenuBar);
+		// Create dashboard interface
+		JPanel jContentPane = new JPanel();
+		jContentPane.setLayout(new BorderLayout());
+		JSplitPane jSplitPane = new JSplitPane();
+		jSplitPane.setDividerLocation(175);
+		jSplitPane.setRightComponent(getJScrollableDesktopPane());
+		jScrollPane = new JScrollPane();
+		treeTabbedPane = new JTabbedPane();
+		treeTabbedPane.addChangeListener(this);
+		if (editable) {
+			configTree = getCustomTree("config", editable);
+			// configTree.expandTwoDeep();
+			jScrollPane.setViewportView(configTree);
+			treeTabbedPane.addTab("Configuration", null, jScrollPane, null);
 		}
-		return jScrollableDesktopPane;
-	}
-
-	// Get reference to CustomTree navigation object to manipulate tree nodes from other interface objects
-	private CustomTree getCustomTree(String type) {
-		if (type.equals("config")) {
-			if (customTree == null) {
-				customTree = new CustomTree(this, type);
+		ArrayList<String> trees = new ArrayList<String>();
+		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
+		while (it.hasNext()) {
+			ArrayList<Object> appData = it.next();
+			if (((Boolean) appData.get(1))) {
+				trees.add((String) appData.get(0));
 			}
-			return customTree;
-		} else {
-			configTree = new CustomTree(this, type);
-			return configTree;
 		}
-	}
-
-	public JTabbedPane getTreeTabbedPane() {
-		return treeTabbedPane;
-	}
-
-	public void setTreeTabbedPane(JTabbedPane treeTabbedPane) {
-		this.treeTabbedPane = treeTabbedPane;
+		int x = 0;
+		while (x < trees.size()) {
+			JScrollPane treeScroll = new JScrollPane();
+			customTree = getCustomTree(trees.get(x), editable);
+			treeScroll.setViewportView(customTree);
+			// customTree.expandTwoDeep();
+			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
+			treeTabbedPane.setSelectedIndex(0);
+			x++;
+		}
+		jSplitPane.setLeftComponent(treeTabbedPane);
+		jContentPane.add(jSplitPane, BorderLayout.CENTER);
+		this.setContentPane(jContentPane);
+		this.setTitle("Dashboard");
+		this.setBounds(new Rectangle(0, 0, 1500, 850));
 	}
 
 	// Overwrites
@@ -202,6 +186,65 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void removeTreeTabPaneTab(String appName) {
+		int count = treeTabbedPane.getTabCount();
+		for (int i = 0; i < count; i++) {
+			try {
+				String label = treeTabbedPane.getTitleAt(i);
+				if (label.equals(appName)) {
+					treeTabbedPane.remove(i);
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	private <T> Reversed<T> reversed(List<T> original) {
+		return new Reversed<T>(original);
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
+
+	public void setTreeTabbedPane(JTabbedPane treeTabbedPane) {
+		this.treeTabbedPane = treeTabbedPane;
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent changeEvent) {
+		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+		int index = sourceTabbedPane.getSelectedIndex();
+		getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened")) {
+			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened");
+			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
+			CustomTree tree = (CustomTree) scroll.getViewport().getView();
+			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
+			ChartPanel chartPanel = null;
+			ImageChartPanel imageChartPanel;
+			Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
+			@SuppressWarnings("unchecked")
+			List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+			for (DefaultMutableTreeNode s : reversed(list)) {
+				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+				if (editable) {
+					chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
+					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
+					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+				} else {
+					imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
+					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
+					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 	}
@@ -230,32 +273,5 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
-	}
-
-	@Override
-	public void stateChanged(ChangeEvent changeEvent) {
-		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
-		int index = sourceTabbedPane.getSelectedIndex();
-		getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
-		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened")) {
-			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened");
-			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
-			CustomTree tree = (CustomTree) scroll.getViewport().getView();
-			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
-			ChartPanel chartPanel = null;
-			Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
-			@SuppressWarnings("unchecked")
-			List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-			for (DefaultMutableTreeNode s : reversed(list)) {
-				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-				chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath());
-				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
-				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
-			}
-		}
-	}
-
-	private <T> Reversed<T> reversed(List<T> original) {
-		return new Reversed<T>(original);
 	}
 }
