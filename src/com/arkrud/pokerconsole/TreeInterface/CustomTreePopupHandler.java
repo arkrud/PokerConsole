@@ -203,6 +203,32 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				} else {
 				}
 			}
+		} else if (obj instanceof PokerHandSizing) {
+			if (ac.equals("DELETE SIZING")) {
+				int response = JOptionPane.showConfirmDialog(null, "Do you want to delete the Sizing", "Sizing Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (response == JOptionPane.NO_OPTION) {
+				} else if (response == JOptionPane.YES_OPTION) {
+					PokerHandSizing sizing = (PokerHandSizing) obj;
+					PokerAction action = sizing.getPokerAction();
+					PokerPosition position = (PokerPosition)(((DefaultMutableTreeNode)node.getChildAt(0)).getUserObject());
+					String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + action.getNodeText() + '/' + sizing.getNodeText();
+					DefaultMutableTreeNode top = (DefaultMutableTreeNode)tree.getModel().getRoot();
+					String treeINIDesignator = ((PokerStrategy)top.getUserObject()).getNodeText() + "opened";
+					PokerHandSizing firstNodeSizing = (PokerHandSizing)((DefaultMutableTreeNode)node.getParent().getChildAt(0)).getUserObject();
+					PokerHandSizing secondNodeSizing = (PokerHandSizing)((DefaultMutableTreeNode)node.getParent().getChildAt(1)).getUserObject();
+					((DefaultMutableTreeNode)node.getChildAt(0)).getUserObject();
+					if (((PokerHandSizing)node.getUserObject()).equals(firstNodeSizing)) {
+						System.out.println(treeINIDesignator);
+						System.out.println(action.getNodeText() +  "-" + secondNodeSizing.getNodeText() + "-" + position.getNodeText());
+					} else {
+						System.out.println(treeINIDesignator);
+						System.out.println(action.getNodeText() +  "-" + firstNodeSizing.getNodeText() + "-" + position.getNodeText());
+					}
+					//UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
+					//((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
+					} else if (response == JOptionPane.CLOSED_OPTION) {
+				}
+			}
 		} else {
 		}
 	}

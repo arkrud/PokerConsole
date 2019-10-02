@@ -19,6 +19,7 @@ import javax.swing.tree.TreePath;
 
 import com.arkrud.pokerconsole.Poker.PokerAction;
 import com.arkrud.pokerconsole.Poker.PokerGroup;
+import com.arkrud.pokerconsole.Poker.PokerHandSizing;
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
@@ -83,6 +84,10 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				} else if (treeObject instanceof PokerAction) {
 					if (!theTree.getTreeType().equals("config")) {
 						dropDownMenus.put("Add Sizing", true);
+					}
+				} else if (treeObject instanceof PokerHandSizing) {
+					if (!theTree.getTreeType().equals("config")) {
+						dropDownMenus.put("Delete Sizing", true);
 					}
 				} else {
 				}

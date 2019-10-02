@@ -1,11 +1,14 @@
 package com.arkrud.pokerconsole.Poker;
 
+import java.util.ArrayList;
+
 import com.arkrud.pokerconsole.TreeInterface.TreeNodeState;
 
 public class PokerAction implements TreeNodeState {
 	private String nodeText;
 	private boolean sizing;
 	private boolean selected;
+	private ArrayList<PokerHandSizing> sizings;
 
 	public PokerAction(String nodeText) {
 		super();
@@ -39,6 +42,14 @@ public class PokerAction implements TreeNodeState {
 
 	public void setSizing(boolean sizing) {
 		this.sizing = sizing;
+	}
+
+	public void addSizing (PokerHandSizing theSizing) {
+		sizings.add(theSizing);
+	}
+
+	public ArrayList<PokerHandSizing> getSizings() {
+		return sizings;
 	}
 
 	@Override

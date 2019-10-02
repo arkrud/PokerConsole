@@ -32,9 +32,9 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Apply Template" };
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing","Apply Template" };
 	private static HashMap<String, ChartPanel> charts = new HashMap<String, ChartPanel>();
-	
+
 
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
 		if (Dashboard.INTERNAL_FRAMES.get(frameTitle) == null) {
@@ -51,7 +51,7 @@ public class UtilMethodsFactory {
 	public static void addToCharts(String path, ChartPanel chartPanel) {
 		charts.put(path, chartPanel);
 	}
-	
+
 	public static void removeFromCharts(String path) {
 		charts.remove(path);
 	}
@@ -185,6 +185,29 @@ public class UtilMethodsFactory {
 		} else {
 			System.out.println("Dir already exists.");
 		}
+	}
+
+	public static void deleteFile(String fileName) {
+		try {
+			File file = new File(fileName);
+			if (file.delete()) {
+				System.out.println(file.getName() + " is deleted!");
+			} else {
+				System.out.println("Delete operation is failed.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static boolean deleteDirectory(File directoryToBeDeleted) {
+	    File[] allContents = directoryToBeDeleted.listFiles();
+	    if (allContents != null) {
+	        for (File file : allContents) {
+	            deleteDirectory(file);
+	        }
+	    }
+	    return directoryToBeDeleted.delete();
 	}
 
 	public static void tableToImage(CustomTable table, String imagePath) {
