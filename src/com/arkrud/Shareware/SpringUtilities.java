@@ -11,7 +11,7 @@ import javax.swing.SpringLayout;
  */
 public class SpringUtilities {
 	/**
-	 * A debugging utility that prints to stdout the component's minimum, preferred, and maximum sizes.
+	 * A   debugging utility that prints to stdout the component's minimum, preferred, and maximum sizes.
 	 */
 	public static void printSizes(Component c) { // NO_UCD (unused code)
 		System.out.println("minimumSize = " + c.getMinimumSize());
