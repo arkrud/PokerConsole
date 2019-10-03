@@ -8,20 +8,31 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 
+import com.arkrud.pokerconsole.Poker.PokerAction;
+import com.arkrud.pokerconsole.Poker.PokerGroup;
+import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
+import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
 import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
+import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -32,7 +43,7 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing","Apply Template" };
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action" };
 	private static HashMap<String, ChartPanel> charts = new HashMap<String, ChartPanel>();
 
 
@@ -224,5 +235,9 @@ public class UtilMethodsFactory {
 		} catch (IOException ioe) {
 			System.out.println("write: " + ioe.getMessage());
 		}
+	}
+	
+	public static <T> Reversed<T> reversed(List<T> original) {
+		return new Reversed<T>(original);
 	}
 }

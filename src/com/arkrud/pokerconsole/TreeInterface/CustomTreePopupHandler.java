@@ -23,6 +23,7 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.dtools.ini.IniItem;
@@ -52,6 +53,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 	private int groupItemUniqueCaracter = 0;
 	private String[] defaultPositions = { "BB", "BU", "CO", "HJ", "LJ", "SB", "UTG1", "UTG2" };
 	private String[] defaultOpponetPositions = { "0SB", "1BU", "2CO", "3HJ", "4LJ", "5UTG2", "6UTG1", "7UTG" };
+	private String[] defaultSizings = { "2BB", "3BB" };
 	final JFileChooser fc = new JFileChooser();
 	private boolean editable;
 
@@ -83,7 +85,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					}
 				} else {
 					String s = (String) JOptionPane.showInputDialog(dash, "Group Name", "Save New Group", JOptionPane.PLAIN_MESSAGE, null, null, null);
-					if (checkForGroupName(s)) {
+					if (checkForNewObjectName(node,s)) {
 						JOptionPane.showConfirmDialog(null, "The selected Group name is Duplicated!", "Duplicated Group Name Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if (!checkIfGroupNameHasLettersOnly(s)) {
@@ -103,6 +105,37 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				}
 			} else if (ac.equals("REFRESH")) {
 				theTree.refreshTreeNode(node);
+			} else if (ac.equals("ADD ACTION")) {
+				String s = (String) JOptionPane.showInputDialog(dash, "New Action", "Add Action", JOptionPane.PLAIN_MESSAGE, null, null, null);
+				System.out.println(s);
+				if (s != null) {
+					if (checkForNewObjectName(node,s)) {
+						JOptionPane.showConfirmDialog(null, "The Action is Already there", "Duplicated Action Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						if ((s != null) && (s.length() > 0)) {
+							PokerAction pokerAction = new PokerAction(s);
+							File actionDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + s);
+							UtilMethodsFactory.createGRoupFolder(actionDir);
+							DefaultMutableTreeNode actionNode = new DefaultMutableTreeNode(pokerAction);
+							DefaultMutableTreeNode root = (DefaultMutableTreeNode)theTree.getTreeModel().getRoot();
+							((DefaultTreeModel) tree.getModel()).insertNodeInto( actionNode, root, root.getChildCount());
+							dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+							int x = 0;
+							while (x < defaultSizings.length) {
+								PokerHandSizing sizing = new PokerHandSizing(defaultSizings[x], pokerAction);
+								DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
+								((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, actionNode, sizingNode.getChildCount());
+								File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + s + "/" + defaultSizings[x]);
+								UtilMethodsFactory.createGRoupFolder(sizingDir);
+								addSizing(defaultSizings[x], sizingNode);
+								theTree.expandNodesBelow(sizingNode, tree);
+								showDiagrams( new TreePath(sizingNode.getFirstChild()), dash.getJScrollableDesktopPane());
+								x++;
+							}
+						}
+					}
+				} else {
+				}
 			} else if (ac.equals("RENAME")) {
 				String s = (String) JOptionPane.showInputDialog(dash, "Rename Tree To", "Rename Tree", JOptionPane.PLAIN_MESSAGE, null, null, "");
 				if ((s != null) && (s.length() > 0)) {
@@ -193,8 +226,9 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		} else if (obj instanceof PokerAction) {
 			if (ac.equals("ADD SIZING")) {
 				String s = (String) JOptionPane.showInputDialog(dash, "New Sizing", "Add Sizing", JOptionPane.PLAIN_MESSAGE, null, null, null);
+				System.out.println(s);
 				if (s != null) {
-					if (checkForGroupName(s)) {
+					if (checkForNewObjectName(node,s)) {
 						JOptionPane.showConfirmDialog(null, "The sizing is Already there", "Duplicated Sizing Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if ((s != null) && (s.length() > 0)) {
@@ -243,14 +277,28 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		}
 	}
 
-	private boolean checkForGroupName(String newGrouName) {
-		Iterator<IniItem> it = INIFilesFactory.getAllItemsFromSection(UtilMethodsFactory.getConsoleConfig(), "Groups").iterator();
+	private boolean checkForNewObjectName(DefaultMutableTreeNode node, String name) {
 		boolean hit = false;
-		A: while (it.hasNext()) {
-			IniItem iniItem = it.next();
-			if (iniItem.getName().contains(newGrouName)) {
-				hit = true;
-				break A;
+		Enumeration<?> en = ((DefaultMutableTreeNode) node).children();
+		@SuppressWarnings("unchecked")
+		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+		for (DefaultMutableTreeNode s : list) {
+			if (s.getUserObject() instanceof PokerHandSizing) {
+				PokerHandSizing pokerHandSizing = (PokerHandSizing) s.getUserObject();
+				if (pokerHandSizing.getNodeText().equals(name)) {
+					hit = true;
+					break;
+				} else {
+					hit = false;
+				}
+			} else if (s.getUserObject() instanceof PokerAction){
+				PokerAction pokerAction = (PokerAction) s.getUserObject();
+				if (pokerAction.getNodeText().equals(name)) {
+					hit = true;
+					break;
+				} else {
+					hit = false;
+				}
 			}
 		}
 		return hit;
@@ -289,6 +337,8 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		theTree.clearAllTreeSelections(node);
 		//theTree.expandTwoDeep();
 	}
+	
+	
 
 	private void addSizing(String sizing, DefaultMutableTreeNode sizingNode) {
 		int x = 0;
@@ -336,7 +386,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 		@SuppressWarnings("unchecked")
 		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-		for (DefaultMutableTreeNode s : reversed(list)) {
+		for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
 			PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
 			if (editable) {
 				chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), true);
@@ -350,18 +400,18 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		}
 		Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 		String iniItemName = "";
+		System.out.println(obj.getClass().getSimpleName());
 		if (obj instanceof PokerAction) {
 			iniItemName = ((PokerAction) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
 		} else if (obj instanceof PokerPosition) {
-			iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
+			TreeNode firstOpponentPositionNode = ((DefaultMutableTreeNode) path.getLastPathComponent()).getFirstChild();
+			PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition)((DefaultMutableTreeNode)firstOpponentPositionNode).getUserObject();
+			iniItemName = pokerOpponentPosition.getChartPaneTitle();
+			//iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
 		} else if (obj instanceof PokerGroup) {
 			iniItemName = ((PokerGroup) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
 		}
 		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", theTree.getTreeType() + "opened", iniItemName);
-	}
-
-	public <T> Reversed<T> reversed(List<T> original) {
-		return new Reversed<T>(original);
 	}
 	
 	private static void copyFileUsingJava7Files(File source, File dest) throws IOException {

@@ -69,6 +69,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 						dropDownMenus.put("Refresh", true);
 						dropDownMenus.put("Remove", true);
 						dropDownMenus.put("Rename", true);
+						dropDownMenus.put("Add Action", true);
 					}
 				} else if (treeObject instanceof PokerGroup) {
 					if (theTree.getTreeType().equals("config")) {
@@ -142,7 +143,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 		@SuppressWarnings("unchecked")
 		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-		for (DefaultMutableTreeNode s : reversed(list)) {
+		for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
 			PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
 			if (editable) {
 				chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), true);
@@ -164,10 +165,6 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			iniItemName = ((PokerGroup) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
 		}
 		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", theTree.getTreeType() + "opened", iniItemName);
-	}
-
-	public <T> Reversed<T> reversed(List<T> original) {
-		return new Reversed<T>(original);
 	}
 
 	public Point getLoc() {

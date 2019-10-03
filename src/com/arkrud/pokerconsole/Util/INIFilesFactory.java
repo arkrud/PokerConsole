@@ -23,6 +23,7 @@ import org.dtools.ini.IniSection;
 public class INIFilesFactory {
 	// Add boolean INI item to section
 	public static void addINIFileItemToSection(File iniFile, String section, String itemName, Object itemValue) {
+		System.out.println(itemValue);
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
 		iniSection.addItem(itemName);
