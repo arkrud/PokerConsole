@@ -2,10 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="D:/Data/Eclipse/Libraries/PokerConsole/jasypt-1.9.2.jar"/>
-	<classpathentry kind="lib" path="D:/Data/Eclipse/Libraries/PokerConsole/mongo-java-driver-3.0.4.jar"/>
-	<classpathentry kind="lib" path="D:/Data/Eclipse/Libraries/PokerConsole/mongo-java-driver-3.7.0.jar"/>
-	<classpathentry kind="lib" path="D:/Data/Eclipse/Libraries/PokerConsole/org.dtools.javaini-v1.1.00.jar"/>
-	<classpathentry kind="lib" path="D:/Data/Eclipse/Libraries/PokerConsole/scrollabledesktop.jar"/>
+	<classpathentry kind="lib" path="E:/Personal/EclipseLibraries/AWSConsole/ThirdParty/jasypt-1.9.2.jar"/>
+	<classpathentry kind="lib" path="E:/Personal/EclipseLibraries/AWSConsole/ThirdParty/mongo-java-driver-3.0.4.jar"/>
+	<classpathentry kind="lib" path="E:/Personal/EclipseLibraries/AWSConsole/ThirdParty/mongo-java-driver-3.7.0.jar"/>
+	<classpathentry kind="lib" path="E:/Personal/EclipseLibraries/AWSConsole/ThirdParty/org.dtools.javaini-v1.1.00.jar"/>
+	<classpathentry kind="lib" path="E:/Personal/EclipseLibraries/AWSConsole/ThirdParty/scrollabledesktop.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

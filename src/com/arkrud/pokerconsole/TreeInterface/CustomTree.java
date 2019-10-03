@@ -176,7 +176,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			pokerActionTreeNode = new DefaultMutableTreeNode(pokerAction);
 			treeNode.add(pokerActionTreeNode);
 		} else if (level == 2) {
-			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2 + 1].equals("RFI")) {
+			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2 ].equals("RFI")) {
 				if (!node.getName().contains("ini") && !node.getName().contains("png")) {
 					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());

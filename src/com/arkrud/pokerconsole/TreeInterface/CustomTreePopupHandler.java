@@ -10,7 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -31,10 +34,13 @@ import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
+import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
+import com.arkrud.pokerconsole.Util.Reversed;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class CustomTreePopupHandler implements ActionListener, PropertyChangeListener {
@@ -47,12 +53,14 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 	private String[] defaultPositions = { "BB", "BU", "CO", "HJ", "LJ", "SB", "UTG1", "UTG2" };
 	private String[] defaultOpponetPositions = { "0SB", "1BU", "2CO", "3HJ", "4LJ", "5UTG2", "6UTG1", "7UTG" };
 	final JFileChooser fc = new JFileChooser();
+	private boolean editable;
 
 	public CustomTreePopupHandler(JTree tree, JPopupMenu popup, Dashboard dash, CustomTree theTree, boolean editable) {
 		// Pass variables values into the class
 		this.tree = tree;
 		this.dash = dash;
 		this.theTree = theTree;
+		this.editable = editable;
 		// Add Mouse listener to control which menu items will show up in drop-down menu
 		cml = new CustomTreeMouseListener(popup, tree, dash, theTree, editable);
 		tree.addMouseListener(cml);
@@ -217,15 +225,17 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					PokerHandSizing firstNodeSizing = (PokerHandSizing)((DefaultMutableTreeNode)node.getParent().getChildAt(0)).getUserObject();
 					PokerHandSizing secondNodeSizing = (PokerHandSizing)((DefaultMutableTreeNode)node.getParent().getChildAt(1)).getUserObject();
 					((DefaultMutableTreeNode)node.getChildAt(0)).getUserObject();
+					String newSaveSelectionString = "";
 					if (((PokerHandSizing)node.getUserObject()).equals(firstNodeSizing)) {
-						System.out.println(treeINIDesignator);
-						System.out.println(action.getNodeText() +  "-" + secondNodeSizing.getNodeText() + "-" + position.getNodeText());
+						newSaveSelectionString = action.getNodeText() +  "-" + secondNodeSizing.getNodeText() + "-" + position.getNodeText();
 					} else {
-						System.out.println(treeINIDesignator);
-						System.out.println(action.getNodeText() +  "-" + firstNodeSizing.getNodeText() + "-" + position.getNodeText());
+						newSaveSelectionString = action.getNodeText() +  "-" + firstNodeSizing.getNodeText() + "-" + position.getNodeText();
 					}
-					//UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
-					//((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
+					UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
+					((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
+					path = path.pathByAddingChild(new DefaultMutableTreeNode(secondNodeSizing));
+					showDiagrams( path, dash.getJScrollableDesktopPane());
+					INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", newSaveSelectionString, treeINIDesignator);
 					} else if (response == JOptionPane.CLOSED_OPTION) {
 				}
 			}
@@ -318,7 +328,42 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			x++;
 		}
 	}
+	
+	private void showDiagrams(TreePath path, JScrollableDesktopPane pane) {
+		dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+		ChartPanel chartPanel;
+		ImageChartPanel imageChartPanel;
+		Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
+		@SuppressWarnings("unchecked")
+		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+		for (DefaultMutableTreeNode s : reversed(list)) {
+			PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+			if (editable) {
+				chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), true);
+				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
+				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), pane, theFrame);
+			} else {
+				imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
+				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
+				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), pane, theFrame);
+			}
+		}
+		Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+		String iniItemName = "";
+		if (obj instanceof PokerAction) {
+			iniItemName = ((PokerAction) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
+		} else if (obj instanceof PokerPosition) {
+			iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
+		} else if (obj instanceof PokerGroup) {
+			iniItemName = ((PokerGroup) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
+		}
+		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", theTree.getTreeType() + "opened", iniItemName);
+	}
 
+	public <T> Reversed<T> reversed(List<T> original) {
+		return new Reversed<T>(original);
+	}
+	
 	private static void copyFileUsingJava7Files(File source, File dest) throws IOException {
 		Files.copy(source.toPath(), dest.toPath());
 	}
