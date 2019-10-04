@@ -41,7 +41,6 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
-import com.arkrud.pokerconsole.Util.Reversed;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class CustomTreePopupHandler implements ActionListener, PropertyChangeListener {
@@ -285,6 +284,10 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					// INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", newSaveSelectionString, treeINIDesignator);
 				} else if (response == JOptionPane.CLOSED_OPTION) {
 				}
+			} else if (ac.equals("ADD HANDS")){
+				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node);
+			} else {
+
 			}
 		} else {
 		}
@@ -292,7 +295,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 
 	private boolean checkForNewObjectName(DefaultMutableTreeNode node, String name) {
 		boolean hit = false;
-		Enumeration<?> en = ((DefaultMutableTreeNode) node).children();
+		Enumeration<?> en = node.children();
 		@SuppressWarnings("unchecked")
 		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
 		for (DefaultMutableTreeNode s : list) {
