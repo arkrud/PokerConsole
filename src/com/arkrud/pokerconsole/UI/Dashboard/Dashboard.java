@@ -123,14 +123,16 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		jScrollPane = new JScrollPane();
 		treeTabbedPane = new JTabbedPane();
 		treeTabbedPane.addChangeListener(this);
-		if (editable) {
+		/*if (editable) {
 			configTree = getCustomTree("config", editable);
 			// configTree.expandTwoDeep();
 			jScrollPane.setViewportView(configTree);
 			treeTabbedPane.addTab("Configuration", null, jScrollPane, null);
-		}
+		}*/
 		ArrayList<String> trees = new ArrayList<String>();
 		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
+		System.out.print(INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()));
+		
 		while (it.hasNext()) {
 			ArrayList<Object> appData = it.next();
 			if (((Boolean) appData.get(1))) {

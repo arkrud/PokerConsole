@@ -30,7 +30,6 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
-import com.arkrud.pokerconsole.Util.Reversed;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class CustomTreeMouseListener implements MouseListener, PropertyChangeListener { // NO_UCD (use default)
@@ -85,6 +84,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				} else if (treeObject instanceof PokerAction) {
 					if (!theTree.getTreeType().equals("config")) {
 						dropDownMenus.put("Add Sizing", true);
+						dropDownMenus.put("Remove", true);
 					}
 				} else if (treeObject instanceof PokerHandSizing) {
 					if (!theTree.getTreeType().equals("config")) {

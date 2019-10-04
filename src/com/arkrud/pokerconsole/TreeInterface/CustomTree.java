@@ -171,11 +171,11 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	private void buildTreeNodes(File node, DefaultMutableTreeNode treeNode) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
 		if (level == 0) {
-		} else if (level == 1) {
+		} else if (level == 2) {
 			pokerAction = new PokerAction(node.getName());
 			pokerActionTreeNode = new DefaultMutableTreeNode(pokerAction);
 			treeNode.add(pokerActionTreeNode);
-		} else if (level == 2) {
+		} else if (level == 3) {
 			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2 ].equals("RFI")) {
 				if (!node.getName().contains("ini") && !node.getName().contains("png")) {
 					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
@@ -190,12 +190,12 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				pokerHandSizingTreeNode = new DefaultMutableTreeNode(pokerHandSizing);
 				pokerActionTreeNode.add(pokerHandSizingTreeNode);
 			}
-		} else if (level == 3) {
+		} else if (level == 4) {
 			pokerPosition = new PokerPosition(node.getName().split("\\.")[0]);
 			pokerPositionTreeNode = new DefaultMutableTreeNode(pokerPosition);
 			pokerPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText());
 			pokerHandSizingTreeNode.add(pokerPositionTreeNode);
-		} else if (level == 4) {
+		} else if (level == 5) {
 			PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 			if (!node.getName().contains("ini") && !node.getName().contains("png")) {
 				pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());

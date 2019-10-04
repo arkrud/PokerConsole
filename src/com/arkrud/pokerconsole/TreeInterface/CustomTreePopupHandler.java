@@ -85,7 +85,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					}
 				} else {
 					String s = (String) JOptionPane.showInputDialog(dash, "Group Name", "Save New Group", JOptionPane.PLAIN_MESSAGE, null, null, null);
-					if (checkForNewObjectName(node,s)) {
+					if (checkForNewObjectName(node, s)) {
 						JOptionPane.showConfirmDialog(null, "The selected Group name is Duplicated!", "Duplicated Group Name Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if (!checkIfGroupNameHasLettersOnly(s)) {
@@ -109,29 +109,29 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				String s = (String) JOptionPane.showInputDialog(dash, "New Action", "Add Action", JOptionPane.PLAIN_MESSAGE, null, null, null);
 				System.out.println(s);
 				if (s != null) {
-					if (checkForNewObjectName(node,s)) {
+					if (checkForNewObjectName(node, s)) {
 						JOptionPane.showConfirmDialog(null, "The Action is Already there", "Duplicated Action Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if ((s != null) && (s.length() > 0)) {
 							PokerAction pokerAction = new PokerAction(s);
-							File actionDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + s);
+							File actionDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) obj).getNodeText() + "/" + s);
 							UtilMethodsFactory.createGRoupFolder(actionDir);
 							DefaultMutableTreeNode actionNode = new DefaultMutableTreeNode(pokerAction);
-							DefaultMutableTreeNode root = (DefaultMutableTreeNode)theTree.getTreeModel().getRoot();
-							((DefaultTreeModel) tree.getModel()).insertNodeInto( actionNode, root, root.getChildCount());
-							dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
-							int x = 0;
-							while (x < defaultSizings.length) {
-								PokerHandSizing sizing = new PokerHandSizing(defaultSizings[x], pokerAction);
-								DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
-								((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, actionNode, sizingNode.getChildCount());
-								File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + s + "/" + defaultSizings[x]);
-								UtilMethodsFactory.createGRoupFolder(sizingDir);
-								addSizing(defaultSizings[x], sizingNode);
-								theTree.expandNodesBelow(sizingNode, tree);
-								showDiagrams( new TreePath(sizingNode.getFirstChild()), dash.getJScrollableDesktopPane());
-								x++;
-							}
+							DefaultMutableTreeNode root = (DefaultMutableTreeNode) theTree.getTreeModel().getRoot();
+							((DefaultTreeModel) tree.getModel()).insertNodeInto(actionNode, root, root.getChildCount());
+							theTree.expandNodesBelow(root, tree);
+							// dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+							// int x = 0;
+							// while (x < defaultSizings.length) {
+							// PokerHandSizing sizing = new PokerHandSizing(defaultSizings[x], pokerAction);
+							// DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
+							// ((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, actionNode, sizingNode.getChildCount());
+							// File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + s + "/" + defaultSizings[x]);
+							// UtilMethodsFactory.createGRoupFolder(sizingDir); addSizing(defaultSizings[x], sizingNode);
+							// theTree.expandNodesBelow(sizingNode, tree);
+							// showDiagrams( new TreePath(sizingNode.getFirstChild()), dash.getJScrollableDesktopPane());
+							// x++;
+							// }
 						}
 					}
 				} else {
@@ -228,22 +228,35 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				String s = (String) JOptionPane.showInputDialog(dash, "New Sizing", "Add Sizing", JOptionPane.PLAIN_MESSAGE, null, null, null);
 				System.out.println(s);
 				if (s != null) {
-					if (checkForNewObjectName(node,s)) {
+					if (checkForNewObjectName(node, s)) {
 						JOptionPane.showConfirmDialog(null, "The sizing is Already there", "Duplicated Sizing Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if ((s != null) && (s.length() > 0)) {
 							PokerHandSizing sizing = new PokerHandSizing(s, ((PokerAction) obj));
-							File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerAction) obj).getNodeText() + "/" + s);
+							DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
+							File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + ((PokerAction) obj).getNodeText() + "/" + s);
 							UtilMethodsFactory.createGRoupFolder(sizingDir);
 							DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
 							((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, node, sizingNode.getChildCount());
-							dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
-							addSizing(s, sizingNode);
-							theTree.expandNodesBelow(sizingNode, tree);
+							// dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+							// addSizing(s, sizingNode);
+							theTree.expandNodesBelow(node, tree);
 						}
 					}
 				} else {
 				}
+			} else if (ac.equals("REMOVE")) {
+				int response = JOptionPane.showConfirmDialog(null, "Do you want to remove the Poker Action", "Poker Action Removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (response == JOptionPane.NO_OPTION) {
+				} else if (response == JOptionPane.YES_OPTION) {
+					PokerAction pokerAction = (PokerAction) obj;
+					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
+					String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText();
+					UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
+					((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
+				} else if (response == JOptionPane.CLOSED_OPTION) {
+				}
+			} else {
 			}
 		} else if (obj instanceof PokerHandSizing) {
 			if (ac.equals("DELETE SIZING")) {
@@ -252,25 +265,25 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				} else if (response == JOptionPane.YES_OPTION) {
 					PokerHandSizing sizing = (PokerHandSizing) obj;
 					PokerAction action = sizing.getPokerAction();
-					PokerPosition position = (PokerPosition)(((DefaultMutableTreeNode)node.getChildAt(0)).getUserObject());
-					String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + action.getNodeText() + '/' + sizing.getNodeText();
-					DefaultMutableTreeNode top = (DefaultMutableTreeNode)tree.getModel().getRoot();
-					String treeINIDesignator = ((PokerStrategy)top.getUserObject()).getNodeText() + "opened";
-					PokerHandSizing firstNodeSizing = (PokerHandSizing)((DefaultMutableTreeNode)node.getParent().getChildAt(0)).getUserObject();
-					PokerHandSizing secondNodeSizing = (PokerHandSizing)((DefaultMutableTreeNode)node.getParent().getChildAt(1)).getUserObject();
-					((DefaultMutableTreeNode)node.getChildAt(0)).getUserObject();
-					String newSaveSelectionString = "";
-					if (((PokerHandSizing)node.getUserObject()).equals(firstNodeSizing)) {
-						newSaveSelectionString = action.getNodeText() +  "-" + secondNodeSizing.getNodeText() + "-" + position.getNodeText();
-					} else {
-						newSaveSelectionString = action.getNodeText() +  "-" + firstNodeSizing.getNodeText() + "-" + position.getNodeText();
-					}
+					// PokerPosition position = (PokerPosition) (((DefaultMutableTreeNode) node.getChildAt(0)).getUserObject());
+					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
+					String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + action.getNodeText() + '/' + sizing.getNodeText();
+					// String treeINIDesignator = ((PokerStrategy) top.getUserObject()).getNodeText() + "opened";
+					// PokerHandSizing firstNodeSizing = (PokerHandSizing) ((DefaultMutableTreeNode) node.getParent().getChildAt(0)).getUserObject();
+					// PokerHandSizing secondNodeSizing = (PokerHandSizing) ((DefaultMutableTreeNode) node.getParent().getChildAt(1)).getUserObject();
+					// ((DefaultMutableTreeNode) node.getChildAt(0)).getUserObject();
+					// String newSaveSelectionString = "";
+					// if (((PokerHandSizing) node.getUserObject()).equals(firstNodeSizing)) {
+					// newSaveSelectionString = action.getNodeText() + "-" + secondNodeSizing.getNodeText() + "-" + position.getNodeText();
+					// } else {
+					// newSaveSelectionString = action.getNodeText() + "-" + firstNodeSizing.getNodeText() + "-" + position.getNodeText();
+					// }
 					UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
 					((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
-					path = path.pathByAddingChild(new DefaultMutableTreeNode(secondNodeSizing));
-					showDiagrams( path, dash.getJScrollableDesktopPane());
-					INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", newSaveSelectionString, treeINIDesignator);
-					} else if (response == JOptionPane.CLOSED_OPTION) {
+					// path = path.pathByAddingChild(new DefaultMutableTreeNode(secondNodeSizing));
+					// showDiagrams(path, dash.getJScrollableDesktopPane());
+					// INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", newSaveSelectionString, treeINIDesignator);
+				} else if (response == JOptionPane.CLOSED_OPTION) {
 				}
 			}
 		} else {
@@ -291,7 +304,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				} else {
 					hit = false;
 				}
-			} else if (s.getUserObject() instanceof PokerAction){
+			} else if (s.getUserObject() instanceof PokerAction) {
 				PokerAction pokerAction = (PokerAction) s.getUserObject();
 				if (pokerAction.getNodeText().equals(name)) {
 					hit = true;
@@ -335,10 +348,8 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			}
 		}
 		theTree.clearAllTreeSelections(node);
-		//theTree.expandTwoDeep();
+		// theTree.expandTwoDeep();
 	}
-	
-	
 
 	private void addSizing(String sizing, DefaultMutableTreeNode sizingNode) {
 		int x = 0;
@@ -378,7 +389,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			x++;
 		}
 	}
-	
+
 	private void showDiagrams(TreePath path, JScrollableDesktopPane pane) {
 		dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 		ChartPanel chartPanel;
@@ -405,15 +416,15 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			iniItemName = ((PokerAction) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
 		} else if (obj instanceof PokerPosition) {
 			TreeNode firstOpponentPositionNode = ((DefaultMutableTreeNode) path.getLastPathComponent()).getFirstChild();
-			PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition)((DefaultMutableTreeNode)firstOpponentPositionNode).getUserObject();
+			PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) firstOpponentPositionNode).getUserObject();
 			iniItemName = pokerOpponentPosition.getChartPaneTitle();
-			//iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
+			// iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
 		} else if (obj instanceof PokerGroup) {
 			iniItemName = ((PokerGroup) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
 		}
 		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", theTree.getTreeType() + "opened", iniItemName);
 	}
-	
+
 	private static void copyFileUsingJava7Files(File source, File dest) throws IOException {
 		Files.copy(source.toPath(), dest.toPath());
 	}
