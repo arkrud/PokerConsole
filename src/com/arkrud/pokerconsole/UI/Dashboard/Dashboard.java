@@ -135,7 +135,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		treeTabbedPane.addChangeListener(this);
 		treeTabbedPane.setUI(new BasicTabbedPaneUI() {
 			protected MouseListener createMouseListener() {
-				return new CustomMouseAdapter(treeTabbedPane);
+				return new CustomMouseAdapter(treeTabbedPane, Dashboard.this);
 			}
 		});
 		/*if (editable) {
