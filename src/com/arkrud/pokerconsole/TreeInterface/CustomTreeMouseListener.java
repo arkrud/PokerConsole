@@ -13,6 +13,8 @@ import java.util.Map;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -67,7 +69,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					} else {
 						dropDownMenus.put("Refresh", true);
 						dropDownMenus.put("Remove", true);
-						//dropDownMenus.put("Rename", true);
+						// dropDownMenus.put("Rename", true);
 						dropDownMenus.put("Add Action", true);
 						dropDownMenus.put("Duplicate", true);
 					}
@@ -130,7 +132,8 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
 					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), pane, theFrame);
-					INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()) + "opened",
+					INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications",
+							dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()) + "opened",
 							((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
 				} else {
 					if (obj instanceof PokerAction && ((PokerAction) obj).getNodeText().equals("RFI")) {
@@ -140,9 +143,34 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					} else {
 					}
 				}
+				JTabbedPane jTabbedPane = dash.getTreeTabbedPane();
+				String oldTreeName = jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
+				String newName = "";
+				CustomTree customTree = (CustomTree) ((JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex())).getViewport().getView();
+				Object elements[] = customTree.getCloudTree().getSelectionPath().getPath();
+				for (int i = 0, n = elements.length; i < n; i++) {
+					Object userObject = ((DefaultMutableTreeNode) elements[i]).getUserObject();
+					if (userObject instanceof PokerStrategy) {
+						newName = newName + ((PokerStrategy) userObject).getNodeText();
+					} else if (userObject instanceof PokerAction) {
+						newName = newName + "-" + ((PokerAction) userObject).getNodeText();
+					} else if (userObject instanceof PokerHandSizing) {
+						newName = newName + "-" + ((PokerHandSizing) userObject).getNodeText();
+					} else if (userObject instanceof PokerPosition) {
+						newName = newName + "-" + ((PokerPosition) userObject).getNodeText();
+					} else if (userObject instanceof PokerOpponentPosition) {
+						String nameWithPrefix = ((PokerOpponentPosition) userObject).getNodeText();
+						String firstLetter = UtilMethodsFactory.firstLetterOccurence(nameWithPrefix);
+						int firstLetterPosition = (nameWithPrefix.indexOf(firstLetter));
+						newName = newName + "-" + ((PokerOpponentPosition) userObject).getNodeText().substring(firstLetterPosition, nameWithPrefix.length());
+					}
+				}
+				String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName + "opened");
+				INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName + "opened", oldTreeName + "opened");
+				INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName, oldTreeName);
+				INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", oldItemValue, newName + "opened");
+				jTabbedPane.setTitleAt(jTabbedPane.getSelectedIndex(), newName);
 			}
-		} else {
-			// System.out.println("single");
 		}
 	}
 

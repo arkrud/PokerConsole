@@ -5,12 +5,15 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.HashMap;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.arkrud.pokerconsole.Poker.PokerStrategy;
+import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -74,7 +77,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String menuText = ((JMenuItem) e.getSource()).getText();
 		if (menuText.contains("Exit")) {
-			
+
 			UtilMethodsFactory.exitApp();
 		} else if (menuText.contains("Add User")) {
 			showConsoleLoginAccountFrame(addDashboardUser);
@@ -85,7 +88,11 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (menuText.contains("Update User")) {
 			showConsoleLoginAccountFrame(addDashboardUser);
 		} else if (menuText.contains("Open Read Only Dashboard")) {
-			generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images"));
+			JScrollPane jScrollPane = (JScrollPane)dash.getTreeTabbedPane().getSelectedComponent();
+			CustomTree customTree = (CustomTree)jScrollPane.getViewport().getView();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)customTree.getTreeModel().getRoot();
+			PokerStrategy pokerStrategy = (PokerStrategy)node.getUserObject();
+			generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()));
 			showDashboard();
 		} else if (menuText.contains("Load Charts in MongoDB")) {
 			MongoDBFactory.crateMongoConnection();
@@ -111,18 +118,22 @@ public class DashboardMenu extends JMenu implements ActionListener {
 
 	private void generateChartImages(File node) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
+		System.out.println(node.getAbsoluteFile().getPath());
+		System.out.println(UtilMethodsFactory.getConfigPath());
+		System.out.println(level);
 		if (level == 0) {
-		} else if (level == 1) {
 		} else if (level == 2) {
+		} else if (level == 3) {
 			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2].equals("RFI")) {
 				if (!node.getName().contains("ini") && !node.getName().contains("png")) {
 					generateCharts(node);
 				}
 			} else {
 			}
-		} else if (level == 3) {
 		} else if (level == 4) {
-			if (!node.getName().contains("ini") && !node.getName().contains("png")) {
+		} else if (level == 5) {
+			if ( !node.getName().contains("png")) {
+				System.out.println("Here we go");
 				generateCharts(node);
 			}
 		} else {
@@ -173,22 +184,22 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
 		File iniFile = new File(UtilMethodsFactory.getConfigPath() + imagePath.split("\\.")[0].replaceAll("\\\\", "/") + ".ini");
-		try {
+		/*try {
 			Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(iniFile, "Update", "latest"));
 		} catch (Exception e) {
 			HashMap<String, String> sectionKeys = new HashMap<String, String>();
 			sectionKeys.put("latest", "false");
 			INIFilesFactory.addINIFileSection(iniFile, "Update", sectionKeys);
-		}
-		if (Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(iniFile, "Update", "latest"))) {
+		}*/
+		//if (Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(iniFile, "Update", "latest"))) {
 			ChartPanel chartPanel = new ChartPanel(imagePath, false);
 			BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
 			JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
 			UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);
 			UtilMethodsFactory.tableToImage(chartPanel.getTable(), imagePath.split("\\.")[0]);
 			pane.remove(theFrame);
-			INIFilesFactory.updateINIFileItems(iniFile, "Update", "false", "latest");
-		}
+			//INIFilesFactory.updateINIFileItems(iniFile, "Update", "false", "latest");
+		//}
 	}
 
 	private void showDashboard() {

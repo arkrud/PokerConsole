@@ -134,6 +134,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		treeTabbedPane = new JTabbedPane();
 		treeTabbedPane.addChangeListener(this);
 		treeTabbedPane.setUI(new BasicTabbedPaneUI() {
+			@Override
 			protected MouseListener createMouseListener() {
 				return new CustomMouseAdapter(treeTabbedPane, Dashboard.this);
 			}
@@ -146,7 +147,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		}*/
 		ArrayList<String> trees = new ArrayList<String>();
 		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
-		
+
 		while (it.hasNext()) {
 			ArrayList<Object> appData = it.next();
 			if (((Boolean) appData.get(1))) {
@@ -156,14 +157,14 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		int x = 0;
 		while (x < trees.size()) {
 			JScrollPane treeScroll = new JScrollPane();
-			
+
 			String treeName = "";
 			if (trees.get(x).contains("-")){
 				treeName = trees.get(x).split("-")[0];
 			} else {
 				treeName = trees.get(x);
 			}
-			
+
 			customTree = getCustomTree(treeName, editable);
 			treeScroll.setViewportView(customTree);
 			// customTree.expandTwoDeep();
@@ -275,11 +276,11 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 					}
 				}
 			}
-			//treeTabbedPane.setTitleAt(treeTabbedPane.getSelectedIndex(), pathString);
+
 		}
 		}
-		
-		
+
+
 	}
 
 	@Override

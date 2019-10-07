@@ -242,8 +242,18 @@ public class UtilMethodsFactory {
 	public static <T> Reversed<T> reversed(List<T> original) {
 		return new Reversed<T>(original);
 	}
-	
+
 	public static void copyFileUsingJava7Files(File source, File dest) throws IOException {
 		Files.copy(source.toPath(), dest.toPath());
 	}
+
+	public static String firstLetterOccurence(String text) {
+		String matchPosition = "";
+		Matcher m = Pattern.compile("[^a-zA-Z]*([a-zA-Z]+).*").matcher(text);
+		if (m.matches()) {
+			matchPosition = m.group(1);
+		}
+		return matchPosition;
+	}
+
 }

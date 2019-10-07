@@ -22,7 +22,7 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class CustomTableModel extends AbstractTableModel {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
@@ -171,6 +171,6 @@ public class CustomTableModel extends AbstractTableModel {
 			INIFilesFactory.addINIFileSection(inifile, entry.getKey(), entry.getValue());
 		HashMap<String, String> sectionKeys = new HashMap<String, String>();
 		sectionKeys.put("latest", "false");
-		INIFilesFactory.addINIFileSection(inifile, "Update", sectionKeys);
+		//INIFilesFactory.addINIFileSection(inifile, "Update", sectionKeys);
 	}
 }
