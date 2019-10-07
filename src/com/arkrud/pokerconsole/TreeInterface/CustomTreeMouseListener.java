@@ -69,6 +69,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 						dropDownMenus.put("Remove", true);
 						dropDownMenus.put("Rename", true);
 						dropDownMenus.put("Add Action", true);
+						dropDownMenus.put("Duplicate", true);
 					}
 				} else if (treeObject instanceof PokerGroup) {
 					if (theTree.getTreeType().equals("config")) {
@@ -79,7 +80,13 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				} else if (treeObject instanceof PokerOpponentPosition) {
 					if (!theTree.getTreeType().equals("config")) {
 						dropDownMenus.put("Apply Template", true);
+						dropDownMenus.put("Remove", true);
 					} else {
+					}
+				} else if (treeObject instanceof PokerPosition) {
+					if (!theTree.getTreeType().equals("config")) {
+						dropDownMenus.put("Remove", true);
+						dropDownMenus.put("Add Opponents Position", true);
 					}
 				} else if (treeObject instanceof PokerAction) {
 					if (!theTree.getTreeType().equals("config")) {
@@ -123,21 +130,23 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
 					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), pane, theFrame);
+					INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()) + "opened",
+							((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
 				} else {
 					if (obj instanceof PokerAction && ((PokerAction) obj).getNodeText().equals("RFI")) {
-						showDiagrams(path, pane);
+						showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
 					} else if (obj instanceof PokerPosition || obj instanceof PokerGroup) {
-						showDiagrams(path, pane);
+						showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
 					} else {
 					}
 				}
 			}
 		} else {
-			//System.out.println("single");
+			// System.out.println("single");
 		}
 	}
 
-	private void showDiagrams(TreePath path, JScrollableDesktopPane pane) {
+	private void showDiagrams(TreePath path, JScrollableDesktopPane pane, String treeTabName) {
 		dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 		ChartPanel chartPanel;
 		ImageChartPanel imageChartPanel;
@@ -164,8 +173,10 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
 		} else if (obj instanceof PokerGroup) {
 			iniItemName = ((PokerGroup) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
+		} else if (obj instanceof PokerGroup) {
+			iniItemName = ((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
 		}
-		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", theTree.getTreeType() + "opened", iniItemName);
+		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", treeTabName + "opened", iniItemName);
 	}
 
 	public Point getLoc() {

@@ -2,6 +2,7 @@ package com.arkrud.pokerconsole.UI.Dashboard;
 
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -21,12 +22,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.CustomMouseAdapter;
 import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -34,9 +37,10 @@ import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.Reversed;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
-public class Dashboard extends JFrame implements InternalFrameListener, WindowListener, ChangeListener {
+public class Dashboard extends JFrame implements InternalFrameListener, WindowListener, ChangeListener   {
 	private static final long serialVersionUID = 1L;
 	public static Hashtable<String, BaseInternalFrame> INTERNAL_FRAMES = new Hashtable<String, BaseInternalFrame>();
+	public static String CURRENT_TREE_TITLE = "";
 	private JMenuBar jJMenuBar = null;
 	private JScrollableDesktopPane jScrollableDesktopPane = null;
 	private CustomTree customTree;
@@ -46,14 +50,20 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	private boolean editable;
 
 	// Constructor
-	public Dashboard(boolean editable) throws Exception {
+	public Dashboard(boolean editable) throws Exception  {
 		this.editable = editable;
 		super.addWindowListener(this);
 		initialize(editable);
 	}
 
 	public void addTreeTabPaneTab(String appName) {
-		CustomTree tree = getCustomTree(appName, true);
+		String treeName = "";
+		if (appName.contains("-")){
+			treeName = appName.split("-")[0];
+		} else {
+			treeName = appName;
+		}
+		CustomTree tree = getCustomTree(treeName, true);
 		// tree.expandTwoDeep();
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
@@ -123,6 +133,11 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		jScrollPane = new JScrollPane();
 		treeTabbedPane = new JTabbedPane();
 		treeTabbedPane.addChangeListener(this);
+		treeTabbedPane.setUI(new BasicTabbedPaneUI() {
+			protected MouseListener createMouseListener() {
+				return new CustomMouseAdapter(treeTabbedPane);
+			}
+		});
 		/*if (editable) {
 			configTree = getCustomTree("config", editable);
 			// configTree.expandTwoDeep();
@@ -131,7 +146,6 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		}*/
 		ArrayList<String> trees = new ArrayList<String>();
 		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
-		System.out.print(INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()));
 		
 		while (it.hasNext()) {
 			ArrayList<Object> appData = it.next();
@@ -142,7 +156,15 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		int x = 0;
 		while (x < trees.size()) {
 			JScrollPane treeScroll = new JScrollPane();
-			customTree = getCustomTree(trees.get(x), editable);
+			
+			String treeName = "";
+			if (trees.get(x).contains("-")){
+				treeName = trees.get(x).split("-")[0];
+			} else {
+				treeName = trees.get(x);
+			}
+			
+			customTree = getCustomTree(treeName, editable);
 			treeScroll.setViewportView(customTree);
 			// customTree.expandTwoDeep();
 			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
@@ -221,6 +243,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	public void stateChanged(ChangeEvent changeEvent) {
 		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
+		CURRENT_TREE_TITLE = sourceTabbedPane.getTitleAt(index);
 		getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened")) {
 			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened");
@@ -229,22 +252,34 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
 			ChartPanel chartPanel = null;
 			ImageChartPanel imageChartPanel;
-			Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
-			@SuppressWarnings("unchecked")
-			List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-			for (DefaultMutableTreeNode s : reversed(list)) {
-				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-				if (editable) {
-					chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
-					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
-					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
-				} else {
-					imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
-					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
-					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+			if (path != null) {
+			if(((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
+				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition)((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+				chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
+				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
+				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+			} else {
+				Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
+				@SuppressWarnings("unchecked")
+				List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+				for (DefaultMutableTreeNode s : reversed(list)) {
+					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+					if (editable) {
+						chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
+						BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
+						UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+					} else {
+						imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
+						BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
+						UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+					}
 				}
 			}
+			//treeTabbedPane.setTitleAt(treeTabbedPane.getSelectedIndex(), pathString);
 		}
+		}
+		
+		
 	}
 
 	@Override

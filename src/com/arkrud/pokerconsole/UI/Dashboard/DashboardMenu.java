@@ -74,6 +74,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String menuText = ((JMenuItem) e.getSource()).getText();
 		if (menuText.contains("Exit")) {
+			
 			UtilMethodsFactory.exitApp();
 		} else if (menuText.contains("Add User")) {
 			showConsoleLoginAccountFrame(addDashboardUser);

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -37,7 +38,7 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action", "Add Hands"};
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action", "Add Hands", "Add Opponents Position", "Duplicate"};
 	private static HashMap<String, ChartPanel> charts = new HashMap<String, ChartPanel>();
 
 
@@ -91,6 +92,10 @@ public class UtilMethodsFactory {
 	}
 
 	public static void exitApp() {
+		if (Dashboard.INTERNAL_FRAMES.size() == 0) {
+			String[] items = {Dashboard.CURRENT_TREE_TITLE + "opened"};
+			INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", items);
+		}
 		System.exit(0);
 	}
 
@@ -180,7 +185,7 @@ public class UtilMethodsFactory {
 			if (file.createNewFile()) {
 				System.out.println("File is created!");
 			} else {
-				// System.out.println("File already exists.");
+				 System.out.println("File already exists.");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -236,5 +241,9 @@ public class UtilMethodsFactory {
 
 	public static <T> Reversed<T> reversed(List<T> original) {
 		return new Reversed<T>(original);
+	}
+	
+	public static void copyFileUsingJava7Files(File source, File dest) throws IOException {
+		Files.copy(source.toPath(), dest.toPath());
 	}
 }

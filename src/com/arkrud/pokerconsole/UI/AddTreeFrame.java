@@ -3,6 +3,7 @@ package com.arkrud.pokerconsole.UI;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -71,6 +72,8 @@ public class AddTreeFrame extends JDialog implements ActionListener {
 			String application = appTreeTextField.getText();
 			Boolean visibility = treeStateCheckBox.isSelected();
 			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", application, visibility);
+			File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + application);
+			UtilMethodsFactory.createGRoupFolder(sizingDir);
 			dash.addTreeTabPaneTab(application);
 			this.dispose();
 		} else {

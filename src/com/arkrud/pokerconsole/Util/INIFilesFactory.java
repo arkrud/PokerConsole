@@ -23,7 +23,6 @@ import org.dtools.ini.IniSection;
 public class INIFilesFactory {
 	// Add boolean INI item to section
 	public static void addINIFileItemToSection(File iniFile, String section, String itemName, Object itemValue) {
-		System.out.println(itemValue);
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
 		iniSection.addItem(itemName);
@@ -173,6 +172,19 @@ public class INIFilesFactory {
 		while (it.hasNext()) {
 			String name = it.next();
 			if (name.startsWith(prefix)) {
+				iniSection.removeItem(name);
+			}
+		}
+		writeINI(iniFile, ini);
+	}
+	
+	public static void removeINIFileItemsByPattern(File iniFile, String section, String pattern) {
+		IniFile ini = readINI(iniFile);
+		IniSection iniSection = ini.getSection(section);
+		Iterator<String> it = iniSection.getItemNames().iterator();
+		while (it.hasNext()) {
+			String name = it.next();
+			if (name.contains(pattern)) {
 				iniSection.removeItem(name);
 			}
 		}
