@@ -67,7 +67,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					} else {
 						dropDownMenus.put("Refresh", true);
 						dropDownMenus.put("Remove", true);
-						dropDownMenus.put("Rename", true);
+						//dropDownMenus.put("Rename", true);
 						dropDownMenus.put("Add Action", true);
 						dropDownMenus.put("Duplicate", true);
 					}

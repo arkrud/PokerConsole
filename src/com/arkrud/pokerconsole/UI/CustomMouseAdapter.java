@@ -43,7 +43,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 				tabbedPane.removeTabAt(index);
 			} else if (SwingUtilities.isRightMouseButton(e)) {
 				final JPopupMenu popupMenu = new JPopupMenu();
-				final JMenuItem addNew = new JMenuItem("Rename");
+				final JMenuItem addNew = new JMenuItem("Set Name");
 				addNew.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						renameStrategyTab(tabbedPane);
