@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.arkrud.pokerconsole.UI;
 
@@ -15,7 +15,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import com.arkrud.Shareware.SpringUtilities;
@@ -31,17 +30,16 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 	private Dashboard dash;
 	private JButton applyButton, cancelButton;
 	private JPanel manageTreesPanel;
-	private JLabel treeLabel, treeStateLabel;
-	private JTextField treeTextField;
+	private JLabel treeLabel, treeStateLabel, treeNameLabel;
 	private JCheckBox treeStateCheckBox;
-	private HashMap<JTextField, JCheckBox> feldsMap = new HashMap<JTextField, JCheckBox>();
+	private HashMap<JLabel, JCheckBox> feldsMap = new HashMap<JLabel, JCheckBox>();
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 *
 	 */
 	public ManageTreesDialog(Dashboard dash) {
 		this.dash = dash;
@@ -56,13 +54,7 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 		Iterator<Map.Entry<String, Boolean>> itr = INIFilesFactory.getTreesData().entrySet().iterator();
 		while (itr.hasNext()) {
 			Map.Entry<String, Boolean> entry = itr.next();
-			treeTextField = new JTextField(entry.getKey());
-			treeTextField.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					treeStateCheckBox.requestFocusInWindow();
-				}
-			});
+			treeNameLabel = new JLabel(entry.getKey());
 			treeStateCheckBox = new JCheckBox();
 			treeStateCheckBox.setSelected(entry.getValue());
 			treeStateCheckBox.addActionListener(new ActionListener() {
@@ -71,8 +63,8 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 					applyButton.requestFocusInWindow();
 				}
 			});
-			feldsMap.put(treeTextField, treeStateCheckBox);
-			manageTreesPanel.add(treeTextField);
+			feldsMap.put(treeNameLabel, treeStateCheckBox);
+			manageTreesPanel.add(treeNameLabel);
 			manageTreesPanel.add(treeStateCheckBox);
 		}
 		applyButton = new JButton("Apply");
@@ -93,30 +85,17 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();
-		String[] itemValues = { "true", "false" };
+		//String[] itemValues = { "true", "false" };
 		if (theButton.getText().equals("Apply")) {
-			Iterator<Map.Entry<JTextField, JCheckBox>> itr = feldsMap.entrySet().iterator();
+			Iterator<Map.Entry<JLabel, JCheckBox>> itr = feldsMap.entrySet().iterator();
 			while (itr.hasNext()) {
-				INIFilesFactory.removeINIItemsWithValues(UtilMethodsFactory.getConsoleConfig(), "Applications", itemValues);
-			}
-			Iterator<Map.Entry<JTextField, JCheckBox>> itr1 = feldsMap.entrySet().iterator();
-			while (itr1.hasNext()) {
-				Map.Entry<JTextField, JCheckBox> entry = itr1.next();
-				INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", ((JTextField) entry.getKey()).getText(), String.valueOf(((JCheckBox) entry.getValue()).isSelected()));
-			}
-			Iterator<Map.Entry<JTextField, JCheckBox>> itr2 = feldsMap.entrySet().iterator();
-			while (itr2.hasNext()) {
-				Map.Entry<JTextField, JCheckBox> entry = itr2.next();
+				Map.Entry<JLabel, JCheckBox> entry = itr.next();
 				if (entry.getValue().isSelected()) {
 					dash.addTreeTabPaneTab(entry.getKey().getText());
-				}
-			}
-			Iterator<Map.Entry<JTextField, JCheckBox>> itr3 = feldsMap.entrySet().iterator();
-			while (itr3.hasNext()) {
-				Map.Entry<JTextField, JCheckBox> entry = itr3.next();
-				if (!entry.getValue().isSelected()) {
+				} else {
 					dash.removeTreeTabPaneTab(entry.getKey().getText());
 				}
+				INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", String.valueOf(entry.getValue().isSelected()) , entry.getKey().getText());
 			}
 			this.dispose();
 		} else {
