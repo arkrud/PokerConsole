@@ -157,7 +157,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			} else if (ac.equals("REMOVE")) {
 				String treeName = ((PokerStrategy) node.getUserObject()).getNodeText();
 				String treeTabTitle = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
-				if (treeTabTitle.contains("-")) {
+				/*if (treeTabTitle.contains("-")) {
 					int response = JOptionPane.showConfirmDialog(null, "Do you want to remove remove this Tree Copy", "Solution Tree Copy removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if (response == JOptionPane.NO_OPTION) {
 					} else if (response == JOptionPane.YES_OPTION) {
@@ -166,7 +166,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", trees);
 					} else if (response == JOptionPane.CLOSED_OPTION) {
 					}
-				} else {
+				} else {*/
 					int response = JOptionPane.showConfirmDialog(null, "Do you want to remove remove this Tree And With All Copies", "Solution Tree Complete removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if (response == JOptionPane.NO_OPTION) {
 					} else if (response == JOptionPane.YES_OPTION) {
@@ -187,7 +187,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
 					} else if (response == JOptionPane.CLOSED_OPTION) {
 					}
-				}
+				//}
 			} else if (ac.equals("DUPLICATE")) {
 				String treeName = ((PokerStrategy) node.getUserObject()).getNodeText();
 				INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", treeName + "-copy", true);

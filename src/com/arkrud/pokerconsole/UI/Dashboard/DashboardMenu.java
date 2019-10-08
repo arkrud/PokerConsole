@@ -92,7 +92,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			CustomTree customTree = (CustomTree)jScrollPane.getViewport().getView();
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)customTree.getTreeModel().getRoot();
 			PokerStrategy pokerStrategy = (PokerStrategy)node.getUserObject();
-			generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()));
+			generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()), Dashboard.EDITABLE);
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "editable");
 			showDashboard();
 		} else if (menuText.contains("Load Charts in MongoDB")) {
 			MongoDBFactory.crateMongoConnection();
@@ -116,7 +117,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 	}
 
-	private void generateChartImages(File node) {
+	private void generateChartImages(File node, boolean editable) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
 		System.out.println(node.getAbsoluteFile().getPath());
 		System.out.println(UtilMethodsFactory.getConfigPath());
@@ -126,7 +127,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (level == 3) {
 			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2].equals("RFI")) {
 				if (!node.getName().contains("ini") && !node.getName().contains("png")) {
-					generateCharts(node);
+					generateCharts(node, editable);
 				}
 			} else {
 			}
@@ -134,14 +135,14 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (level == 5) {
 			if ( !node.getName().contains("png")) {
 				System.out.println("Here we go");
-				generateCharts(node);
+				generateCharts(node, editable);
 			}
 		} else {
 		}
 		if (node.isDirectory()) {
 			String[] subNote = node.list();
 			for (String filename : subNote) {
-				generateChartImages(new File(node, filename));
+				generateChartImages(new File(node, filename), editable);
 			}
 		}
 	}
@@ -180,7 +181,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 	}
 
-	private void generateCharts(File node) {
+	private void generateCharts(File node, boolean editable) {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
 		File iniFile = new File(UtilMethodsFactory.getConfigPath() + imagePath.split("\\.")[0].replaceAll("\\\\", "/") + ".ini");
@@ -192,7 +193,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			INIFilesFactory.addINIFileSection(iniFile, "Update", sectionKeys);
 		}*/
 		//if (Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(iniFile, "Update", "latest"))) {
-			ChartPanel chartPanel = new ChartPanel(imagePath, false);
+			ChartPanel chartPanel = new ChartPanel(imagePath, editable);
 			BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
 			JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
 			UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);

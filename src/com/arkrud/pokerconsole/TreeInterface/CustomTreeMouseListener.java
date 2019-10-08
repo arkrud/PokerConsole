@@ -128,7 +128,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 			if (path != null && !theTree.getTreeType().equals("config")) {
 				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
-					ChartPanel chartPanel = new ChartPanel(((PokerOpponentPosition) obj).getChartImagePath(), true);
+					ChartPanel chartPanel = new ChartPanel(((PokerOpponentPosition) obj).getChartImagePath(), Dashboard.EDITABLE);
 					dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
 					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), pane, theFrame);

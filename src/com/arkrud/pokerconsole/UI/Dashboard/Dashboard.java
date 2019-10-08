@@ -41,6 +41,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	private static final long serialVersionUID = 1L;
 	public static Hashtable<String, BaseInternalFrame> INTERNAL_FRAMES = new Hashtable<String, BaseInternalFrame>();
 	public static String CURRENT_TREE_TITLE = "";
+	public static boolean EDITABLE = true;
 	private JMenuBar jJMenuBar = null;
 	private JScrollableDesktopPane jScrollableDesktopPane = null;
 	private CustomTree customTree;
@@ -121,6 +122,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	// Initialization of the visual interface
 	private void initialize(boolean editable) throws Exception {
 		// Create dashboard menu items and add menu to dashboard
+		EDITABLE = Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "editable")); 
 		jJMenuBar = new JMenuBar();
 		jJMenuBar.add(new DashboardMenu(this, editable));
 		this.setJMenuBar(jJMenuBar);

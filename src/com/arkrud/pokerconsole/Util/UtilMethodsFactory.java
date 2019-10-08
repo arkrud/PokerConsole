@@ -96,6 +96,7 @@ public class UtilMethodsFactory {
 			String[] items = {Dashboard.CURRENT_TREE_TITLE + "opened"};
 			INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", items);
 		}
+		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "editable");
 		System.exit(0);
 	}
 
