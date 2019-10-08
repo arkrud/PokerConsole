@@ -32,7 +32,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		setText("Edit");
 		exit = new JMenuItem("Exit");
 		addTree = new JMenuItem("Add Tree");
-		manageTrees = new JMenuItem("Manage Trees");
+		manageTrees = new JMenuItem("Hide/Show Trees");
 		openReadOnlyDash = new JMenuItem("Open Read Only Dashboard");
 		populateChartDB = new JMenuItem("Load Charts in MongoDB");
 		dataSourceSelection = new JMenuItem();
@@ -83,7 +83,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			showConsoleLoginAccountFrame(addDashboardUser);
 		} else if (menuText.contains("Add Tree")) {
 			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash,null,null,null,null);
-		} else if (menuText.contains("Manage Trees")) {
+		} else if (menuText.contains("Hide/Show Trees")) {
 			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null,null,null,null);
 		} else if (menuText.contains("Update User")) {
 			showConsoleLoginAccountFrame(addDashboardUser);
