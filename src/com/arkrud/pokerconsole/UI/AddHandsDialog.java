@@ -26,6 +26,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.arkrud.Shareware.SpringUtilities;
+import com.arkrud.pokerconsole.Poker.PokerAction;
 import com.arkrud.pokerconsole.Poker.PokerHandSizing;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
@@ -68,8 +69,11 @@ public class AddHandsDialog extends JDialog implements ActionListener {
 		@SuppressWarnings("unchecked")
 		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
 		for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
-			PokerPosition pokerPosition = (PokerPosition) s.getUserObject();
-			alreadyAdded.add(pokerPosition.getNodeText());
+			if (s.getUserObject() instanceof PokerPosition) {
+				PokerPosition pokerPosition = (PokerPosition) s.getUserObject();
+				alreadyAdded.add(pokerPosition.getNodeText());
+			}
+			
 		}
 
 		handsPanel = new JPanel(new SpringLayout());
@@ -112,9 +116,16 @@ public class AddHandsDialog extends JDialog implements ActionListener {
 				if (jCheckBox.isSelected() && jCheckBox.isEnabled()) {
 					PokerPosition pokerPosition = new PokerPosition(jCheckBox.getName());
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
+					if(tree.getSelectionPath().getPath().length == 3){
 					File pokerHandDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/"
 							+ ((PokerHandSizing) obj).getPokerAction().getNodeText() + "/" + ((PokerHandSizing) obj).getNodeText() + "/" + jCheckBox.getName());
 					UtilMethodsFactory.createGRoupFolder(pokerHandDir);
+					} else if (tree.getSelectionPath().getPath().length == 2){
+						File pokerHandDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/"
+								 + ((PokerAction) obj).getNodeText() + "/" + jCheckBox.getName());
+						UtilMethodsFactory.createGRoupFolder(pokerHandDir);
+					}
+					
 					DefaultMutableTreeNode pokerPositionNode = new DefaultMutableTreeNode(pokerPosition);
 					((DefaultTreeModel) tree.getModel()).insertNodeInto(pokerPositionNode, node, pokerPositionNode.getChildCount());
 				}

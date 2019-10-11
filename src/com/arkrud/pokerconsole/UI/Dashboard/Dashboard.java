@@ -37,21 +37,26 @@ import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.Reversed;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
-public class Dashboard extends JFrame implements InternalFrameListener, WindowListener, ChangeListener   {
+public class Dashboard extends JFrame implements InternalFrameListener, WindowListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Collection of Frames added to scrollable desktop.
+	 */
 	public static Hashtable<String, BaseInternalFrame> INTERNAL_FRAMES = new Hashtable<String, BaseInternalFrame>();
+	/**
+	 * Collection of Frames added to scrollable desktop.
+	 */
 	public static String CURRENT_TREE_TITLE = "";
-	public static boolean EDITABLE = true;
+	public static boolean MANUAL_NAMING = false;
 	private JMenuBar jJMenuBar = null;
 	private JScrollableDesktopPane jScrollableDesktopPane = null;
 	private CustomTree customTree;
 	private CustomTree configTree;
 	private JTabbedPane treeTabbedPane;
-	private JScrollPane jScrollPane;
 	private boolean editable;
 
 	// Constructor
-	public Dashboard(boolean editable) throws Exception  {
+	public Dashboard(boolean editable) throws Exception {
 		this.editable = editable;
 		super.addWindowListener(this);
 		initialize(editable);
@@ -59,13 +64,12 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	public void addTreeTabPaneTab(String appName) {
 		String treeName = "";
-		if (appName.contains("-")){
+		if (appName.contains("-")) {
 			treeName = appName.split("-")[0];
 		} else {
 			treeName = appName;
 		}
 		CustomTree tree = getCustomTree(treeName, true);
-		// tree.expandTwoDeep();
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
 		if (!hasTab(appName)) {
@@ -122,7 +126,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	// Initialization of the visual interface
 	private void initialize(boolean editable) throws Exception {
 		// Create dashboard menu items and add menu to dashboard
-		EDITABLE = Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "editable")); 
+		MANUAL_NAMING = Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "manualtreenaming"));
 		jJMenuBar = new JMenuBar();
 		jJMenuBar.add(new DashboardMenu(this, editable));
 		this.setJMenuBar(jJMenuBar);
@@ -132,7 +136,6 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		JSplitPane jSplitPane = new JSplitPane();
 		jSplitPane.setDividerLocation(175);
 		jSplitPane.setRightComponent(getJScrollableDesktopPane());
-		jScrollPane = new JScrollPane();
 		treeTabbedPane = new JTabbedPane();
 		treeTabbedPane.addChangeListener(this);
 		treeTabbedPane.setUI(new BasicTabbedPaneUI() {
@@ -141,15 +144,8 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 				return new CustomMouseAdapter(treeTabbedPane, Dashboard.this);
 			}
 		});
-		/*if (editable) {
-			configTree = getCustomTree("config", editable);
-			// configTree.expandTwoDeep();
-			jScrollPane.setViewportView(configTree);
-			treeTabbedPane.addTab("Configuration", null, jScrollPane, null);
-		}*/
 		ArrayList<String> trees = new ArrayList<String>();
 		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
-
 		while (it.hasNext()) {
 			ArrayList<Object> appData = it.next();
 			if (((Boolean) appData.get(1))) {
@@ -159,17 +155,14 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		int x = 0;
 		while (x < trees.size()) {
 			JScrollPane treeScroll = new JScrollPane();
-
 			String treeName = "";
-			if (trees.get(x).contains("-")){
+			if (trees.get(x).contains("-")) {
 				treeName = trees.get(x).split("-")[0];
 			} else {
 				treeName = trees.get(x);
 			}
-
 			customTree = getCustomTree(treeName, editable);
 			treeScroll.setViewportView(customTree);
-			// customTree.expandTwoDeep();
 			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
 			treeTabbedPane.setSelectedIndex(0);
 			x++;
@@ -252,37 +245,35 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened");
 			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
+			
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
 			ChartPanel chartPanel = null;
 			ImageChartPanel imageChartPanel;
 			if (path != null) {
-			if(((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
-				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition)((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-				chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
-				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
-				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
-			} else {
-				Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
-				@SuppressWarnings("unchecked")
-				List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-				for (DefaultMutableTreeNode s : reversed(list)) {
-					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-					if (editable) {
-						chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
-						BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
-						UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
-					} else {
-						imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
-						BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
-						UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
+					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+					chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
+					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
+					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+				} else {
+					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
+					@SuppressWarnings("unchecked")
+					List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+					for (DefaultMutableTreeNode s : reversed(list)) {
+						PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+						if (editable) {
+							chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
+							BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
+							UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+						} else {
+							imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
+							BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
+							UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+						}
 					}
 				}
 			}
-
 		}
-		}
-
-
 	}
 
 	@Override

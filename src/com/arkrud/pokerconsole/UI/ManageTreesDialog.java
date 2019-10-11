@@ -85,7 +85,6 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();
-		//String[] itemValues = { "true", "false" };
 		if (theButton.getText().equals("Apply")) {
 			Iterator<Map.Entry<JLabel, JCheckBox>> itr = feldsMap.entrySet().iterator();
 			while (itr.hasNext()) {

@@ -10,7 +10,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 
 import com.arkrud.pokerconsole.Poker.PokerAction;
-import com.arkrud.pokerconsole.Poker.PokerGroup;
 import com.arkrud.pokerconsole.Poker.PokerHandSizing;
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
@@ -34,9 +33,7 @@ public class StateRenderer implements TreeCellRenderer {
 			TreeNodeState state = (TreeNodeState) node.getUserObject();
 			checkBox.setText(state.getNodeText());
 			checkBox.setSelected(state.isSelected());
-			if (node.getUserObject() instanceof PokerGroup) {
-				checkBox.setIcon(UtilMethodsFactory.populateInterfaceImages("interfaceimages").get("filter"));
-			} else if (node.getUserObject() instanceof PokerStrategy){
+			if (node.getUserObject() instanceof PokerStrategy){
 				checkBox.setIcon(UtilMethodsFactory.populateInterfaceImages("interfaceimages").get("configuration"));
 			} else if (node.getUserObject() instanceof PokerAction){
 				checkBox.setIcon(UtilMethodsFactory.populateInterfaceImages("interfaceimages").get("action"));

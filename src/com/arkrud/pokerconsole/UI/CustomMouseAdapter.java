@@ -9,17 +9,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.arkrud.pokerconsole.Poker.PokerAction;
-import com.arkrud.pokerconsole.Poker.PokerHandSizing;
-import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
-import com.arkrud.pokerconsole.Poker.PokerPosition;
-import com.arkrud.pokerconsole.Poker.PokerStrategy;
-import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
@@ -53,6 +45,9 @@ public class CustomMouseAdapter extends MouseAdapter {
 						renameStrategyTab(tabbedPane);
 					}
 				});
+				if(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "manualtreenaming").equals("false")) {
+					setName.setEnabled(false);
+				}
 				popupMenu.add(setName);
 				final JMenuItem removeTreeCopy = new JMenuItem("Remove Tree Copy");
 				removeTreeCopy.addActionListener(new ActionListener() {
@@ -68,30 +63,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 	}
 
 	private void renameStrategyTab(JTabbedPane tabbedPane) {
-		String newName = "";
-		CustomTree customTree = (CustomTree) ((JScrollPane) tabbedPane.getComponentAt(tabbedPane.getSelectedIndex())).getViewport().getView();
-		Object elements[] = customTree.getCloudTree().getSelectionPath().getPath();
-		for (int i = 0, n = elements.length; i < n; i++) {
-			Object obj = ((DefaultMutableTreeNode) elements[i]).getUserObject();
-			if (obj instanceof PokerStrategy) {
-				newName = newName + ((PokerStrategy) obj).getNodeText();
-			} else if (obj instanceof PokerAction) {
-				newName = newName + "-" + ((PokerAction) obj).getNodeText();
-			} else if (obj instanceof PokerHandSizing) {
-				newName = newName + "-" + ((PokerHandSizing) obj).getNodeText();
-			} else if (obj instanceof PokerPosition) {
-				newName = newName + "-" + ((PokerPosition) obj).getNodeText();
-			} else if (obj instanceof PokerOpponentPosition) {
-				newName = newName + "-" + ((PokerOpponentPosition) obj).getNodeText();
-			}
-		}
-		String oldTreeName = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
-		String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName + "opened");
-		INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName + "opened", oldTreeName + "opened");
-		INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName, oldTreeName);
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", oldItemValue, newName + "opened");
-		tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), newName);
-		return;
+		UtilMethodsFactory.showDialogToDesctop("RenameSolutioTab", 250, 140, dash, null, null, null, null, tabbedPane);
 	}
 
 	private void removeTreeCopy(JTabbedPane tabbedPane, Dashboard dash) {

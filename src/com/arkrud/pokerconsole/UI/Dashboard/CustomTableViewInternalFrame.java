@@ -10,15 +10,6 @@ import javax.swing.event.InternalFrameListener;
 
 import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ImageChartPanel;
-//import com.arkrud.TableInterface.CustomTable;
-//import com.arkrud.UI.PropertiesTabbedPane;
-//import com.arkrud.UI.PropertyPanel;
-//import com.arkrud.TableInterface.CustomTable;
-//import com.arkrud.UI.PrepareCWDashboardPanel;
-//import com.arkrud.UI.PropertiesTabbedPane;
-//import com.arkrud.UI.CF.CFCreateStackFrame;
-//import com.arkrud.UI.ELB.ELBAddPanel;
-//import com.ggl.filebrowser.view.FileBrowserMainPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 
 public class CustomTableViewInternalFrame extends BaseInternalFrame implements InternalFrameListener {

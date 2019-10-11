@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -28,6 +29,7 @@ import com.arkrud.pokerconsole.UI.AddHandsDialog;
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
 import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
+import com.arkrud.pokerconsole.UI.RenameTreeDialog;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -92,10 +94,10 @@ public class UtilMethodsFactory {
 	}
 
 	public static void exitApp() {
-		if (Dashboard.INTERNAL_FRAMES.size() == 0) {
-			String[] items = {Dashboard.CURRENT_TREE_TITLE + "opened"};
-			INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", items);
-		}
+		//if (Dashboard.INTERNAL_FRAMES.size() == 0) {
+		//	String[] items = {Dashboard.CURRENT_TREE_TITLE + "opened"};
+			//INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", items);
+		//}
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "editable");
 		System.exit(0);
 	}
@@ -152,11 +154,14 @@ public class UtilMethodsFactory {
 		return images;
 	}
 
-	public static void showDialogToDesctop(String frameType, int width, int height, Dashboard dash, JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node) {
+	public static void showDialogToDesctop(String frameType, int width, int height, Dashboard dash, JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node, JTabbedPane tabbedPane) {
 		JDialog dialog = null;
 		switch (frameType) {
 		case "AddTreesFrame":
 			dialog = new AddTreeFrame(dash);
+			break;
+		case "RenameSolutioTab":
+			dialog = new RenameTreeDialog(dash, tabbedPane);
 			break;
 		case "ManageTreesDialog":
 			dialog = new ManageTreesDialog(dash);
@@ -164,6 +169,7 @@ public class UtilMethodsFactory {
 		case "AddHandsDialog":
 			dialog = new AddHandsDialog(tree, theTree, obj, node);
 			break;
+			
 		default:
 			break;
 		}
@@ -184,9 +190,9 @@ public class UtilMethodsFactory {
 		// Create the file
 		try {
 			if (file.createNewFile()) {
-				System.out.println("File is created!");
+				// System.out.println("File is created!");
 			} else {
-				 System.out.println("File already exists.");
+				// System.out.println("File already exists.");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -255,6 +261,10 @@ public class UtilMethodsFactory {
 			matchPosition = m.group(1);
 		}
 		return matchPosition;
+	}
+	
+	public static boolean checkIfGroupNameHasLettersOnly(String name) {
+		return name.matches("[a-zA-Z]+");
 	}
 
 }

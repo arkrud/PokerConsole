@@ -171,6 +171,5 @@ public class CustomTableModel extends AbstractTableModel {
 			INIFilesFactory.addINIFileSection(inifile, entry.getKey(), entry.getValue());
 		HashMap<String, String> sectionKeys = new HashMap<String, String>();
 		sectionKeys.put("latest", "false");
-		//INIFilesFactory.addINIFileSection(inifile, "Update", sectionKeys);
 	}
 }

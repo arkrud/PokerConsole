@@ -84,8 +84,7 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 			}
 		}
 		HashMap<String, String> sectionKeys = new HashMap<String, String>();
-		sectionKeys.put("latest", "true");
-		//INIFilesFactory.addINIFileSection(file, "Update", sectionKeys);
+		sectionKeys.put("latest", "true");		
 	}
 
 	@Override

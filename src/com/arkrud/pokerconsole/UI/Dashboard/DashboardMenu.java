@@ -23,15 +23,18 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class DashboardMenu extends JMenu implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private JMenuItem exit, addDashboardUser, clearUser, addTree, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection;
+	private JMenuItem exit, addDashboardUser, clearUser, addTree, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming;
 	private Dashboard dash;
+	private boolean editable;
 
 	public DashboardMenu(Dashboard dash, boolean editable) {
 		super();
 		this.dash = dash;
+		this.editable = editable;
 		setText("Edit");
 		exit = new JMenuItem("Exit");
 		addTree = new JMenuItem("Add Tree");
+		manualSolutionNaming = new JMenuItem("Enable Manual Solution Copy Naming");
 		manageTrees = new JMenuItem("Hide/Show Trees");
 		openReadOnlyDash = new JMenuItem("Open Read Only Dashboard");
 		populateChartDB = new JMenuItem("Load Charts in MongoDB");
@@ -61,14 +64,16 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		openReadOnlyDash.addActionListener(this);
 		populateChartDB.addActionListener(this);
 		dataSourceSelection.addActionListener(this);
+		manualSolutionNaming.addActionListener(this);
 		if (editable) {
 			add(addDashboardUser);
 			add(clearUser);
 			add(addTree);
+			add(manualSolutionNaming);
 			add(manageTrees);
 			add(openReadOnlyDash);
-			add(dataSourceSelection);
-			add(populateChartDB);
+			// add(dataSourceSelection);
+			// add(populateChartDB);
 		}
 		add(exit);
 	}
@@ -77,22 +82,27 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String menuText = ((JMenuItem) e.getSource()).getText();
 		if (menuText.contains("Exit")) {
-
 			UtilMethodsFactory.exitApp();
 		} else if (menuText.contains("Add User")) {
 			showConsoleLoginAccountFrame(addDashboardUser);
 		} else if (menuText.contains("Add Tree")) {
-			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash,null,null,null,null);
+			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash, null, null, null, null, null);
+		} else if (menuText.contains("Enable Manual Solution Copy Naming")) {
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "manualtreenaming");
+			manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
+		} else if (menuText.contains("Disable Manual Solution Copy Naming")) {
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "manualtreenaming");
+			manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 		} else if (menuText.contains("Hide/Show Trees")) {
-			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null,null,null,null);
+			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null, null);
 		} else if (menuText.contains("Update User")) {
 			showConsoleLoginAccountFrame(addDashboardUser);
 		} else if (menuText.contains("Open Read Only Dashboard")) {
-			JScrollPane jScrollPane = (JScrollPane)dash.getTreeTabbedPane().getSelectedComponent();
-			CustomTree customTree = (CustomTree)jScrollPane.getViewport().getView();
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)customTree.getTreeModel().getRoot();
-			PokerStrategy pokerStrategy = (PokerStrategy)node.getUserObject();
-			generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()), Dashboard.EDITABLE);
+			JScrollPane jScrollPane = (JScrollPane) dash.getTreeTabbedPane().getSelectedComponent();
+			CustomTree customTree = (CustomTree) jScrollPane.getViewport().getView();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) customTree.getTreeModel().getRoot();
+			PokerStrategy pokerStrategy = (PokerStrategy) node.getUserObject();
+			generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()), editable);
 			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "editable");
 			showDashboard();
 		} else if (menuText.contains("Load Charts in MongoDB")) {
@@ -119,22 +129,18 @@ public class DashboardMenu extends JMenu implements ActionListener {
 
 	private void generateChartImages(File node, boolean editable) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
-		System.out.println(node.getAbsoluteFile().getPath());
-		System.out.println(UtilMethodsFactory.getConfigPath());
-		System.out.println(level);
 		if (level == 0) {
 		} else if (level == 2) {
 		} else if (level == 3) {
-			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2].equals("RFI")) {
-				if (!node.getName().contains("ini") && !node.getName().contains("png")) {
+			if (node.isFile()) {
+				if (!node.getName().contains("png")) {
 					generateCharts(node, editable);
 				}
 			} else {
 			}
 		} else if (level == 4) {
 		} else if (level == 5) {
-			if ( !node.getName().contains("png")) {
-				System.out.println("Here we go");
+			if (!node.getName().contains("png")) {
 				generateCharts(node, editable);
 			}
 		} else {
@@ -152,7 +158,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		if (level == 0) {
 		} else if (level == 1) {
 		} else if (level == 2) {
-			if (node.getAbsoluteFile().getPath().split("\\\\")[level + UtilMethodsFactory.getConfigPath().split("/").length / 2].equals("RFI")) {
+			if (node.isFile()) {
 				if (node.getName().contains("ini")) {
 					String absolutePath = node.getAbsoluteFile().getPath();
 					String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length()).split("\\.")[0].replaceAll("\\\\", "/");
@@ -184,23 +190,12 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	private void generateCharts(File node, boolean editable) {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
-		File iniFile = new File(UtilMethodsFactory.getConfigPath() + imagePath.split("\\.")[0].replaceAll("\\\\", "/") + ".ini");
-		/*try {
-			Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(iniFile, "Update", "latest"));
-		} catch (Exception e) {
-			HashMap<String, String> sectionKeys = new HashMap<String, String>();
-			sectionKeys.put("latest", "false");
-			INIFilesFactory.addINIFileSection(iniFile, "Update", sectionKeys);
-		}*/
-		//if (Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(iniFile, "Update", "latest"))) {
-			ChartPanel chartPanel = new ChartPanel(imagePath, editable);
-			BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
-			JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
-			UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);
-			UtilMethodsFactory.tableToImage(chartPanel.getTable(), imagePath.split("\\.")[0]);
-			pane.remove(theFrame);
-			//INIFilesFactory.updateINIFileItems(iniFile, "Update", "false", "latest");
-		//}
+		ChartPanel chartPanel = new ChartPanel(imagePath, editable);
+		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
+		JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
+		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);
+		UtilMethodsFactory.tableToImage(chartPanel.getTable(), imagePath.split("\\.")[0]);
+		pane.remove(theFrame);
 	}
 
 	private void showDashboard() {

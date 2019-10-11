@@ -8,7 +8,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import com.arkrud.pokerconsole.Poker.PokerAction;
-import com.arkrud.pokerconsole.Poker.PokerGroup;
 import com.arkrud.pokerconsole.Poker.PokerHandSizing;
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
@@ -40,9 +39,6 @@ public class CustomTreeCellRenderer extends DefaultTreeCellRenderer {
 		} else if (obj instanceof PokerPosition) {
 			setText(((PokerPosition) obj).getNodeText());
 			setIcon(UtilMethodsFactory.populateInterfaceImages("interfaceimages").get("hero"));
-		} else if (obj instanceof PokerGroup) {
-			setText(((PokerGroup) obj).getNodeText());
-			setIcon(UtilMethodsFactory.populateInterfaceImages("interfaceimages").get("group"));
 		} else {
 		}
 		return this;
