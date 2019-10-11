@@ -24,7 +24,8 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class DashboardMenu extends JMenu implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming;
+	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection,
+			manualSolutionNaming;
 	private Dashboard dash;
 	private boolean editable;
 	final JFileChooser fc = new JFileChooser();
@@ -93,25 +94,20 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (menuText.contains("Add Tree")) {
 			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash, null, null, null, null, null);
 		} else if (menuText.contains("Load Solution")) {
-			/*fc.setCurrentDirectory(new File(UtilMethodsFactory.getConfigPath() + "Images/"));
-			fc.setDialogTitle("Load Solution Package");
-			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			fc.setAcceptAllFileFilterUsed(false);
-			int returnVal = fc.showOpenDialog(null);
 			String solutionPackagePath = "";
-			File dir = null;
+			File file = null;
+			fc.setCurrentDirectory(new File(UtilMethodsFactory.getConfigPath() + "Images/"));
+			fc.setDialogTitle("Load Solution Package");
+			int returnVal = fc.showOpenDialog(null);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				dir = fc.getSelectedFile();
-				solutionPackagePath = dir.getAbsolutePath();
+				file = fc.getSelectedFile();
+				solutionPackagePath = file.getAbsolutePath();
+				solutionPackagePath = solutionPackagePath.replace("\\", "/");
 				System.out.println(solutionPackagePath);
-				//templatePath = templatePath.substring(templatePath.indexOf("Images"), templatePath.length());
-				//templatePath = templatePath.replace("\\", "/");
 			} else {
-			}	*/
-			String zipFilePath = "C:/QA/Exported.zip";
-	        String destDirectory = "C:/QA";
-	        UtilMethodsFactory.unZipUpdate(zipFilePath, destDirectory);
-			
+			}
+			String destDirectory = (UtilMethodsFactory.getConfigPath() + "Images/").substring(1);
+			UtilMethodsFactory.unZipUpdate(solutionPackagePath, destDirectory);
 		} else if (menuText.contains("Enable Manual Solution Copy Naming")) {
 			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "manualtreenaming");
 			manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
@@ -119,7 +115,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "manualtreenaming");
 			manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 		} else if (menuText.contains("Hide/Show Trees")) {
-			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null, null);
+			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null,
+					null);
 		} else if (menuText.contains("Update User")) {
 			showConsoleLoginAccountFrame(addDashboardUser);
 		} else if (menuText.contains("Open Read Only Dashboard")) {
@@ -143,7 +140,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "ini");
 			reOpenDashboard();
 		} else if (menuText.contains("Clear Security")) {
-			int response = JOptionPane.showConfirmDialog(null, "Do you want to disable security?", "Disable security", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			int response = JOptionPane.showConfirmDialog(null, "Do you want to disable security?", "Disable security", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
 			if (response == JOptionPane.NO_OPTION) {
 			} else if (response == JOptionPane.YES_OPTION) {
 				INIFilesFactory.removeINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security");
