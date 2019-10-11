@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -23,9 +24,10 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class DashboardMenu extends JMenu implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private JMenuItem exit, addDashboardUser, clearUser, addTree, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming;
+	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming;
 	private Dashboard dash;
 	private boolean editable;
+	final JFileChooser fc = new JFileChooser();
 
 	public DashboardMenu(Dashboard dash, boolean editable) {
 		super();
@@ -34,6 +36,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		setText("Edit");
 		exit = new JMenuItem("Exit");
 		addTree = new JMenuItem("Add Tree");
+		loadSolution = new JMenuItem("Load Solution");
 		manualSolutionNaming = new JMenuItem("Enable Manual Solution Copy Naming");
 		manageTrees = new JMenuItem("Hide/Show Trees");
 		openReadOnlyDash = new JMenuItem("Open Read Only Dashboard");
@@ -58,6 +61,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 		exit.addActionListener(this);
 		addTree.addActionListener(this);
+		loadSolution.addActionListener(this);
 		addDashboardUser.addActionListener(this);
 		clearUser.addActionListener(this);
 		manageTrees.addActionListener(this);
@@ -69,6 +73,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			add(addDashboardUser);
 			add(clearUser);
 			add(addTree);
+			add(loadSolution);
 			add(manualSolutionNaming);
 			add(manageTrees);
 			add(openReadOnlyDash);
@@ -87,6 +92,26 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			showConsoleLoginAccountFrame(addDashboardUser);
 		} else if (menuText.contains("Add Tree")) {
 			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash, null, null, null, null, null);
+		} else if (menuText.contains("Load Solution")) {
+			/*fc.setCurrentDirectory(new File(UtilMethodsFactory.getConfigPath() + "Images/"));
+			fc.setDialogTitle("Load Solution Package");
+			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			fc.setAcceptAllFileFilterUsed(false);
+			int returnVal = fc.showOpenDialog(null);
+			String solutionPackagePath = "";
+			File dir = null;
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				dir = fc.getSelectedFile();
+				solutionPackagePath = dir.getAbsolutePath();
+				System.out.println(solutionPackagePath);
+				//templatePath = templatePath.substring(templatePath.indexOf("Images"), templatePath.length());
+				//templatePath = templatePath.replace("\\", "/");
+			} else {
+			}	*/
+			String zipFilePath = "C:/QA/Exported.zip";
+	        String destDirectory = "C:/QA";
+	        UtilMethodsFactory.unZipUpdate(zipFilePath, destDirectory);
+			
 		} else if (menuText.contains("Enable Manual Solution Copy Naming")) {
 			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "manualtreenaming");
 			manualSolutionNaming.setText("Disable Manual Solution Copy Naming");

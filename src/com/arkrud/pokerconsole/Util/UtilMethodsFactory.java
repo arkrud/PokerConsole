@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -40,9 +44,8 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action", "Add Hands", "Add Opponents Position", "Duplicate"};
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action", "Add Hands", "Add Opponents Position", "Duplicate" };
 	private static HashMap<String, ChartPanel> charts = new HashMap<String, ChartPanel>();
-
 
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
 		if (Dashboard.INTERNAL_FRAMES.get(frameTitle) == null) {
@@ -94,10 +97,10 @@ public class UtilMethodsFactory {
 	}
 
 	public static void exitApp() {
-		//if (Dashboard.INTERNAL_FRAMES.size() == 0) {
-		//	String[] items = {Dashboard.CURRENT_TREE_TITLE + "opened"};
-			//INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", items);
-		//}
+		// if (Dashboard.INTERNAL_FRAMES.size() == 0) {
+		// String[] items = {Dashboard.CURRENT_TREE_TITLE + "opened"};
+		// INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", items);
+		// }
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "editable");
 		System.exit(0);
 	}
@@ -169,7 +172,6 @@ public class UtilMethodsFactory {
 		case "AddHandsDialog":
 			dialog = new AddHandsDialog(tree, theTree, obj, node);
 			break;
-			
 		default:
 			break;
 		}
@@ -221,13 +223,13 @@ public class UtilMethodsFactory {
 	}
 
 	public static boolean deleteDirectory(File directoryToBeDeleted) {
-	    File[] allContents = directoryToBeDeleted.listFiles();
-	    if (allContents != null) {
-	        for (File file : allContents) {
-	            deleteDirectory(file);
-	        }
-	    }
-	    return directoryToBeDeleted.delete();
+		File[] allContents = directoryToBeDeleted.listFiles();
+		if (allContents != null) {
+			for (File file : allContents) {
+				deleteDirectory(file);
+			}
+		}
+		return directoryToBeDeleted.delete();
 	}
 
 	public static void tableToImage(CustomTable table, String imagePath) {
@@ -262,9 +264,39 @@ public class UtilMethodsFactory {
 		}
 		return matchPosition;
 	}
-	
+
 	public static boolean checkIfGroupNameHasLettersOnly(String name) {
 		return name.matches("[a-zA-Z]+");
 	}
 
+	public static void unZipUpdate(String pathToUpdateZip, String destinationPath) {
+		byte[] byteBuffer = new byte[1024];
+		try {
+			ZipInputStream inZip = new ZipInputStream(new FileInputStream(pathToUpdateZip));
+			ZipEntry inZipEntry = inZip.getNextEntry();
+			while (inZipEntry != null) {
+				String fileName = inZipEntry.getName();
+				File unZippedFile = new File(destinationPath + File.separator + fileName);
+				System.out.println("Unzipping: " + unZippedFile.getAbsoluteFile());
+				if (inZipEntry.isDirectory()) {
+					unZippedFile.mkdirs();
+				} else {
+					new File(unZippedFile.getParent()).mkdirs();
+					unZippedFile.createNewFile();
+					FileOutputStream unZippedFileOutputStream = new FileOutputStream(unZippedFile);
+					int length;
+					while ((length = inZip.read(byteBuffer)) > 0) {
+						unZippedFileOutputStream.write(byteBuffer, 0, length);
+					}
+					unZippedFileOutputStream.close();
+				}
+				inZipEntry = inZip.getNextEntry();
+			}
+			// inZipEntry.close();
+			inZip.close();
+			System.out.println("Finished Unzipping");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
