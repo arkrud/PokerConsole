@@ -64,6 +64,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 
 	private void renameStrategyTab(JTabbedPane tabbedPane) {
 		UtilMethodsFactory.showDialogToDesctop("RenameSolutioTab", 250, 140, dash, null, null, null, null, tabbedPane);
+		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "true", tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()).split("-")[0]);
 	}
 
 	private void removeTreeCopy(JTabbedPane tabbedPane, Dashboard dash) {

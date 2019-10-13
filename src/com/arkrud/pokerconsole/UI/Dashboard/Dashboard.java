@@ -43,15 +43,9 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 * Collection of Frames added to scrollable desktop.
 	 */
 	public static Hashtable<String, BaseInternalFrame> INTERNAL_FRAMES = new Hashtable<String, BaseInternalFrame>();
-	/**
-	 * Collection of Frames added to scrollable desktop.
-	 */
-	public static String CURRENT_TREE_TITLE = "";
-	public static boolean MANUAL_NAMING = false;
 	private JMenuBar jJMenuBar = null;
 	private JScrollableDesktopPane jScrollableDesktopPane = null;
 	private CustomTree customTree;
-	private CustomTree configTree;
 	private JTabbedPane treeTabbedPane;
 	private boolean editable;
 
@@ -62,32 +56,20 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		initialize(editable);
 	}
 
-	public void addTreeTabPaneTab(String appName) {
+	public CustomTree addTreeTabPaneTab(String appName) {
 		String treeName = "";
 		if (appName.contains("-")) {
 			treeName = appName.split("-")[0];
 		} else {
 			treeName = appName;
 		}
-		CustomTree tree = getCustomTree(treeName, true);
+		CustomTree tree = new CustomTree(this, treeName, true);
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
 		if (!hasTab(appName)) {
 			treeTabbedPane.insertTab(appName, null, jScrollPane, null, 0);
 		}
-	}
-
-	// Get reference to CustomTree navigation object to manipulate tree nodes from other interface objects
-	private CustomTree getCustomTree(String type, boolean editable) {
-		if (type.equals("config")) {
-			if (customTree == null) {
-				customTree = new CustomTree(this, type, editable);
-			}
-			return customTree;
-		} else {
-			configTree = new CustomTree(this, type, editable);
-			return configTree;
-		}
+		return tree;
 	}
 
 	// Get reference to JScrollableDesktopPane object
@@ -113,20 +95,9 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		return false;
 	}
 
-	public void hideTreeTabPaneTab(String appName) {
-		int count = treeTabbedPane.getTabCount();
-		for (int i = 0; i < count; i++) {
-			String label = treeTabbedPane.getTitleAt(i);
-			if (label.equals(appName)) {
-				treeTabbedPane.setEnabledAt(i, false);
-			}
-		}
-	}
-
 	// Initialization of the visual interface
 	private void initialize(boolean editable) throws Exception {
 		// Create dashboard menu items and add menu to dashboard
-		MANUAL_NAMING = Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "manualtreenaming"));
 		jJMenuBar = new JMenuBar();
 		jJMenuBar.add(new DashboardMenu(this, editable));
 		this.setJMenuBar(jJMenuBar);
@@ -148,7 +119,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
 		while (it.hasNext()) {
 			ArrayList<Object> appData = it.next();
-			if (((Boolean) appData.get(1))) {
+			if (((Boolean) appData.get(1)) ) {
 				trees.add((String) appData.get(0));
 			}
 		}
@@ -161,7 +132,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			} else {
 				treeName = trees.get(x);
 			}
-			customTree = getCustomTree(treeName, editable);
+			customTree = new CustomTree(this, treeName, editable);
 			treeScroll.setViewportView(customTree);
 			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
 			treeTabbedPane.setSelectedIndex(0);
@@ -239,13 +210,11 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	public void stateChanged(ChangeEvent changeEvent) {
 		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
-		CURRENT_TREE_TITLE = sourceTabbedPane.getTitleAt(index);
 		getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened")) {
 			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened");
 			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
-			
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
 			ChartPanel chartPanel = null;
 			ImageChartPanel imageChartPanel;

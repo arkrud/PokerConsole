@@ -37,18 +37,14 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 public class CustomTreeMouseListener implements MouseListener, PropertyChangeListener {
 	private JPopupMenu popup;
 	private Dashboard dash;
-	private JTree tree;
-	private CustomTree theTree;
 	private Point loc;
 	private HashMap<String, Boolean> dropDownMenus = new HashMap<String, Boolean>();
 	private boolean editable;
 
-	public CustomTreeMouseListener(JPopupMenu popup, JTree tree, Dashboard dash, CustomTree theTree, boolean editable) {
+	public CustomTreeMouseListener(JPopupMenu popup, Dashboard dash, boolean editable) {
 		this.editable = editable;
 		this.popup = popup;
-		this.tree = tree;
 		this.dash = dash;
-		this.theTree = theTree;
 	}
 
 	private void checkForPopup(MouseEvent e) {
@@ -61,41 +57,28 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			loc = e.getPoint();
 			TreePath path = ((JTree) e.getSource()).getPathForLocation(loc.x, loc.y);
 			Object treeObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-			tree.setSelectionPath(path);
+			((JTree) e.getSource()).setSelectionPath(path);
 			if (path != null) {
 				if (treeObject instanceof PokerStrategy) {
-					if (theTree.getTreeType().equals("config")) {
-						dropDownMenus.put("Add Group", true);
-					} else {
-						dropDownMenus.put("Refresh", true);
-						dropDownMenus.put("Remove", true);
-						dropDownMenus.put("Add Action", true);
-						dropDownMenus.put("Duplicate", true);
-					}
+					dropDownMenus.put("Refresh", true);
+					dropDownMenus.put("Remove", true);
+					dropDownMenus.put("Add Action", true);
+					dropDownMenus.put("Duplicate", true);
 				} else if (treeObject instanceof PokerOpponentPosition) {
-					if (!theTree.getTreeType().equals("config")) {
-						dropDownMenus.put("Apply Template", true);
-						dropDownMenus.put("Remove", true);
-					} else {
-					}
+					dropDownMenus.put("Apply Template", true);
+					dropDownMenus.put("Remove", true);
 				} else if (treeObject instanceof PokerPosition) {
-					if (!theTree.getTreeType().equals("config")) {
-						dropDownMenus.put("Remove", true);
-						dropDownMenus.put("Add Opponents Position", true);
-					}
+					dropDownMenus.put("Remove", true);
+					dropDownMenus.put("Add Opponents Position", true);
 				} else if (treeObject instanceof PokerAction) {
-					if (!theTree.getTreeType().equals("config")) {
-						dropDownMenus.put("Add Sizing", true);
-						dropDownMenus.put("Add Hands", true);
-						dropDownMenus.put("Add Opponents Position", true);
-						dropDownMenus.put("Remove", true);
-					}
+					dropDownMenus.put("Add Sizing", true);
+					dropDownMenus.put("Add Hands", true);
+					dropDownMenus.put("Add Opponents Position", true);
+					dropDownMenus.put("Remove", true);
 				} else if (treeObject instanceof PokerHandSizing) {
-					if (!theTree.getTreeType().equals("config")) {
-						dropDownMenus.put("Delete Sizing", true);
-						dropDownMenus.put("Add Hands", true);
-						dropDownMenus.put("Add Opponents Position", true);
-					}
+					dropDownMenus.put("Delete Sizing", true);
+					dropDownMenus.put("Add Hands", true);
+					dropDownMenus.put("Add Opponents Position", true);
 				} else {
 				}
 				// Set menu attributes
@@ -111,7 +94,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					i++;
 				}
 				// Show pop-up
-				popup.show(tree, loc.x, loc.y);
+				popup.show((JTree) e.getSource(), loc.x, loc.y);
 			}
 		}
 	}
@@ -121,7 +104,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		if (e.getClickCount() == 2) {
 		} else {
 			JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
-			TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+			TreePath path = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
 			if (path != null) {
 				Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 				if (path != null) {
@@ -150,11 +133,17 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 						} else {
 							showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
 						}
-						String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName + "opened");
-						INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName + "opened", oldTreeName + "opened");
-						INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName, oldTreeName);
-						INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", oldItemValue, newName + "opened");
-						jTabbedPane.setTitleAt(jTabbedPane.getSelectedIndex(), newName);
+						if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newName.split("-")[0]).equals("false")) {
+							String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName + "opened");
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName + "opened", oldTreeName + "opened");
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName, oldTreeName);
+							INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", oldItemValue, newName + "opened");
+							jTabbedPane.setTitleAt(jTabbedPane.getSelectedIndex(), newName);
+						} else {
+							String newPosition = newName.substring(newName.indexOf("-") + 1, newName.length());
+							String positionItem = INIFilesFactory.getSolutionCopySelectionItemName(UtilMethodsFactory.getConsoleConfig(), oldTreeName.split("-")[0]);
+							INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", newPosition, positionItem);
+						}
 					}
 				}
 			}

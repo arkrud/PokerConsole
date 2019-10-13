@@ -32,6 +32,7 @@ import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
+import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
@@ -49,7 +50,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		this.dash = dash;
 		this.theTree = theTree;
 		// Add Mouse listener to control which menu items will show up in drop-down menu
-		cml = new CustomTreeMouseListener(popup, tree, dash, theTree, editable);
+		cml = new CustomTreeMouseListener(popup, dash, editable);
 		tree.addMouseListener(cml);
 	}
 
@@ -86,7 +87,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			} else if (ac.equals("REMOVE")) {
 				String treeName = ((PokerStrategy) node.getUserObject()).getNodeText();
 				String treeTabTitle = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
-				int response = JOptionPane.showConfirmDialog(null, "Do you want to remove remove this Tree And With All Copies", "Solution Tree Complete removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				int response = JOptionPane.showConfirmDialog(null, "Do you want to remove this Tree With All Copies", "Solution Tree Complete removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (response == JOptionPane.NO_OPTION) {
 				} else if (response == JOptionPane.YES_OPTION) {
 					int x = 0;
@@ -153,7 +154,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 							PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(Integer.toString(node.getChildCount() + 1) + s);
 							pokerOpponentPosition.setSelected(false);
 							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + s);
-							pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + pokerAction.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini");
+							pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini");
 							DefaultMutableTreeNode pokerOpponentPositionNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 							((DefaultTreeModel) tree.getModel()).insertNodeInto(pokerOpponentPositionNode, node, node.getChildCount());
 							theTree.expandNodesBelow(node, tree);
@@ -275,6 +276,12 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			String templatePath = "";
 			File file = null;
 			if (ac.equals("APPLY TEMPLATE")) {
+				String chartTitle = ((PokerOpponentPosition) obj).getChartPaneTitle();
+				String toPath = UtilMethodsFactory.getConfigPath() + ((PokerOpponentPosition) obj).getChartImagePath();
+				toPath = toPath.replace("/", "\\\\");
+				toPath = toPath.substring(2, toPath.length());
+				toPath = toPath.replace("jpg", "ini");
+				Path to = Paths.get(toPath); // convert from String to Path
 				fc.setCurrentDirectory(new File(UtilMethodsFactory.getConfigPath() + "Images/"));
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -282,23 +289,24 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					templatePath = file.getAbsolutePath();
 					templatePath = templatePath.substring(templatePath.indexOf("Images"), templatePath.length());
 					templatePath = templatePath.replace("\\", "/");
-				} else {
+					} else {
 				}
-				ChartPanel chartPanel = new ChartPanel(templatePath, true);
-				dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
-				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
-				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), dash.getJScrollableDesktopPane(), theFrame);
 				Path from = file.toPath(); // convert from File to Path
-				String toPath = UtilMethodsFactory.getConfigPath() + ((PokerOpponentPosition) obj).getChartImagePath();
-				toPath = toPath.replace("/", "\\\\");
-				toPath = toPath.substring(2, toPath.length());
-				toPath = toPath.replace("jpg", "ini");
-				Path to = Paths.get(toPath); // convert from String to Path
 				try {
 					Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+				ChartPanel chartPanel = new ChartPanel(templatePath, true);
+				dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+				BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartTitle, chartPanel);
+				UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartTitle, dash.getJScrollableDesktopPane(), theFrame);
+				String thePath = UtilMethodsFactory.getConfigPath() + ((PokerOpponentPosition) obj).getChartImagePath();
+				thePath = thePath.replace("/", "\\");
+				thePath = thePath.substring(1, thePath.length());
+				thePath = thePath.replace("jpg", "ini");
+				String a = thePath.split("\\.")[0];
+				UtilMethodsFactory.tableToImage(chartPanel.getTable(), a);
 			} else if (ac.equals("REMOVE")) {
 				int response = JOptionPane.showConfirmDialog(null, "Do you want to remove the Opponents Position", "Opponents Position Removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (response == JOptionPane.NO_OPTION) {

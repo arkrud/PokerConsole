@@ -49,6 +49,23 @@ public class INIFilesFactory {
 		return iniSection.getItems();
 	}
 
+	public static String getSolutionCopySelectionItemName(File iniFile, String solutionName) {
+		String solutionCopySelectionItemName = "";
+		IniFile ini = readINI(iniFile);
+		IniSection iniSection = ini.getSection("Applications");
+		Iterator<IniItem> params = iniSection.getItems().iterator();
+		while (params.hasNext()) {
+			IniItem item = params.next();
+			if (item.getName().contains(solutionName)) {
+				if (!item.getValue().equals("true")) {
+					solutionCopySelectionItemName = item.getName();
+					break;
+				}
+			}
+		}
+		return solutionCopySelectionItemName;
+	}
+
 	// Retrieve Applications Tree info from INI configuration file
 	public static ArrayList<ArrayList<Object>> getAppTreesConfigInfo(File iniFile) {
 		ArrayList<ArrayList<Object>> appsInfo = new ArrayList<ArrayList<Object>>();
@@ -82,6 +99,35 @@ public class INIFilesFactory {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(iniSectionName);
 		return iniSection.getItem(itemName).getValue();
+	}
+
+	public static HashMap<String, HashMap<String, String>> getItemValuesFromINI(File iniFile) {
+		HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
+		IniFile ini = readINI(iniFile);
+		Iterator<IniSection> its = ini.getSections().iterator();
+		while (its.hasNext()) {
+			IniSection section = (IniSection) its.next();
+			Iterator<IniItem> iti = section.getItems().iterator();
+			HashMap<String, String> itemsMap = new HashMap<String, String>();
+			while (iti.hasNext()) {
+				IniItem iniItem = (IniItem) iti.next();
+				itemsMap.put(iniItem.getName(), iniItem.getValue());
+			}
+			data.put(section.getName(), itemsMap);
+		}
+		return data;
+	}
+
+	public static HashMap<String, Boolean> getTreesData() {
+		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
+		Iterator<IniItem> it = INIFilesFactory.getAllItemsFromSection(UtilMethodsFactory.getConsoleConfig(), "Applications").iterator();
+		while (it.hasNext()) {
+			IniItem iniItem = (IniItem) it.next();
+			if (iniItem.getValue().equals("true") || iniItem.getValue().equals("false")) {
+				map.put(iniItem.getName(), Boolean.parseBoolean(iniItem.getValue()));
+			}
+		}
+		return map;
 	}
 
 	/**
@@ -130,13 +176,6 @@ public class INIFilesFactory {
 		return ini;
 	}
 
-	// Remove section from INI file
-	public static void removeINIFileSection(File iniFile, String sectionName) {
-		IniFile ini = readINI(iniFile);
-		ini.removeSection(sectionName);
-		writeINI(iniFile, ini);
-	}
-
 	public static void removeINIFileItems(File iniFile, String section, String[] itemNames) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
@@ -148,36 +187,6 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
-	public static void removeINIItemsWithValues(File iniFile, String section, String[] itemValues) {
-		IniFile ini = readINI(iniFile);
-		IniSection iniSection = ini.getSection(section);
-		Iterator<IniItem> it = iniSection.getItems().iterator();
-		while (it.hasNext()) {
-			IniItem iniItem = (IniItem) it.next();
-			int x = 0;
-			while (x < itemValues.length) {
-				if (iniItem.getValue().equals(itemValues[x])) {
-					iniSection.removeItem(iniItem);
-				}
-				x++;
-			}
-		}
-		writeINI(iniFile, ini);
-	}
-
-	public static void removeINIFileItemsByPrefix(File iniFile, String section, String prefix) {
-		IniFile ini = readINI(iniFile);
-		IniSection iniSection = ini.getSection(section);
-		Iterator<String> it = iniSection.getItemNames().iterator();
-		while (it.hasNext()) {
-			String name = it.next();
-			if (name.startsWith(prefix)) {
-				iniSection.removeItem(name);
-			}
-		}
-		writeINI(iniFile, ini);
-	}
-	
 	public static void removeINIFileItemsByPattern(File iniFile, String section, String pattern) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
@@ -200,6 +209,43 @@ public class INIFilesFactory {
 			String value = item.getValue();
 			if (value.contains(pattern)) {
 				iniSection.removeItem(item.getName());
+			}
+		}
+		writeINI(iniFile, ini);
+	}
+
+	public static void removeINIFileItemsByPrefix(File iniFile, String section, String prefix) {
+		IniFile ini = readINI(iniFile);
+		IniSection iniSection = ini.getSection(section);
+		Iterator<String> it = iniSection.getItemNames().iterator();
+		while (it.hasNext()) {
+			String name = it.next();
+			if (name.startsWith(prefix)) {
+				iniSection.removeItem(name);
+			}
+		}
+		writeINI(iniFile, ini);
+	}
+
+	// Remove section from INI file
+	public static void removeINIFileSection(File iniFile, String sectionName) {
+		IniFile ini = readINI(iniFile);
+		ini.removeSection(sectionName);
+		writeINI(iniFile, ini);
+	}
+
+	public static void removeINIItemsWithValues(File iniFile, String section, String[] itemValues) {
+		IniFile ini = readINI(iniFile);
+		IniSection iniSection = ini.getSection(section);
+		Iterator<IniItem> it = iniSection.getItems().iterator();
+		while (it.hasNext()) {
+			IniItem iniItem = (IniItem) it.next();
+			int x = 0;
+			while (x < itemValues.length) {
+				if (iniItem.getValue().equals(itemValues[x])) {
+					iniSection.removeItem(iniItem);
+				}
+				x++;
 			}
 		}
 		writeINI(iniFile, ini);
@@ -232,34 +278,5 @@ public class INIFilesFactory {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static HashMap<String, Boolean> getTreesData() {
-		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
-		Iterator<IniItem> it = INIFilesFactory.getAllItemsFromSection(UtilMethodsFactory.getConsoleConfig(), "Applications").iterator();
-		while (it.hasNext()) {
-			IniItem iniItem = (IniItem) it.next();
-			if (iniItem.getValue().equals("true") || iniItem.getValue().equals("false")) {
-				map.put(iniItem.getName(), Boolean.parseBoolean(iniItem.getValue()));
-			}
-		}
-		return map;
-	}
-	
-	public static HashMap<String, HashMap<String, String>> getItemValuesFromINI(File iniFile) {
-		HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
-		IniFile ini = readINI(iniFile);
-		Iterator<IniSection> its = ini.getSections().iterator();
-		while (its.hasNext()) {
-			IniSection section = (IniSection) its.next();
-			Iterator<IniItem> iti = section.getItems().iterator();
-			HashMap<String, String> itemsMap = new HashMap<String, String>();
-			while (iti.hasNext()) {
-				IniItem iniItem = (IniItem) iti.next();
-				itemsMap.put(iniItem.getName(), iniItem.getValue());
-			}
-			data.put(section.getName(), itemsMap);
-		}
-		return data;
 	}
 }

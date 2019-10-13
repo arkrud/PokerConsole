@@ -52,7 +52,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	private DefaultTreeModel treeModel;
 	private JTree cloudTree;
 	private Dashboard dash;
-	private String treeType;
 	private DefaultMutableTreeNode pokerActionTreeNode = null;
 	private DefaultMutableTreeNode pokerHandSizingTreeNode = null;
 	private DefaultMutableTreeNode pokerPositionTreeNode = null;
@@ -75,16 +74,11 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * <p>
 	 *
 	 * @param dash reference to the Dashboard object
-	 * @param treeType tree usage identifier (OT or OCT)
+	 * @param treeName tree usage identifier (OT or OCT)
 	 */
-	public CustomTree(Dashboard dash, String treeType, boolean editable) {
+	public CustomTree(Dashboard dash, String treeName, boolean editable) {
 		this.dash = dash;
-		this.treeType = treeType;
-		if (treeType.equals("config")) {
-			top = new DefaultMutableTreeNode(new PokerStrategy("Configuration"));
-		} else {
-			top = new DefaultMutableTreeNode(new PokerStrategy(treeType));
-		}
+		top = new DefaultMutableTreeNode(new PokerStrategy(treeName));
 		treeModel = new DefaultTreeModel(top);
 		treeModel.addTreeModelListener(new CustomTreeModelListener());
 		cloudTree = new JTree(treeModel);
@@ -92,7 +86,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		cloudTree.setRowHeight(0);
 		cloudTree.setToggleClickCount(0);
 		try {
-			createNodes(top, treeType);
+			createNodes(top);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -101,13 +95,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		cloudTree.setShowsRootHandles(true);
 		cloudTree.setBackground(Color.WHITE);
 		ToolTipManager.sharedInstance().registerComponent(cloudTree);
-		if (treeType.equals("config")) {
-			cloudTree.setCellRenderer(new StateRenderer());
-			cloudTree.setCellEditor(new StateEditor());
-			cloudTree.setEditable(true);
-		} else {
-			cloudTree.setCellRenderer(new CustomTreeCellRenderer());
-		}
+		cloudTree.setCellRenderer(new CustomTreeCellRenderer());
 		try {
 			getTreePopUpMenu(cloudTree, editable);
 		} catch (Exception e) {
@@ -226,8 +214,8 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * @param top root node
 	 *
 	 */
-	private void createNodes(DefaultMutableTreeNode top, String treeType) throws Exception {
-		buildTreeNodes(new File(UtilMethodsFactory.getConfigPath() + "Images/" + treeType), top);
+	private void createNodes(DefaultMutableTreeNode top) throws Exception {
+		buildTreeNodes(new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText()), top);
 		expandTwoDeep();
 	}
 
@@ -283,10 +271,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		}
 	}
 
-	public String getTreeType() {
-		return treeType;
-	}
-
 	/**
 	 * This method gets called when a bound property is changed. <br>
 	 */
@@ -298,7 +282,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		node.removeAllChildren();
 		treeModel.nodeStructureChanged(node);
 		try {
-			createNodes(node, strategyName);
+			createNodes(node);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -434,10 +418,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 
 	public void setTreeModel(DefaultTreeModel treeModel) {
 		this.treeModel = treeModel;
-	}
-
-	public void setTreeType(String treeType) {
-		this.treeType = treeType;
 	}
 
 	/**

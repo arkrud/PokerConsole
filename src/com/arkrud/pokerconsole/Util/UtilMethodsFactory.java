@@ -34,6 +34,7 @@ import com.arkrud.pokerconsole.UI.AddTreeFrame;
 import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.RenameTreeDialog;
+import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -97,11 +98,8 @@ public class UtilMethodsFactory {
 	}
 
 	public static void exitApp() {
-		// if (Dashboard.INTERNAL_FRAMES.size() == 0) {
-		// String[] items = {Dashboard.CURRENT_TREE_TITLE + "opened"};
-		// INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", items);
-		// }
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "editable");
+		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "manualtreenaming");
 		System.exit(0);
 	}
 
@@ -299,4 +297,7 @@ public class UtilMethodsFactory {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
 }

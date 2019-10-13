@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -20,7 +21,8 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 	static final long serialVersionUID = 1L;
 	private JButton renameButton, cancelButton;
 	private JPanel renameTabPanel, tabNamePanel, buttonsPanel;
-	private final JTextField tabNameTextField;
+	private JLabel solutionName;
+	private final JTextField solutionCopyName;
 	private JTabbedPane tabbedPane;
 	private Dashboard dash;
 
@@ -29,23 +31,26 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 		this.dash = dash;
 		setModal(true);
 		setTitle("Rename Solution Tab");
-		
-		tabNameTextField = new JTextField(15);
-		tabNameTextField.setText(tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
+		String tabText = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+		solutionName = new JLabel(tabText.split("-")[0] + "-");
+		solutionCopyName = new JTextField(15);
+		solutionCopyName.setText(tabText.substring(tabText.indexOf("-") + 1, tabText.length()));
 		
 		renameButton = new JButton("Rename");
 		cancelButton = new JButton("Cancel");
 		renameButton.addActionListener(this);
 		cancelButton.addActionListener(this);
 		
-		tabNameTextField.addActionListener(new ActionListener() {
+		solutionCopyName.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				renameButton.requestFocusInWindow();
 			}
 		});
-		tabNamePanel = new JPanel();
-		tabNamePanel.add(tabNameTextField);
+		tabNamePanel = new JPanel(new SpringLayout());
+		tabNamePanel.add(solutionName);
+		tabNamePanel.add(solutionCopyName);
+		SpringUtilities.makeCompactGrid(tabNamePanel, 1, 2, 10, 10, 10, 10);
 		
 		buttonsPanel = new JPanel(new SpringLayout());
 		buttonsPanel.add(renameButton);
@@ -63,12 +68,13 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();
 		if (theButton.getText().equals("Rename")) {
-			String tabName = tabNameTextField.getText();
+			String tabName = solutionName.getText()  + solutionCopyName.getText();
 			String oldTreeName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
+			String newSolutionCopyName = solutionName.getText() + solutionCopyName.getText();
 			String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName + "opened");
-			INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", tabNameTextField.getText() + "opened", oldTreeName + "opened");
-			INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", tabNameTextField.getText(), oldTreeName);
-			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", oldItemValue, tabNameTextField.getText() + "opened");
+			INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newSolutionCopyName + "opened", oldTreeName + "opened");
+			INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newSolutionCopyName, oldTreeName);
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", oldItemValue, newSolutionCopyName + "opened");
 			tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), tabName);
 			this.dispose();
 		} else {

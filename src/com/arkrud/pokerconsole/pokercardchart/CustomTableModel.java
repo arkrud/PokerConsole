@@ -99,11 +99,12 @@ public class CustomTableModel extends AbstractTableModel {
 				MongoDBFactory.crateMongoConnection();
 				colorsMap = MongoDBFactory.getColorMap(imagePath.split("\\.")[0]);
 			} else {
-				if (!UtilMethodsFactory.hasChart(path) || UtilMethodsFactory.getChart(path).getIniData().isEmpty()) {
+				colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
+				/*if (!UtilMethodsFactory.hasChart(path) || UtilMethodsFactory.getChart(path).getIniData().isEmpty()) {
 					colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
 				} else {
 					colorsMap = UtilMethodsFactory.getChart(path).getIniData();
-				}
+				}*/
 			}
 		} else {
 			useINI = false;
