@@ -382,10 +382,11 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 												path = new TreePath(childNode2.getPath());
 												cloudTree.setSelectionPath(path);
 												cloudTree.scrollPathToVisible(path);
+
 												return path;
 											}
 										} else if (childNode2.getUserObject() instanceof PokerOpponentPosition) {
-											if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(pathNodes[2])) {
+											if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(Integer.toString(y + 1) + pathNodes[2])) {
 												path = new TreePath(childNode2.getPath());
 												cloudTree.setSelectionPath(path);
 												cloudTree.scrollPathToVisible(path);

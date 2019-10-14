@@ -112,6 +112,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					String newName = constructNewTabname(jTabbedPane);
 					String oldTreeName = jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
 					if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", newName)) {
+
 						JOptionPane.showMessageDialog(dash, "This position is selected in another Solution Tree copy", "Error", JOptionPane.ERROR_MESSAGE);
 						int x = 0;
 						while (x < jTabbedPane.getTabCount()) {

@@ -38,7 +38,7 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 /**
  * Class to build advanced desktop interface with tree controls and scrollable are to show multiple frames.<br>
- * 
+ *
  */
 public class Dashboard extends JFrame implements InternalFrameListener, WindowListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
@@ -64,7 +64,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	/**
 	 * Sole constructor of Dashboard object. <br>
 	 * Adding Window Listener and initializing graphics controls
-	 * 
+	 *
 	 * @param editable flag to define the editable state of the Poker hand charts
 	 */
 	public Dashboard(boolean editable) throws Exception {
@@ -75,7 +75,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Public method to add new navigation tree tab. <br>
-	 * 
+	 *
 	 * @param tabName String to define the Solution name
 	 */
 	public CustomTree addTreeTabPaneTab(String tabName) {
@@ -96,7 +96,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Public method to get reference to JScrollableDesktopPane object.<br>
-	 * 
+	 *
 	 */
 	public JScrollableDesktopPane getJScrollableDesktopPane() {
 		if (jScrollableDesktopPane == null) {
@@ -107,7 +107,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Public method to get reference to JTabbedPane object.<br>
-	 * 
+	 *
 	 */
 	public JTabbedPane getTreeTabbedPane() {
 		return treeTabbedPane;
@@ -119,9 +119,10 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Public method to remove internal frame info from static data structure when window is closed. <br>
-	 * 
+	 *
 	 * @Override
 	 */
+	@Override
 	public void internalFrameClosed(InternalFrameEvent e) {
 		BaseInternalFrame thisFrame = (BaseInternalFrame) e.getSource();
 		Dashboard.INTERNAL_FRAMES.remove(thisFrame.getTitle());
@@ -149,7 +150,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Public method to remove tab from tabbed pane. <br>
-	 * 
+	 *
 	 * @param tabText string representing tab header text
 	 */
 	public void removeTreeTabPaneTab(String tabText) {
@@ -198,9 +199,10 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 * </ul>
 	 * </ul>
 	 * <p>
-	 * 
+	 *
 	 * @Override
 	 */
+	@Override
 	public void stateChanged(ChangeEvent changeEvent) {
 		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
@@ -248,11 +250,12 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	}
 
 	/**
-	 * 
+	 *
 	 * Includes method to exit application. <br>
-	 * 
+	 *
 	 * @Override
 	 */
+	@Override
 	public void windowClosing(WindowEvent arg0) {
 		UtilMethodsFactory.exitApp();
 	}
@@ -275,7 +278,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Pivate method to check if tab with given header name already exist.<br>
-	 * 
+	 *
 	 * @param tabName String to define the tab name
 	 */
 	private boolean hasTab(String tabName) {
@@ -291,7 +294,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Private method to initialize all controls. <br>
-	 * 
+	 *
 	 * @param editable flag to define the editable state of the Poker hand charts
 	 */
 	private void initialize(boolean editable) throws Exception {
@@ -310,7 +313,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Private method to create dashboard menu items and add menu to dashboard. <br>
-	 * 
+	 *
 	 */
 	private void addMenu() {
 		jJMenuBar = new JMenuBar();
@@ -320,7 +323,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Private method to initialize Desktop frame content panel. <br>
-	 * 
+	 *
 	 */
 	private JPanel initializeFrameContentPanel() {
 		JPanel frameContentPanel = new JPanel();
@@ -330,7 +333,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Private method to initialize Split pane to hole trees tabbed pane and scrollable desktop. <br>
-	 * 
+	 *
 	 */
 	private JSplitPane initializeSplitPane() {
 		JSplitPane jSplitPane = new JSplitPane();
@@ -357,7 +360,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Private method to retrieve available trees info from INI file. <br>
-	 * 
+	 *
 	 */
 	private ArrayList<String> getTreesFromINI() {
 		ArrayList<String> trees = new ArrayList<String>();
@@ -373,7 +376,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	/**
 	 * Private method to add trees to tabbed pane. <br>
-	 * 
+	 *
 	 * @param treeTabbedPane JTabbedPane object to hold navigation trees.
 	 * @param trees Array of Poker Strategy names.
 	 */

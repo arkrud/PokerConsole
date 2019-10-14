@@ -26,6 +26,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 		this.dash = dash;
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		final int index = tabbedPane.getUI().tabForCoordinate(tabbedPane, e.getX(), e.getY());
 		if (index != -1) {
@@ -41,6 +42,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 				final JPopupMenu popupMenu = new JPopupMenu();
 				final JMenuItem setName = new JMenuItem("Set Name");
 				setName.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						renameStrategyTab(tabbedPane);
 					}
@@ -51,6 +53,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 				popupMenu.add(setName);
 				final JMenuItem removeTreeCopy = new JMenuItem("Remove Tree Copy");
 				removeTreeCopy.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						removeTreeCopy(tabbedPane, dash);
 					}
@@ -63,7 +66,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 	}
 
 	private void renameStrategyTab(JTabbedPane tabbedPane) {
-		UtilMethodsFactory.showDialogToDesctop("RenameSolutioTab", 250, 140, dash, null, null, null, null, tabbedPane);
+		UtilMethodsFactory.showDialogToDesctop("RenameSolutioTab", 250, 140, dash, null, null, null, null, tabbedPane, null);
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "true", tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()).split("-")[0]);
 	}
 

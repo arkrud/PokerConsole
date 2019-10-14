@@ -32,7 +32,6 @@ import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
-import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
@@ -133,7 +132,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				} else {
 				}
 			} else if (ac.equals("ADD HANDS")) {
-				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null);
+				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null,null);
 			} else if (ac.equals("ADD OPPONENTS POSITION")) {
 				String s = (String) JOptionPane.showInputDialog(dash, "New Opponets Position", "Add Opponets Position", JOptionPane.PLAIN_MESSAGE, null, null, null);
 				if (s != null) {
@@ -141,7 +140,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						JOptionPane.showConfirmDialog(null, "This Opponents Position is Already there", "Duplicated Opponents Position Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if ((s != null) && (s.length() > 0)) {
-							PokerAction pokerAction = (PokerAction) (((DefaultMutableTreeNode) node).getUserObject());
+							PokerAction pokerAction = (PokerAction) (node.getUserObject());
 							DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
 							File chartINIFileName = new File(
 									UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini");
@@ -188,7 +187,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				} else if (response == JOptionPane.CLOSED_OPTION) {
 				}
 			} else if (ac.equals("ADD HANDS")) {
-				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null);
+				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null, null);
 			} else if (ac.equals("ADD OPPONENTS POSITION")) {
 				String s = (String) JOptionPane.showInputDialog(dash, "New Opponets Position", "Add Opponets Position", JOptionPane.PLAIN_MESSAGE, null, null, null);
 				if (s != null) {
@@ -196,7 +195,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						JOptionPane.showConfirmDialog(null, "This Opponents Position is Already there", "Duplicated Opponents Position Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if ((s != null) && (s.length() > 0)) {
-							PokerHandSizing pokerHandSizing = (PokerHandSizing) (((DefaultMutableTreeNode) node).getUserObject());
+							PokerHandSizing pokerHandSizing = (PokerHandSizing) (node.getUserObject());
 							DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
 							int n = 0;
 							int opponentsHangsNodesCount = 0;
@@ -248,7 +247,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						JOptionPane.showConfirmDialog(null, "This Opponents Position is Already there", "Duplicated Opponents Position Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						if ((s != null) && (s.length() > 0)) {
-							PokerPosition pokerPosition = (PokerPosition) (((DefaultMutableTreeNode) node).getUserObject());
+							PokerPosition pokerPosition = (PokerPosition) (node.getUserObject());
 							DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
 							PokerHandSizing pokerHandSizing = (PokerHandSizing) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
 							File chartINIFileName = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/"

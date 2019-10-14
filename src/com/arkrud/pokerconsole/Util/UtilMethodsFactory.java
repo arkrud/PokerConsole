@@ -21,6 +21,7 @@ import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -34,6 +35,7 @@ import com.arkrud.pokerconsole.UI.AddTreeFrame;
 import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.RenameTreeDialog;
+import com.arkrud.pokerconsole.UI.Dashboard.AddUserDialog;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -154,7 +156,7 @@ public class UtilMethodsFactory {
 		return images;
 	}
 
-	public static void showDialogToDesctop(String frameType, int width, int height, Dashboard dash, JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node, JTabbedPane tabbedPane) {
+	public static void showDialogToDesctop(String frameType, int invalid, int invalid2, Dashboard dash, JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node, JTabbedPane tabbedPane, JMenuItem addUser) {
 		JDialog dialog = null;
 		switch (frameType) {
 		case "AddTreesFrame":
@@ -169,10 +171,13 @@ public class UtilMethodsFactory {
 		case "AddHandsDialog":
 			dialog = new AddHandsDialog(tree, theTree, obj, node);
 			break;
+		case "AddUser":
+			dialog = new AddUserDialog(addUser);
+			break;
 		default:
 			break;
 		}
-		dialog.setSize(width, height);
+		dialog.setSize(invalid, invalid2);
 		// Get the size of the screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		// Determine the new location of the window
@@ -296,7 +301,7 @@ public class UtilMethodsFactory {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+
+
 }
