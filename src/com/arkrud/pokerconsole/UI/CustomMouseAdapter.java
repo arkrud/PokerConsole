@@ -45,7 +45,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 						renameStrategyTab(tabbedPane);
 					}
 				});
-				if(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "manualtreenaming").equals("false")) {
+				if(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "manualtreenaming").equals("false")) {
 					setName.setEnabled(false);
 				}
 				popupMenu.add(setName);
@@ -73,8 +73,8 @@ public class CustomMouseAdapter extends MouseAdapter {
 		} else if (response == JOptionPane.YES_OPTION) {
 			String treeTabTitle = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
 			dash.removeTreeTabPaneTab(treeTabTitle);
-			String[] trees = { treeTabTitle, treeTabTitle + "opened" };
-			INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", trees);
+			INIFilesFactory.removeINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Applications", treeTabTitle);
+			INIFilesFactory.removeINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", treeTabTitle);
 		} else if (response == JOptionPane.CLOSED_OPTION) {
 		}
 	}

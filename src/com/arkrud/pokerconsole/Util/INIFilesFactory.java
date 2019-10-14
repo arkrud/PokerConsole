@@ -186,6 +186,13 @@ public class INIFilesFactory {
 		}
 		writeINI(iniFile, ini);
 	}
+	
+	public static void removeINIFileItem(File iniFile, String section, String itemName) {
+		IniFile ini = readINI(iniFile);
+		IniSection iniSection = ini.getSection(section);
+		iniSection.removeItem(itemName);
+		writeINI(iniFile, ini);
+	}
 
 	public static void removeINIFileItemsByPattern(File iniFile, String section, String pattern) {
 		IniFile ini = readINI(iniFile);

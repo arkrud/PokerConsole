@@ -97,13 +97,13 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 							String title = dash.getTreeTabbedPane().getTitleAt(x);
 							dash.removeTreeTabPaneTab(title);
 							treesArrayLIst.add(title);
-							treesArrayLIst.add(title + "opened");
 						}
 						;
 						x++;
 					}
 					String[] trees = treesArrayLIst.toArray(new String[treesArrayLIst.size()]);
 					INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", trees);
+					INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Selections", trees);
 					String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + treeName;
 					UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
 				} else if (response == JOptionPane.CLOSED_OPTION) {

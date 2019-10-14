@@ -34,7 +34,6 @@ import com.arkrud.pokerconsole.UI.AddTreeFrame;
 import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.RenameTreeDialog;
-import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -98,8 +97,8 @@ public class UtilMethodsFactory {
 	}
 
 	public static void exitApp() {
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "editable");
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "manualtreenaming");
+		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "editable");
+		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "manualtreenaming");
 		System.exit(0);
 	}
 

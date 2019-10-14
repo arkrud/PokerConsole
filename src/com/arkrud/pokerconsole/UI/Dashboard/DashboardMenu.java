@@ -54,7 +54,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else {
 			clearUser.setEnabled(false);
 		}
-		if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "ini").equals("true")) {
+		if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "ini").equals("true")) {
 			dataSourceSelection.setText("Use MongoDB");
 		} else {
 			dataSourceSelection.setText("Use INI Files");
@@ -114,10 +114,10 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			} else {
 			}
 		} else if (menuText.contains("Enable Manual Solution Copy Naming")) {
-			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "manualtreenaming");
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "manualtreenaming");
 			manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
 		} else if (menuText.contains("Disable Manual Solution Copy Naming")) {
-			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "manualtreenaming");
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "manualtreenaming");
 			manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 		} else if (menuText.contains("Hide/Show Trees")) {
 			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null, null);
@@ -129,19 +129,19 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) customTree.getTreeModel().getRoot();
 			PokerStrategy pokerStrategy = (PokerStrategy) node.getUserObject();
 			generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()), editable);
-			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "editable");
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "editable");
 			showDashboard();
 		} else if (menuText.contains("Load Charts in MongoDB")) {
 			MongoDBFactory.crateMongoConnection();
 			addDocuments(new File(UtilMethodsFactory.getConfigPath() + "Images"));
 			MongoDBFactory.closeMongoConnection();
 		} else if (menuText.contains("Use MongoDB")) {
-			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "mongo");
-			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "ini");
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "mongo");
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "ini");
 			reOpenDashboard();
 		} else if (menuText.contains("Use INI Files")) {
-			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "false", "mongo");
-			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "data", "true", "ini");
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "mongo");
+			INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "ini");
 			reOpenDashboard();
 		} else if (menuText.contains("Clear Security")) {
 			int response = JOptionPane.showConfirmDialog(null, "Do you want to disable security?", "Disable security", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);

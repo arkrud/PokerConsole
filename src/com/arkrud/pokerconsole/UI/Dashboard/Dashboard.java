@@ -34,9 +34,12 @@ import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
-import com.arkrud.pokerconsole.Util.Reversed;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+/**
+ * Class to build advanced desktop interface with tree controls and scrollable are to show multiple frames.<br>
+ * 
+ */
 public class Dashboard extends JFrame implements InternalFrameListener, WindowListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 	/**
@@ -44,35 +47,57 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 */
 	public static Hashtable<String, BaseInternalFrame> INTERNAL_FRAMES = new Hashtable<String, BaseInternalFrame>();
 	private JMenuBar jJMenuBar = null;
+	/**
+	 * Scrollable Frames to be added to scrollable desktop.
+	 */
 	private JScrollableDesktopPane jScrollableDesktopPane = null;
-	private CustomTree customTree;
+	/**
+	 * Tabbed Pane to hold multiple custom trees.
+	 */
 	private JTabbedPane treeTabbedPane;
+	/**
+	 * Flag to define if the charts presented in scrollable frames are editable.<br>
+	 * And define limited interface controls set in non-editable state
+	 */
 	private boolean editable;
 
-	// Constructor
+	/**
+	 * Sole constructor of Dashboard object. <br>
+	 * Adding Window Listener and initializing graphics controls
+	 * 
+	 * @param editable flag to define the editable state of the Poker hand charts
+	 */
 	public Dashboard(boolean editable) throws Exception {
 		this.editable = editable;
 		super.addWindowListener(this);
 		initialize(editable);
 	}
 
-	public CustomTree addTreeTabPaneTab(String appName) {
+	/**
+	 * Public method to add new navigation tree tab. <br>
+	 * 
+	 * @param tabName String to define the Solution name
+	 */
+	public CustomTree addTreeTabPaneTab(String tabName) {
 		String treeName = "";
-		if (appName.contains("-")) {
-			treeName = appName.split("-")[0];
+		if (tabName.contains("-")) {
+			treeName = tabName.split("-")[0];
 		} else {
-			treeName = appName;
+			treeName = tabName;
 		}
 		CustomTree tree = new CustomTree(this, treeName, true);
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
-		if (!hasTab(appName)) {
-			treeTabbedPane.insertTab(appName, null, jScrollPane, null, 0);
+		if (!hasTab(tabName)) {
+			treeTabbedPane.insertTab(tabName, null, jScrollPane, null, 0);
 		}
 		return tree;
 	}
 
-	// Get reference to JScrollableDesktopPane object
+	/**
+	 * Public method to get reference to JScrollableDesktopPane object.<br>
+	 * 
+	 */
 	public JScrollableDesktopPane getJScrollableDesktopPane() {
 		if (jScrollableDesktopPane == null) {
 			jScrollableDesktopPane = new JScrollableDesktopPane(jJMenuBar);
@@ -80,78 +105,23 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		return jScrollableDesktopPane;
 	}
 
+	/**
+	 * Public method to get reference to JTabbedPane object.<br>
+	 * 
+	 */
 	public JTabbedPane getTreeTabbedPane() {
 		return treeTabbedPane;
 	}
 
-	private boolean hasTab(String appName) {
-		int count = treeTabbedPane.getTabCount();
-		for (int i = 0; i < count; i++) {
-			String label = treeTabbedPane.getTitleAt(i);
-			if (label.equals(appName)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// Initialization of the visual interface
-	private void initialize(boolean editable) throws Exception {
-		// Create dashboard menu items and add menu to dashboard
-		jJMenuBar = new JMenuBar();
-		jJMenuBar.add(new DashboardMenu(this, editable));
-		this.setJMenuBar(jJMenuBar);
-		// Create dashboard interface
-		JPanel jContentPane = new JPanel();
-		jContentPane.setLayout(new BorderLayout());
-		JSplitPane jSplitPane = new JSplitPane();
-		jSplitPane.setDividerLocation(175);
-		jSplitPane.setRightComponent(getJScrollableDesktopPane());
-		treeTabbedPane = new JTabbedPane();
-		treeTabbedPane.addChangeListener(this);
-		treeTabbedPane.setUI(new BasicTabbedPaneUI() {
-			@Override
-			protected MouseListener createMouseListener() {
-				return new CustomMouseAdapter(treeTabbedPane, Dashboard.this);
-			}
-		});
-		ArrayList<String> trees = new ArrayList<String>();
-		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
-		while (it.hasNext()) {
-			ArrayList<Object> appData = it.next();
-			if (((Boolean) appData.get(1)) ) {
-				trees.add((String) appData.get(0));
-			}
-		}
-		int x = 0;
-		while (x < trees.size()) {
-			JScrollPane treeScroll = new JScrollPane();
-			String treeName = "";
-			if (trees.get(x).contains("-")) {
-				treeName = trees.get(x).split("-")[0];
-			} else {
-				treeName = trees.get(x);
-			}
-			customTree = new CustomTree(this, treeName, editable);
-			treeScroll.setViewportView(customTree);
-			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
-			treeTabbedPane.setSelectedIndex(0);
-			x++;
-		}
-		jSplitPane.setLeftComponent(treeTabbedPane);
-		jContentPane.add(jSplitPane, BorderLayout.CENTER);
-		this.setContentPane(jContentPane);
-		this.setTitle("Dashboard");
-		this.setBounds(new Rectangle(0, 0, 1500, 850));
-	}
-
-	// Overwrites
 	@Override
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
 
-	// Remove internal frame info from static data structure when window is closed
-	@Override
+	/**
+	 * Public method to remove internal frame info from static data structure when window is closed. <br>
+	 * 
+	 * @Override
+	 */
 	public void internalFrameClosed(InternalFrameEvent e) {
 		BaseInternalFrame thisFrame = (BaseInternalFrame) e.getSource();
 		Dashboard.INTERNAL_FRAMES.remove(thisFrame.getTitle());
@@ -177,16 +147,17 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 
-	public boolean isEditable() {
-		return editable;
-	}
-
-	public void removeTreeTabPaneTab(String appName) {
+	/**
+	 * Public method to remove tab from tabbed pane. <br>
+	 * 
+	 * @param tabText string representing tab header text
+	 */
+	public void removeTreeTabPaneTab(String tabText) {
 		int count = treeTabbedPane.getTabCount();
 		for (int i = 0; i < count; i++) {
 			try {
 				String label = treeTabbedPane.getTitleAt(i);
-				if (label.equals(appName)) {
+				if (label.equals(tabText)) {
 					treeTabbedPane.remove(i);
 				}
 			} catch (Exception e) {
@@ -194,25 +165,48 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		}
 	}
 
-	private <T> Reversed<T> reversed(List<T> original) {
-		return new Reversed<T>(original);
-	}
-
-	public void setEditable(boolean editable) {
-		this.editable = editable;
-	}
-
-	public void setTreeTabbedPane(JTabbedPane treeTabbedPane) {
-		this.treeTabbedPane = treeTabbedPane;
-	}
-
-	@Override
+	/**
+	 * Allows to have Navigation tree to have previously selected node to be selected and Poker hand charts placed into scrollable desktop on clicking on the header of tab pane tabs. <br>
+	 * <ul>
+	 * <li>Get selected tab index.
+	 * <li>Check if this solution tree has something previously selected.
+	 * <li>Retrieve the selection path string from the INI file <FRI-BB>.
+	 * <li>Check if selected tree node is leaf object or branch.
+	 * <li>If this is leaf object.
+	 * <ul>
+	 * <li>Get PokerOpponentPosition object from the tree node.
+	 * <li>Generate the Poker hand ChartPanel object based on PokerOpponentPosition object ChartImagePath property.
+	 * <li>Poker hand chart can be editable or static based on the value of editable flag.
+	 * <li>Generate chart window.
+	 * <li>Add hand chart window to the Scrollable Desktop.
+	 * </ul>
+	 * <li>If this is branch object, get PokerOpponentPosition object from the tree node
+	 * <ul>
+	 * <li>Loop over all children under branch node.
+	 * <li>If the flag is set to editable.
+	 * <ul>
+	 * <li>Generate the Poker hand chart based on PokerOpponentPosition object ChartImagePath property
+	 * <li>Poker hand chart can be editable or static based on the value of editable flag.
+	 * <li>Generate chart window.
+	 * <li>Add hand chart window to the Scrollable Desktop.
+	 * </ul>
+	 * <li>If the flag is set to editable.
+	 * <ul>
+	 * <li>Generate the Poker hand chart ImageChartPanel object based on PokerOpponentPosition object ChartImagePath property
+	 * <li>Generate chart window.
+	 * <li>Add hand chart window to the Scrollable Desktop. </ul
+	 * </ul>
+	 * </ul>
+	 * <p>
+	 * 
+	 * @Override
+	 */
 	public void stateChanged(ChangeEvent changeEvent) {
 		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
 		getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
-		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened")) {
-			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", sourceTabbedPane.getTitleAt(index) + "opened");
+		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
+			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
 			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
@@ -228,7 +222,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 					@SuppressWarnings("unchecked")
 					List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-					for (DefaultMutableTreeNode s : reversed(list)) {
+					for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
 						PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
 						if (editable) {
 							chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
@@ -253,8 +247,12 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	public void windowClosed(WindowEvent arg0) {
 	}
 
-	// Exit application
-	@Override
+	/**
+	 * 
+	 * Includes method to exit application. <br>
+	 * 
+	 * @Override
+	 */
 	public void windowClosing(WindowEvent arg0) {
 		UtilMethodsFactory.exitApp();
 	}
@@ -273,5 +271,127 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
+	}
+
+	/**
+	 * Pivate method to check if tab with given header name already exist.<br>
+	 * 
+	 * @param tabName String to define the tab name
+	 */
+	private boolean hasTab(String tabName) {
+		int count = treeTabbedPane.getTabCount();
+		for (int i = 0; i < count; i++) {
+			String label = treeTabbedPane.getTitleAt(i);
+			if (label.equals(tabName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Private method to initialize all controls. <br>
+	 * 
+	 * @param editable flag to define the editable state of the Poker hand charts
+	 */
+	private void initialize(boolean editable) throws Exception {
+		addMenu();
+		JPanel frameContentPanel = initializeFrameContentPanel();
+		JSplitPane jSplitPane = initializeSplitPane();
+		treeTabbedPane = initializeTabbedPane();
+		ArrayList<String> trees = getTreesFromINI();
+		addTreesToTabs(treeTabbedPane, trees);
+		jSplitPane.setLeftComponent(treeTabbedPane);
+		frameContentPanel.add(jSplitPane, BorderLayout.CENTER);
+		this.setContentPane(frameContentPanel);
+		this.setTitle("Poker Strategies Dashboard");
+		this.setBounds(new Rectangle(0, 0, 1500, 850));
+	}
+
+	/**
+	 * Private method to create dashboard menu items and add menu to dashboard. <br>
+	 * 
+	 */
+	private void addMenu() {
+		jJMenuBar = new JMenuBar();
+		jJMenuBar.add(new DashboardMenu(this, editable));
+		this.setJMenuBar(jJMenuBar);
+	}
+
+	/**
+	 * Private method to initialize Desktop frame content panel. <br>
+	 * 
+	 */
+	private JPanel initializeFrameContentPanel() {
+		JPanel frameContentPanel = new JPanel();
+		frameContentPanel.setLayout(new BorderLayout());
+		return frameContentPanel;
+	}
+
+	/**
+	 * Private method to initialize Split pane to hole trees tabbed pane and scrollable desktop. <br>
+	 * 
+	 */
+	private JSplitPane initializeSplitPane() {
+		JSplitPane jSplitPane = new JSplitPane();
+		jSplitPane.setDividerLocation(175);
+		jSplitPane.setRightComponent(getJScrollableDesktopPane());
+		return jSplitPane;
+	}
+
+	/**
+	 * Private method to initialize trees tabbed pane. <br>
+	 * Tabbed pane has CustomMouseAdapter set to provide dropm down nemu functionality on tab headers.
+	 */
+	private JTabbedPane initializeTabbedPane() {
+		treeTabbedPane = new JTabbedPane();
+		treeTabbedPane.addChangeListener(this);
+		treeTabbedPane.setUI(new BasicTabbedPaneUI() {
+			@Override
+			protected MouseListener createMouseListener() {
+				return new CustomMouseAdapter(treeTabbedPane, Dashboard.this);
+			}
+		});
+		return treeTabbedPane;
+	}
+
+	/**
+	 * Private method to retrieve available trees info from INI file. <br>
+	 * 
+	 */
+	private ArrayList<String> getTreesFromINI() {
+		ArrayList<String> trees = new ArrayList<String>();
+		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
+		while (it.hasNext()) {
+			ArrayList<Object> appData = it.next();
+			if (((Boolean) appData.get(1))) {
+				trees.add((String) appData.get(0));
+			}
+		}
+		return trees;
+	}
+
+	/**
+	 * Private method to add trees to tabbed pane. <br>
+	 * 
+	 * @param treeTabbedPane JTabbedPane object to hold navigation trees.
+	 * @param trees Array of Poker Strategy names.
+	 */
+	private void addTreesToTabs(JTabbedPane treeTabbedPane, ArrayList<String> trees) {
+		int x = 0;
+		while (x < trees.size()) {
+			JScrollPane treeScroll = new JScrollPane();
+			String treeName = "";
+			if (trees.get(x).contains("-")) {
+				treeName = trees.get(x).split("-")[0];
+			} else {
+				treeName = trees.get(x);
+			}
+			CustomTree customTree = new CustomTree(this, treeName, editable);
+			treeScroll.setViewportView(customTree);
+			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
+			treeTabbedPane.setSelectedIndex(0);
+			x++;
+		}
 	}
 }

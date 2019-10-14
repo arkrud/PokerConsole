@@ -121,7 +121,7 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	private static void showDashboard() {
 		Dashboard dash = null;
 		try {
-			dash = new Dashboard(Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "editable")));
+			dash = new Dashboard(Boolean.parseBoolean(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "editable")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

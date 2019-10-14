@@ -95,7 +95,7 @@ public class CustomTableModel extends AbstractTableModel {
 		File inifile = new File(UtilMethodsFactory.getConfigPath() + imagePath.substring(0, imagePath.length() - 3) + "ini");
 		String path = imagePath.substring(0, imagePath.length() - 3) + "jpg";
 		if (inifile.exists()) {
-			if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "mongo").equals("true")) {
+			if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "mongo").equals("true")) {
 				MongoDBFactory.crateMongoConnection();
 				colorsMap = MongoDBFactory.getColorMap(imagePath.split("\\.")[0]);
 			} else {
@@ -152,7 +152,7 @@ public class CustomTableModel extends AbstractTableModel {
 			data.add(objects);
 			y++;
 		}
-		if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "data", "mongo").equals("true")) {
+		if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "mongo").equals("true")) {
 			MongoDBFactory.closeMongoConnection();
 		}
 	}

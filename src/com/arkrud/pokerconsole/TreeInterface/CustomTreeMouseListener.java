@@ -111,7 +111,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					JTabbedPane jTabbedPane = dash.getTreeTabbedPane();
 					String newName = constructNewTabname(jTabbedPane);
 					String oldTreeName = jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
-					if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Applications", newName + "opened")) {
+					if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", newName)) {
 						JOptionPane.showMessageDialog(dash, "This position is selected in another Solution Tree copy", "Error", JOptionPane.ERROR_MESSAGE);
 						int x = 0;
 						while (x < jTabbedPane.getTabCount()) {
@@ -127,17 +127,17 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 								dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
 								BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
 								UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), pane, theFrame);
-								INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()) + "opened",
+								INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()),
 										((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
 							}
 						} else {
 							showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
 						}
 						if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newName.split("-")[0]).equals("false")) {
-							String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName + "opened");
-							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName + "opened", oldTreeName + "opened");
+							String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", oldTreeName);
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", newName, oldTreeName);
 							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName, oldTreeName);
-							INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", oldItemValue, newName + "opened");
+							INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Selections", oldItemValue, newName);
 							jTabbedPane.setTitleAt(jTabbedPane.getSelectedIndex(), newName);
 						} else {
 							String newPosition = newName.substring(newName.indexOf("-") + 1, newName.length());
@@ -203,7 +203,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
 		} else {
 		}
-		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", treeTabName + "opened", iniItemName);
+		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", treeTabName, iniItemName);
 	}
 
 	public Point getLoc() {
