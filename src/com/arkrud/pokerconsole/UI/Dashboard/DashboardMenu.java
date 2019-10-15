@@ -28,8 +28,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	/**
 	 * Menu items.
 	 */
-	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection,
-			manualSolutionNaming;
+	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming;
 	/**
 	 * REference to dashboard object
 	 */
@@ -48,10 +47,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * Sole constructor of Dashboard object. <br>
 	 * Adding Window Listener and initializing graphics controls
 	 *
-	 * @param dash
-	 *            dashboard object reference
-	 * @param editable
-	 *            flag to define the editable state of the Poker hand charts
+	 * @param dash dashboard object reference
+	 * @param editable flag to define the editable state of the Poker hand charts
 	 */
 	public DashboardMenu(Dashboard dash, boolean editable) {
 		super();
@@ -108,7 +105,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	}
 
 	/**
-	 * Includes method to perform menu actions. <br>
+	 * Initiates methods to perform menu actions on menu items selection. <br>
 	 *
 	 * @Override
 	 */
@@ -128,8 +125,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (menuText.contains("Disable Manual Solution Copy Naming")) {
 			disableManualNaming();
 		} else if (menuText.contains("Hide/Show Trees")) {
-			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null,
-					null, null);
+			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null, null, null);
 		} else if (menuText.contains("Update User")) {
 			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser);
 		} else if (menuText.contains("Open Read Only Dashboard")) {
@@ -146,17 +142,14 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	}
 
 	/**
-	 * Allows to have Navigation tree to have previously selected node to be selected and Poker hand charts placed into scrollable desktop on clicking on the
-	 * header of tab pane tabs. <br>
+	 * Allows to have previously selected tree node to be selected and Poker hand charts placed into scrollable desktop on clicking on the header of tab pane tabs. <br>
 	 * <ul>
 	 * <li>Calculates the level on the node in the tree independent from application deployment location in file system.
 	 * <li>Generates charts at specific levels if filesystem object is file.
 	 * <ul>
 	 *
-	 * @param node
-	 *            INI file object to be loaded into Poker hands chart
-	 * @param editable
-	 *            flag to define the editable state of the Poker hand charts
+	 * @param node INI file object to be loaded into Poker hands chart
+	 * @param editable flag to define the editable state of the Poker hand charts
 	 */
 	private void generateChartImages(File node, boolean editable) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
@@ -171,72 +164,42 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			} else if (level == 3) {
 				if (node.isFile()) {
 					if (!node.getName().contains("png")) {
-						generateCharts(node, editable);
+						generateChart(node, editable);
 					}
 				} else {
 				}
 			} else if (level == 4) {
 				if (!node.getName().contains("png")) {
-					generateCharts(node, editable);
+					generateChart(node, editable);
 				}
 			} else if (level == 5) {
 				if (!node.getName().contains("png")) {
-					generateCharts(node, editable);
+					generateChart(node, editable);
 				}
 			} else {
 			}
 		}
 	}
 
-	private void addDocuments(File node) {
-		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
-		if (node.isDirectory()) {
-			String[] subNote = node.list();
-			for (String filename : subNote) {
-				addDocuments(new File(node, filename));
-			}
-		} else {
-			if (level == 0) {
-			} else if (level == 1) {
-			} else if (level == 2) {
-				if (node.isFile()) {
-					if (node.getName().contains("ini")) {
-						String absolutePath = node.getAbsoluteFile().getPath();
-						String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length()).split("\\.")[0].replaceAll("\\\\",
-								"/");
-						MongoDBFactory.addDocument(INIFilesFactory.getItemValuesFromINI(node), imagePath);
-						File pngfile = new File(UtilMethodsFactory.getConfigPath() + imagePath + ".png");
-						MongoDBFactory.updateDocuments(imagePath, pngfile);
-					}
-				} else {
-				}
-			} else if (level == 3) {
-				if (node.isFile()) {
-					if (node.getName().contains("ini")) {
-						String absolutePath = node.getAbsoluteFile().getPath();
-						String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length()).split("\\.")[0].replaceAll("\\\\",
-								"/");
-						MongoDBFactory.addDocument(INIFilesFactory.getItemValuesFromINI(node), imagePath);
-						File pngfile = new File(UtilMethodsFactory.getConfigPath() + imagePath + ".png");
-						MongoDBFactory.updateDocuments(imagePath, pngfile);
-					}
-
-				} else {
-				}
-			} else if (level == 4) {
-				if (node.getName().contains("ini")) {
-					String absolutePath = node.getAbsoluteFile().getPath();
-					String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length()).split("\\.")[0].replaceAll("\\\\", "/");
-					MongoDBFactory.addDocument(INIFilesFactory.getItemValuesFromINI(node), imagePath);
-					File pngfile = new File(UtilMethodsFactory.getConfigPath() + imagePath + ".png");
-					MongoDBFactory.updateDocuments(imagePath, pngfile);
-				}
-			} else {
-			}
-		}
-	}
-
-	private void generateCharts(File node, boolean editable) {
+	
+	
+	/**
+	 * Generates chart from INI file to produce PNG image and removes it. <br>
+	 * <ul>
+	 * <li>Get absolute file path.
+	 * <li>Strip the path before application Images directory to produce relative path string.
+	 * <li>Generate ChartPanel object using relative path and according editable flag value.
+	 * <li>Instantiate BaseInternalFrame to hold the ChartPanel and using relative path as a title.
+	 * <li>Get reference to JScrollableDesktopPane from Dashboard.
+	 * <li>Add frame to the scrollable desktop using relative path as a frame title.
+	 * <li>Generate chart PNG image from chart table in the ChartPanel in the same location as initial INI file.
+	 * <li>Remove the frame from the JScrollableDesktopPane.
+	 * <ul>
+	 *
+	 * @param node INI file object to be loaded into Poker hands chart
+	 * @param editable flag to define the editable state of the Poker hand charts
+	 */
+	private void generateChart(File node, boolean editable) {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
 		ChartPanel chartPanel = new ChartPanel(imagePath, editable);
@@ -331,12 +294,52 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	}
 
 	private void clearSecurity() {
-		int response = JOptionPane.showConfirmDialog(null, "Do you want to disable security?", "Disable security", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE);
+		int response = JOptionPane.showConfirmDialog(null, "Do you want to disable security?", "Disable security", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if (response == JOptionPane.NO_OPTION) {
 		} else if (response == JOptionPane.YES_OPTION) {
 			INIFilesFactory.removeINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security");
 		} else if (response == JOptionPane.CLOSED_OPTION) {
 		}
+	}
+	
+	private void addDocuments(File node) {
+		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
+		if (node.isDirectory()) {
+			String[] subNote = node.list();
+			for (String filename : subNote) {
+				addDocuments(new File(node, filename));
+			}
+		} else {
+			if (level == 0) {
+			} else if (level == 1) {
+			} else if (level == 2) {
+				if (node.isFile()) {
+					if (node.getName().contains("ini")) {
+						updateMongoDocument(node);
+					}
+				} else {
+				}
+			} else if (level == 3) {
+				if (node.isFile()) {
+					if (node.getName().contains("ini")) {
+						updateMongoDocument(node);
+					}
+				} else {
+				}
+			} else if (level == 4) {
+				if (node.getName().contains("ini")) {
+					updateMongoDocument(node);
+				}
+			} else {
+			}
+		}
+	}
+	
+	private void updateMongoDocument(File node) {
+		String absolutePath = node.getAbsoluteFile().getPath();
+		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length()).split("\\.")[0].replaceAll("\\\\", "/");
+		MongoDBFactory.addDocument(INIFilesFactory.getItemValuesFromINI(node), imagePath);
+		File pngfile = new File(UtilMethodsFactory.getConfigPath() + imagePath + ".png");
+		MongoDBFactory.updateDocuments(imagePath, pngfile);
 	}
 }
