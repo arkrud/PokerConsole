@@ -181,10 +181,10 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 	}
 
-	
-	
+
+
 	/**
-	 * Generates chart from INI file to produce PNG image and removes it. <br>
+	 * Generates chart from INI file to produce PNG image and removes chart. <br>
 	 * <ul>
 	 * <li>Get absolute file path.
 	 * <li>Strip the path before application Images directory to produce relative path string.
@@ -301,7 +301,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (response == JOptionPane.CLOSED_OPTION) {
 		}
 	}
-	
+
 	private void addDocuments(File node) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
 		if (node.isDirectory()) {
@@ -334,7 +334,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			}
 		}
 	}
-	
+
 	private void updateMongoDocument(File node) {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length()).split("\\.")[0].replaceAll("\\\\", "/");

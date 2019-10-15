@@ -39,6 +39,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 	private JTree tree;
 	private TreePath path;
 	private Dashboard dash;
+	private boolean editable;
 	private CustomTreeMouseListener cml;
 	private CustomTree theTree;
 	final JFileChooser fc = new JFileChooser();
@@ -47,6 +48,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		// Pass variables values into the class
 		this.tree = tree;
 		this.dash = dash;
+		this.editable = editable;
 		this.theTree = theTree;
 		// Add Mouse listener to control which menu items will show up in drop-down menu
 		cml = new CustomTreeMouseListener(popup, dash, editable);
@@ -220,7 +222,13 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 									+ Integer.toString(opponentsHangsNodesCount + 1) + s + ".ini");
 							DefaultMutableTreeNode pokerOpponentPositionNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 							((DefaultTreeModel) tree.getModel()).insertNodeInto(pokerOpponentPositionNode, node, opponentsHangsNodesCount);
+							tree.setSelectionPath(new TreePath(pokerOpponentPositionNode.getPath()));
 							theTree.expandNodesBelow(node, tree);
+							dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+							ChartPanel chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
+							BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
+							UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), dash.getJScrollableDesktopPane(), theFrame);
+
 						}
 					}
 				}
