@@ -113,6 +113,10 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		return treeTabbedPane;
 	}
 
+	public void closeAllFrames() {
+		jScrollableDesktopPane.getDesktopMediator().closeAllFrames();
+	}
+
 	@Override
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
@@ -206,7 +210,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	public void stateChanged(ChangeEvent changeEvent) {
 		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
-		getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
+		closeAllFrames();
 		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
 			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
 			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
@@ -217,9 +221,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			if (path != null) {
 				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
 					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-					chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
-					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
-					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());					
 				} else {
 					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 					@SuppressWarnings("unchecked")
@@ -227,10 +229,8 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 					for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
 						PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
 						if (editable) {
-							chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), editable);
-							BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
-							UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
-						} else {
+							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
+							} else {
 							imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
 							BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
 							UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);

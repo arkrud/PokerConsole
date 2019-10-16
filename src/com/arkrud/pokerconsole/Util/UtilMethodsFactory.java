@@ -29,6 +29,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 
+import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.AddHandsDialog;
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
@@ -36,6 +37,7 @@ import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.RenameTreeDialog;
 import com.arkrud.pokerconsole.UI.Dashboard.AddUserDialog;
+import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -59,6 +61,12 @@ public class UtilMethodsFactory {
 			jScrollableDesktopPan.setSelectedFrame(theFrame);
 			Dashboard.INTERNAL_FRAMES.put(frameTitle, theFrame);
 		}
+	}
+	
+	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, JScrollableDesktopPane  jScrollableDesktopPane ) {
+		ChartPanel chartPanel = new ChartPanel(chartImagePath, editable);
+		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
+		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
 	}
 
 	public static void addToCharts(String path, ChartPanel chartPanel) {
@@ -203,7 +211,7 @@ public class UtilMethodsFactory {
 		}
 	}
 
-	public static void createGRoupFolder(File file) {
+	public static void createFolder(File file) {
 		if (file.mkdir()) {
 			System.out.println("Dir is created!");
 		} else {

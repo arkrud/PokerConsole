@@ -119,11 +119,11 @@ public class AddHandsDialog extends JDialog implements ActionListener {
 					if(tree.getSelectionPath().getPath().length == 3){
 					File pokerHandDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/"
 							+ ((PokerHandSizing) obj).getPokerAction().getNodeText() + "/" + ((PokerHandSizing) obj).getNodeText() + "/" + jCheckBox.getName());
-					UtilMethodsFactory.createGRoupFolder(pokerHandDir);
+					UtilMethodsFactory.createFolder(pokerHandDir);
 					} else if (tree.getSelectionPath().getPath().length == 2){
 						File pokerHandDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/"
 								 + ((PokerAction) obj).getNodeText() + "/" + jCheckBox.getName());
-						UtilMethodsFactory.createGRoupFolder(pokerHandDir);
+						UtilMethodsFactory.createFolder(pokerHandDir);
 					}
 					
 					DefaultMutableTreeNode pokerPositionNode = new DefaultMutableTreeNode(pokerPosition);

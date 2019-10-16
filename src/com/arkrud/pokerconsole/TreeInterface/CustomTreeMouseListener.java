@@ -124,10 +124,9 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					} else {
 						if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
 							if (obj instanceof PokerOpponentPosition) {
-								ChartPanel chartPanel = new ChartPanel(((PokerOpponentPosition) obj).getChartImagePath(), editable);
-								dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
-								BaseInternalFrame theFrame = new CustomTableViewInternalFrame(((PokerOpponentPosition) obj).getChartPaneTitle(), chartPanel);
-								UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(((PokerOpponentPosition) obj).getChartPaneTitle(), pane, theFrame);
+								PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition)obj;
+								dash.closeAllFrames();
+								UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, pane);
 								INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()),
 										((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
 							}
@@ -176,8 +175,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 	}
 
 	private void showDiagrams(TreePath path, JScrollableDesktopPane pane, String treeTabName) {
-		dash.getJScrollableDesktopPane().getDesktopMediator().closeAllFrames();
-		ChartPanel chartPanel;
+		dash.closeAllFrames();
 		ImageChartPanel imageChartPanel;
 		Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 		@SuppressWarnings("unchecked")
@@ -186,9 +184,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			if (s.getUserObject() instanceof PokerOpponentPosition) {
 				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
 				if (editable) {
-					chartPanel = new ChartPanel(pokerOpponentPosition.getChartImagePath(), true);
-					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), chartPanel);
-					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), pane, theFrame);
+					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, pane);
 				} else {
 					imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
 					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);

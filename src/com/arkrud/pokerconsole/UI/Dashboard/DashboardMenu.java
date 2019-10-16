@@ -103,6 +103,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 		add(exit);
 	}
+	
+	
 
 	/**
 	 * Initiates methods to perform menu actions on menu items selection. <br>
@@ -210,10 +212,19 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		pane.remove(theFrame);
 	}
 
-	private void showDashboard() {
+	/**
+	 * Opens read-only or editable Dashboard. <br>
+	 * <ul>
+	 * <li>Instantiate new dashboard.
+	 * <li>Make dashboard visible.
+	 * <li>Dispose current dashboard.
+	 * <ul>
+	 *
+	 */
+	private void showDashboard(boolean editable) {
 		Dashboard readOnlyDash = null;
 		try {
-			readOnlyDash = new Dashboard(false);
+			readOnlyDash = new Dashboard(editable);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -221,17 +232,19 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		dash.dispose();
 	}
 
-	private void reOpenDashboard() {
-		Dashboard refreshedDash = null;
-		try {
-			refreshedDash = new Dashboard(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		refreshedDash.setVisible(true);
-		dash.dispose();
-	}
-
+	/**
+	 * Imports solution from solution package ZIP file.<br>
+	 * <ul>
+	 * <li>Opens File dialog to select solution package ZIP file from filesystem.
+	 * <li>Add solution name to INI file Application section.
+	 * <li>Create strategy directory.
+	 * <li>Instantiate new tree and add it to new solution tree tab.
+	 * <li>Unzip solution files to the solution directory.
+	 * <li>Refresh tree to read and reflect new solution charts.
+	 * <li>Select the imported tab with new solution tree.
+	 * <ul>
+	 *
+	 */
 	private void loadSolution() {
 		String solutionPackagePath = "";
 		File file = null;
@@ -240,12 +253,11 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		int returnVal = fc.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = fc.getSelectedFile();
-			solutionPackagePath = file.getAbsolutePath();
-			solutionPackagePath = solutionPackagePath.replace("\\", "/");
+			solutionPackagePath = file.getAbsolutePath().replace("\\", "/");
 			String strategyName = file.getName().split("\\.")[0];
 			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", strategyName, "true");
-			File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + strategyName);
-			UtilMethodsFactory.createGRoupFolder(sizingDir);
+			File strategyDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + strategyName);
+			UtilMethodsFactory.createFolder(strategyDir);
 			CustomTree tree = dash.addTreeTabPaneTab(strategyName);
 			String destDirectory = (UtilMethodsFactory.getConfigPath() + "Images/").substring(1);
 			UtilMethodsFactory.unZipUpdate(solutionPackagePath, destDirectory);
@@ -262,7 +274,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		PokerStrategy pokerStrategy = (PokerStrategy) node.getUserObject();
 		generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()), editable);
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "editable");
-		showDashboard();
+		showDashboard(false);
 	}
 
 	private void enableManualNaming() {
@@ -284,13 +296,13 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	private void useMongo() {
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "mongo");
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "ini");
-		reOpenDashboard();
+		showDashboard(true);
 	}
 
 	private void useINI() {
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "mongo");
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "ini");
-		reOpenDashboard();
+		showDashboard(true);
 	}
 
 	private void clearSecurity() {

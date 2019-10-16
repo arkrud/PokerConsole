@@ -74,7 +74,7 @@ public class AddTreeFrame extends JDialog implements ActionListener {
 			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", application, visibility);
 			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", application, "false");
 			File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + application);
-			UtilMethodsFactory.createGRoupFolder(sizingDir);
+			UtilMethodsFactory.createFolder(sizingDir);
 			dash.addTreeTabPaneTab(application);
 			this.dispose();
 		} else {
