@@ -273,6 +273,7 @@ public class INIFilesFactory {
 	public static void updateINIFileItems(File iniFile, String section, String newItemValue, String itemName) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
+		System.out.println("name: " + itemName);
 		iniSection.getItem(itemName).setValue(newItemValue);
 		writeINI(iniFile, ini);
 	}

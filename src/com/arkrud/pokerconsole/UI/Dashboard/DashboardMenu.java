@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.arkrud.pokerconsole.UI.Dashboard;
 
 import java.awt.event.ActionEvent;
@@ -26,11 +29,11 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 public class DashboardMenu extends JMenu implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	/**
-	 * Menu items.
+	 * Menu item.
 	 */
 	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming;
 	/**
-	 * REference to dashboard object
+	 * Reference to dashboard object
 	 */
 	private Dashboard dash;
 	/**
@@ -109,7 +112,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	/**
 	 * Initiates methods to perform menu actions on menu items selection. <br>
 	 *
-	 * @Override
+	 * 
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -148,7 +151,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * <ul>
 	 * <li>Calculates the level on the node in the tree independent from application deployment location in file system.
 	 * <li>Generates charts at specific levels if filesystem object is file.
-	 * <ul>
+	 * </ul>
 	 *
 	 * @param node INI file object to be loaded into Poker hands chart
 	 * @param editable flag to define the editable state of the Poker hand charts
@@ -196,7 +199,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * <li>Add frame to the scrollable desktop using relative path as a frame title.
 	 * <li>Generate chart PNG image from chart table in the ChartPanel in the same location as initial INI file.
 	 * <li>Remove the frame from the JScrollableDesktopPane.
-	 * <ul>
+	 * </ul>
 	 *
 	 * @param node INI file object to be loaded into Poker hands chart
 	 * @param editable flag to define the editable state of the Poker hand charts
@@ -218,8 +221,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * <li>Instantiate new dashboard.
 	 * <li>Make dashboard visible.
 	 * <li>Dispose current dashboard.
-	 * <ul>
-	 *
+	 * </ul>
+	 *@param editable flag to define the editable state of the Poker hand charts
 	 */
 	private void showDashboard(boolean editable) {
 		Dashboard readOnlyDash = null;
@@ -242,7 +245,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * <li>Unzip solution files to the solution directory.
 	 * <li>Refresh tree to read and reflect new solution charts.
 	 * <li>Select the imported tab with new solution tree.
-	 * <ul>
+	 * </ul>
 	 *
 	 */
 	private void loadSolution() {
@@ -267,6 +270,14 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 	}
 
+	/**
+	 * Open read only dashboard.
+	 * <ul>
+	 * <li>Generates chart images if not yet generated.
+	 * <li>Update INI configuration file to set dashboard flag to false (not editable).
+	 * <li>Show read-only and close editable dashboard.
+	 * </ul>
+	 */
 	private void openReadOnlyDashboard() {
 		JScrollPane jScrollPane = (JScrollPane) dash.getTreeTabbedPane().getSelectedComponent();
 		CustomTree customTree = (CustomTree) jScrollPane.getViewport().getView();
@@ -277,34 +288,79 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		showDashboard(false);
 	}
 
+	/**
+	 * Enable manual naming.
+	 * <ul>
+	 * <li>Update INI configuration file to set manual naming of the tree tab headers flag to true (editable).
+	 * <li>Set appropriate menu item text.
+	 * </ul>
+	 */
 	private void enableManualNaming() {
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "manualtreenaming");
 		manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
 	}
-
+	
+	/**
+	 * Disable manual naming.
+	 * <ul>
+	 * <li>Update INI configuration file to set manual naming of the tree tab headers flag to false (auto naming).
+	 * <li>Set appropriate menu item text.
+	 * </ul>
+	 */
 	private void disableManualNaming() {
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "manualtreenaming");
 		manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 	}
-
+	
+	/**
+	 * Load Charts To Mongo DB.
+	 * <ul>
+	 * <li>Open Mongo DB connection.
+	 * <li>Add chart images to Mongo DB table.
+	 * <li>Close Mongo DB connection.
+	 * </ul>
+	 */
 	private void loadChartsToMongo() {
 		MongoDBFactory.crateMongoConnection();
 		addDocuments(new File(UtilMethodsFactory.getConfigPath() + "Images"));
 		MongoDBFactory.closeMongoConnection();
 	}
-
+	
+	/**
+	 * Set dashboard to use Mongo DB to populate charts.
+	 * <ul>
+	 * <li>Update INI configuration file to set use Mongo DB flag to true.
+	 * <li>Update INI configuration file to set use INI files flag to false.
+	 * <li>Show editable dashboard with chart images loaded from Mongo DB.
+	 * </ul>
+	 */
 	private void useMongo() {
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "mongo");
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "ini");
 		showDashboard(true);
 	}
-
+	
+	/**
+	 * Set dashboard to use INI files to populate charts.
+	 * <ul>
+	 * <li>Update INI configuration file to set use Mongo DB flag to false.
+	 * <li>Update INI configuration file to set use INI files flag to true.
+	 * <li>Show editable dashboard with chart images loaded from file system INI files.
+	 * </ul>
+	 */
 	private void useINI() {
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "mongo");
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "ini");
 		showDashboard(true);
 	}
 
+	/**
+	 * Clear security.
+	 * <ul>
+	 * <li>Bring up confirmation dialog for user to approve the action.
+	 * <li>If approved remove Security section from INI configuration file.
+	 * </ul>
+	 */
 	private void clearSecurity() {
 		int response = JOptionPane.showConfirmDialog(null, "Do you want to disable security?", "Disable security", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if (response == JOptionPane.NO_OPTION) {
@@ -314,6 +370,15 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 	}
 
+	/**
+	 * Recursive Crawl file system to add chart images to Mongo DB.
+	 *<ul>
+	 * <li>Calculate how deep the file structure is.
+	 * <li>If file object is directory run this function recursively.
+	 * <li>If file object is file add image object document to Mongo.
+	 * </ul>
+	 * @param node the node
+	 */
 	private void addDocuments(File node) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
 		if (node.isDirectory()) {
@@ -347,6 +412,17 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 	}
 
+	/**
+	 * Add and update mongo document.
+	 * <ul>
+	 * <li>Get image path string from the file.
+	 * <li>Add file object document to Mongo.
+	 * <li>Generate PNG image file.
+	 * <li>Update created Mongo document with PNG file.
+	 * </ul>
+	 *
+	 * @param node the node
+	 */
 	private void updateMongoDocument(File node) {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length()).split("\\.")[0].replaceAll("\\\\", "/");

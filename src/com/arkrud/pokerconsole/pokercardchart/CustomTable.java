@@ -19,7 +19,6 @@ public class CustomTable extends JTable {
 	public CustomTable(String imagePath, ChartPanel chart, boolean editable) {
 		CustomTableModel tableModel = (new CustomTableModel(chart));
 		tableModel.generateTableHeaders();
-		System.out.println("imagePath: " +  imagePath);
 		tableModel.generateTableData(imagePath);
 		String path = imagePath.substring(0, imagePath.length() - 3) + "ini";
 		tableModel.generateChartINIFile(path);

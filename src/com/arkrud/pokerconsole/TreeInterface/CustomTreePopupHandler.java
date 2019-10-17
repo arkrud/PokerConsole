@@ -136,7 +136,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			} else if (ac.equals("ADD HANDS")) {
 				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null, null);
 			} else if (ac.equals("ADD OPPONENTS POSITION")) {
-				String s = (String) JOptionPane.showInputDialog(dash, "New Opponets Position", "Add Opponets Position", JOptionPane.PLAIN_MESSAGE, null, null, null);
+				String s = ((String) JOptionPane.showInputDialog(dash, "New Opponets Position", "Add Opponets Position", JOptionPane.PLAIN_MESSAGE, null, null, null)).toUpperCase();
 				if (s != null) {
 					if (checkForNewObjectName(node, s)) {
 						JOptionPane.showConfirmDialog(null, "This Opponents Position is Already there", "Duplicated Opponents Position Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -183,7 +183,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			} else if (ac.equals("ADD HANDS")) {
 				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null, null);
 			} else if (ac.equals("ADD OPPONENTS POSITION")) {
-				String s = (String) JOptionPane.showInputDialog(dash, "New Opponets Position", "Add Opponets Position", JOptionPane.PLAIN_MESSAGE, null, null, null);
+				String s = ((String) JOptionPane.showInputDialog(dash, "New Opponets Position", "Add Opponets Position", JOptionPane.PLAIN_MESSAGE, null, null, null)).toUpperCase();
 				if (s != null) {
 					if (checkForNewObjectName(node, s)) {
 						JOptionPane.showConfirmDialog(null, "This Opponents Position is Already there", "Duplicated Opponents Position Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -212,15 +212,23 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				} else if (response == JOptionPane.YES_OPTION) {
 					PokerPosition pokerPosition = (PokerPosition) obj;
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
-					PokerHandSizing pokerHandSizing = (PokerHandSizing) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
-					String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
-							+ pokerPosition.getNodeText();
-					UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
-					((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
+					if (((DefaultMutableTreeNode) node.getParent()).getUserObject() instanceof PokerHandSizing) {
+						PokerHandSizing pokerHandSizing = (PokerHandSizing) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+						String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
+								+ pokerPosition.getNodeText();
+						UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
+						((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
+					} else if (((DefaultMutableTreeNode) node.getParent()).getUserObject() instanceof PokerAction) {
+						PokerAction pokerAction = (PokerAction) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+						String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" 
+								+ pokerPosition.getNodeText();
+						UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
+						((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
+					}
 				} else if (response == JOptionPane.CLOSED_OPTION) {
 				}
 			} else if (ac.equals("ADD OPPONENTS POSITION")) {
-				String s = (String) JOptionPane.showInputDialog(dash, "New Opponets Position", "Add Opponets Position", JOptionPane.PLAIN_MESSAGE, null, null, null);
+				String s = ((String) JOptionPane.showInputDialog(dash, "New Opponets Position", "Add Opponets Position", JOptionPane.PLAIN_MESSAGE, null, null, null)).toUpperCase();
 				if (s != null) {
 					if (checkForNewObjectName(node, s)) {
 						JOptionPane.showConfirmDialog(null, "This Opponents Position is Already there", "Duplicated Opponents Position Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -228,15 +236,28 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						if ((s != null) && (s.length() > 0)) {
 							PokerPosition pokerPosition = (PokerPosition) (node.getUserObject());
 							DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
-							PokerHandSizing pokerHandSizing = (PokerHandSizing) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
-							copyChartINIFile(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
-									+ pokerPosition.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini");
-							PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(Integer.toString(node.getChildCount() + 1) + s.toUpperCase());
-							pokerOpponentPosition.setSelected(false);
-							pokerOpponentPosition.setChartPaneTitle(pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s);
-							pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
-									+ pokerPosition.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini");
-							displayChartFarame(pokerOpponentPosition, node);
+							Object treeObject = ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+							if (treeObject instanceof PokerHandSizing) {
+								PokerHandSizing pokerHandSizing = (PokerHandSizing) treeObject;
+								copyChartINIFile(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
+										+ pokerPosition.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini");
+								PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(Integer.toString(node.getChildCount() + 1) + s);
+								pokerOpponentPosition.setSelected(false);
+								pokerOpponentPosition.setChartPaneTitle(pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s);
+								pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
+										+ pokerPosition.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini");
+								displayChartFarame(pokerOpponentPosition, node);
+							} else if (treeObject instanceof PokerAction) {
+								PokerAction pokerAction = (PokerAction) treeObject;
+								copyChartINIFile(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
+										+ Integer.toString(node.getChildCount() + 1) + s + ".ini");
+								PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(Integer.toString(node.getChildCount() + 1) + s);
+								pokerOpponentPosition.setSelected(false);
+								pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s);
+								pokerOpponentPosition.setChartImagePath(
+										"Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini");
+								displayChartFarame(pokerOpponentPosition, node);
+							}
 						}
 					}
 				} else {
@@ -286,11 +307,17 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 					if (((DefaultMutableTreeNode) node.getParent()).getUserObject() instanceof PokerPosition) {
 						PokerPosition pokerPosition = (PokerPosition) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
 						DefaultMutableTreeNode sizingNode = (DefaultMutableTreeNode) ((DefaultMutableTreeNode) node.getParent()).getParent();
-						DefaultMutableTreeNode actionNode = (DefaultMutableTreeNode) (sizingNode.getParent());
-						PokerHandSizing pokerHandSizing = (PokerHandSizing) sizingNode.getUserObject();
-						PokerAction pokerAction = (PokerAction) actionNode.getUserObject();
-						fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText()
-								+ "/" + pokerOpponentPosition.getNodeText() + ".ini";
+						if (sizingNode.getUserObject() instanceof PokerHandSizing) {
+							DefaultMutableTreeNode actionNode = (DefaultMutableTreeNode) (sizingNode.getParent());
+							PokerHandSizing pokerHandSizing = (PokerHandSizing) sizingNode.getUserObject();
+							PokerAction pokerAction = (PokerAction) actionNode.getUserObject();
+							fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
+									+ pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini";
+						} else if (sizingNode.getUserObject() instanceof PokerAction) {
+							PokerAction pokerAction = (PokerAction) sizingNode.getUserObject();
+							fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
+									+ pokerOpponentPosition.getNodeText() + ".ini";
+						}
 					} else if (((DefaultMutableTreeNode) node.getParent()).getUserObject() instanceof PokerAction) {
 						PokerAction pokerAction = (PokerAction) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
 						fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini";
@@ -321,8 +348,8 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		}
 		return opponentsHandsNodesCount;
 	}
-	
-	private int findSameNodeTypePosition (DefaultMutableTreeNode node) {
+
+	private int findSameNodeTypePosition(DefaultMutableTreeNode node) {
 		int n = 0;
 		int sameNodeTypePosition = 0;
 		while (n < node.getChildCount()) {
@@ -333,8 +360,6 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		}
 		return sameNodeTypePosition;
 	}
-	
-	
 
 	private void copyChartINIFile(String filePath) {
 		File chartINIFileName = new File(filePath);
@@ -377,12 +402,12 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 				} else {
 					hit = false;
 				}
-			 } else if (s.getUserObject() instanceof PokerOpponentPosition) {
-				 PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-				 String nodeText = pokerOpponentPosition.getNodeText();
-				 String firstLetter = UtilMethodsFactory.firstLetterOccurence(nodeText);
-				 int firstLetterPosition = nodeText.indexOf(firstLetter);
-				 String	noPrefixName = nodeText.substring(firstLetterPosition, nodeText.length());
+			} else if (s.getUserObject() instanceof PokerOpponentPosition) {
+				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+				String nodeText = pokerOpponentPosition.getNodeText();
+				String firstLetter = UtilMethodsFactory.firstLetterOccurence(nodeText);
+				int firstLetterPosition = nodeText.indexOf(firstLetter);
+				String noPrefixName = nodeText.substring(firstLetterPosition, nodeText.length());
 				if (noPrefixName.equals(name)) {
 					hit = true;
 					break;

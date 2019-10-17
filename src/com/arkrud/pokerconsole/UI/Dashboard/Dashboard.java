@@ -216,7 +216,6 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
-			ChartPanel chartPanel = null;
 			ImageChartPanel imageChartPanel;
 			if (path != null) {
 				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {

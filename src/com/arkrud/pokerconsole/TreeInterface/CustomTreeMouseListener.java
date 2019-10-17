@@ -112,7 +112,6 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					String newName = constructNewTabname(jTabbedPane);
 					String oldTreeName = jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
 					if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", newName)) {
-
 						JOptionPane.showMessageDialog(dash, "This position is selected in another Solution Tree copy", "Error", JOptionPane.ERROR_MESSAGE);
 						int x = 0;
 						while (x < jTabbedPane.getTabCount()) {
@@ -124,7 +123,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					} else {
 						if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
 							if (obj instanceof PokerOpponentPosition) {
-								PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition)obj;
+								PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) obj;
 								dash.closeAllFrames();
 								UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, pane);
 								INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()),
@@ -141,8 +140,10 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 							jTabbedPane.setTitleAt(jTabbedPane.getSelectedIndex(), newName);
 						} else {
 							String newPosition = newName.substring(newName.indexOf("-") + 1, newName.length());
-							String positionItem = INIFilesFactory.getSolutionCopySelectionItemName(UtilMethodsFactory.getConsoleConfig(), oldTreeName.split("-")[0]);
-							INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", newPosition, positionItem);
+							//System.out.println("oldTreeName: "  + oldTreeName);
+							//String positionItem = INIFilesFactory.getSolutionCopySelectionItemName(UtilMethodsFactory.getConsoleConfig(), oldTreeName.split("-")[0]);
+							//System.out.println("positionItem: " +  positionItem);
+							INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Selections", newPosition, oldTreeName);
 						}
 					}
 				}
@@ -199,6 +200,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		} else if (obj instanceof PokerPosition) {
 			iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
 		} else {
+			
 		}
 		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", treeTabName, iniItemName);
 	}
