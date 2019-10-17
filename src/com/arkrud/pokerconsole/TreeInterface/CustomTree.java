@@ -2,11 +2,7 @@ package com.arkrud.pokerconsole.TreeInterface;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -34,127 +30,125 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 /**
- * Class to build AWS Objects Tree (OT) and AWS Objects Configuration Tree (OCT).<br>
- * OT will organize AWS object accessible by user by Region, AWS Account, AWS Service, and AWS Object type. <br>
- * OT nodes provide drop down menus relevant to the actions allowed for object the node represents including action to refresh node children. <br>
- * Double click on container nodes will add associated object table control with data for filtered list of objects in multitable view area. <br>
- * OT objects are rendered with object and container specific icons and object and container names <br>
- * OCT provides the view of the same tree hierarchy as OT tree provides. <br>
- * But each object is presented as check box to activate or deactivate retrieval of AWS objects data based on accounts, services, and object types user desired. <br>
- * The OCT also provides filter objects which can be used to filter retrieval of the AWS objects based on text pattern. <br>
- * After all selections in OCT tree are done the root "Select To Finish Configuration" node needs to be selected to apply the changes. <br>
- * After objects and containers are checked in OCT OT tree needs to be refreshed to reflect the configuration change and retrieve desired objects from AWS cloud. <br>
- * Tree interface provides indeterministic progress bar while the AWS objects are retrieving which can take significant time for of large amount of them requested. <br>
+ * CustomTree class to build Poker charts management Tree.<br>
+ * It will organize chart by Poker Strategy, Poker Action, Sizing, Poker table position, and Poker table opponent position.<br>
+ * Tree nodes provide drop down menus relevant to the actions allowed for object the node represents including action to refresh node children.<br>
+ * Double click on container nodes will show the charts or chart group in scrollable desktop for fast view of defined hand ranges. <br>
+ * Tree objects are rendered with object and container specific icons and object and container names <br>
+ *
  */
-public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSelectionListener, PropertyChangeListener {
+public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSelectionListener {
 	private static final long serialVersionUID = 1L;
 	private DefaultMutableTreeNode top;
 	private DefaultTreeModel treeModel;
-	private JTree cloudTree;
+	private JTree jTree;
 	private Dashboard dash;
 	private DefaultMutableTreeNode pokerActionTreeNode = null;
 	private DefaultMutableTreeNode pokerHandSizingTreeNode = null;
 	private DefaultMutableTreeNode pokerPositionTreeNode = null;
+	private DefaultMutableTreeNode pokerOpponentPositionTreeNode = null;
 	private PokerAction pokerAction = null;
 	private PokerHandSizing pokerHandSizing = null;
 	private PokerPosition pokerPosition = null;
-	private DefaultMutableTreeNode pokerOpponentPositionTreeNode = null;
 
 	/**
 	 *
 	 * Sole constructor of CustomTree object. <br>
 	 * Defines the behavior of the tree interface and adds it to the JPanel<br>
-	 *
-	 *
 	 * <ul>
-	 * <li>Set tree top element to AwsCommon object
-	 * <li>Initiate default JTree model
-	 * <li>Add CustomTreeModelListener
+	 * <li>Set tree top element to PokerStrategy object.
+	 * <li>Initiate default JTree model.
+	 * <li>Add CustomTreeModelListener to model to implement dynamic tree behaver.
+	 * <li>Instantiate JTee object.
+	 * <li>Add TreeWillExpandListener to listen to Tree will expand events.
+	 * <li>Set row height to 0 to have tree object sizes to be defined by rendered images .
+	 * <li>Create tree structure from INI or PNG image files in file system or from image objects in Mongo DB tables.
+	 * <li>Set tree selection model to single selection.
+	 * <li>Add TreeSelectionListener to listen to tree selection events.
+	 * <li>Set root handles to be shown.
+	 * <li>Set white background for tree area.
+	 * <li>Set cell renderer to show images and custom text for the nodes.
+	 * <li>Add pop-up menu to the nodes.
+	 * <li>Set SpringLayout for panel holding the tree.
+	 * <li>Set white background for panel under the tree.
+	 * <li>Add three to panel.
+	 * <li>Set settings for SpringLayout.
 	 * </ul>
 	 * <p>
 	 *
-	 * @param dash reference to the Dashboard object
-	 * @param treeName tree usage identifier (OT or OCT)
+	 * @param dash
+	 *            reference to the Dashboard object
+	 * @param treeName
+	 *            tree usage identifier (OT or OCT)
 	 */
 	public CustomTree(Dashboard dash, String treeName, boolean editable) {
 		this.dash = dash;
 		top = new DefaultMutableTreeNode(new PokerStrategy(treeName));
 		treeModel = new DefaultTreeModel(top);
 		treeModel.addTreeModelListener(new CustomTreeModelListener());
-		cloudTree = new JTree(treeModel);
-		cloudTree.addTreeWillExpandListener(this);
-		cloudTree.setRowHeight(0);
-		cloudTree.setToggleClickCount(0);
+		jTree = new JTree(treeModel);
+		jTree.addTreeWillExpandListener(this);
+		jTree.setRowHeight(0);
 		try {
 			createNodes(top);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		cloudTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		cloudTree.addTreeSelectionListener(this);
-		cloudTree.setShowsRootHandles(true);
-		cloudTree.setBackground(Color.WHITE);
-		ToolTipManager.sharedInstance().registerComponent(cloudTree);
-		cloudTree.setCellRenderer(new CustomTreeCellRenderer());
+		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		jTree.addTreeSelectionListener(this);
+		jTree.setShowsRootHandles(true);
+		jTree.setBackground(Color.WHITE);
+		ToolTipManager.sharedInstance().registerComponent(jTree);
+		jTree.setCellRenderer(new CustomTreeCellRenderer());
 		try {
-			getTreePopUpMenu(cloudTree, editable);
+			getTreePopUpMenu(jTree, editable);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		setLayout(new SpringLayout());
 		setBackground(Color.WHITE);
-		add(cloudTree);
+		add(jTree);
 		SpringUtilities.makeCompactGrid(this, 1, 1, 1, 1, 1, 1);
 	}
 
-	/*public Integer checkIfAnythingIsSelected(DefaultMutableTreeNode node) {
-		Set<Boolean> selections = new LinkedHashSet<Boolean>();
-		checkIfAnythingSelected(node, selections);
-		return selections.size();
-	}*/
-
-	public void clearAllTreeSelections(DefaultMutableTreeNode node) {
-		int childCount = node.getChildCount();
-		for (int i = 0; i < childCount; i++) {
-			DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) node.getChildAt(i);
-			if (childNode.getChildCount() > 0) {
-				clearAllTreeSelections(childNode);
-			} else {
-				if (childNode.getUserObject() instanceof PokerOpponentPosition) {
-					((PokerOpponentPosition) childNode.getUserObject()).setSelected(false);
-				}
-			}
-		}
-	}
-
+	/**
+	 * Expand nodes below selected tree node.
+	 *
+	 * @param node the node
+	 * @param cloudTree the cloud tree
+	 */
 	public void expandNodesBelow(DefaultMutableTreeNode node, JTree cloudTree) {
 		cloudTree.expandPath(new TreePath(((DefaultTreeModel) cloudTree.getModel()).getPathToRoot(node)));
 	}
 
 	/**
-	 * Expand tree 2 nodes deep. <br>
+	 * Gets the tree reference.
+	 *
+	 * @return the tree
 	 */
-	public void expandTwoDeep() {
-		for (int i = 0; i < 1; i++) {
-			cloudTree.expandRow(i);
-		}
+	public JTree getTheTree() {
+		return jTree;
 	}
 
-	public JTree getCloudTree() {
-		return cloudTree;
-	}
-
+	/**
+	 * Gets the tree model reference.
+	 *
+	 * @return the tree model
+	 */
 	public DefaultTreeModel getTreeModel() {
 		return treeModel;
 	}
 
 	/**
-	 * This method gets called when a bound property is changed. <br>
+	 * Refresh tree node.
+	 * <ul>
+	 * <li>Remove all nodes.
+	 * <li>Call node structure changed to reflect removal.
+	 * <li>Recreate nodes from underlying data.
+	 * </ul>
+	 * @param node the node
+	 * @param strategyName the strategy name
 	 */
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-	}
-
 	public void refreshTreeNode(DefaultMutableTreeNode node, String strategyName) {
 		node.removeAllChildren();
 		treeModel.nodeStructureChanged(node);
@@ -166,14 +160,21 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		expandNodesBelow(node);
 	}
 
-	public void renameNode(DefaultMutableTreeNode node, String nodeText) {
-		if (node.getUserObject() instanceof PokerStrategy) {
-			PokerStrategy pokerStrategy = (PokerStrategy) (node.getUserObject());
-			pokerStrategy.setNodeText(nodeText);
-		}
-		treeModel.nodeStructureChanged(node);
-	}
 
+	/**
+	 * Defines logic by which specific tree node is selected when tabs of various strategies and strategy copies are clicked.
+	 *
+	 *<ul>
+	 * <li>Represent dash-delimited INI file string as array of tokens.
+	 * <li>Calculate the child count of node.
+	 * <li>For every length of path extract the object properties match with the data from INI and initiate selection.
+	 * </ul>
+	 *
+	 * @param node The root node of the tree
+	 * @param pathString The charts or chart groups to be opened represented by string defined in INI file
+	 * @param tree The tree object to work on
+	 * @return The TreePath object of selected node
+	 */
 	public TreePath selectTreeNode(DefaultMutableTreeNode node, String pathString, CustomTree tree) {
 		String[] pathNodes = pathString.split("-");
 		int childCount = node.getChildCount();
@@ -183,12 +184,8 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) node.getChildAt(i);
 				if (childNode.getUserObject() instanceof PokerAction) {
 					if (((PokerAction) (childNode.getUserObject())).getNodeText().equals(pathNodes[0])) {
-						path = new TreePath(childNode.getPath());
-						cloudTree.setSelectionPath(path);
-						cloudTree.scrollPathToVisible(path);
-						cloudTree.expandPath(path);
+						path = setSelection(childNode, jTree );
 					}
-				} else if (childNode.getUserObject() instanceof PokerPosition) {
 				}
 			}
 		} else if (pathNodes.length == 2) {
@@ -200,11 +197,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 						for (int x = 0; x < childCount1; x++) {
 							DefaultMutableTreeNode childNode1 = (DefaultMutableTreeNode) childNode.getChildAt(x);
 							if (((PokerOpponentPosition) (childNode1.getUserObject())).getNodeText().equals(Integer.toString(x + 1) + pathNodes[1])) {
-								path = new TreePath(childNode1.getPath());
-								cloudTree.setSelectionPath(path);
-								cloudTree.scrollPathToVisible(path);
-								return path;
-							} else {
+								path = setSelection(childNode1, jTree );
 							}
 						}
 					}
@@ -228,11 +221,9 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 											if (((PokerPosition) (childNode2.getUserObject())).getNodeText().equals(pathNodes[2])) {
 												for (int z = 0; z < childCount3; z++) {
 													DefaultMutableTreeNode childNode3 = (DefaultMutableTreeNode) childNode2.getChildAt(z);
-													if (((PokerOpponentPosition) (childNode3.getUserObject())).getNodeText().equals(Integer.toString(z + 1) + pathNodes[3])) {
-														path = new TreePath(childNode3.getPath());
-														cloudTree.setSelectionPath(path);
-														cloudTree.scrollPathToVisible(path);
-														return path;
+													if (((PokerOpponentPosition) (childNode3.getUserObject())).getNodeText()
+															.equals(Integer.toString(z + 1) + pathNodes[3])) {
+														path = setSelection(childNode3, jTree );
 													}
 												}
 											}
@@ -241,10 +232,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 								}
 							} else if (childNode1.getUserObject() instanceof PokerOpponentPosition) {
 								if (((PokerOpponentPosition) (childNode1.getUserObject())).getNodeText().equals(Integer.toString(x + 1) + pathNodes[2])) {
-									path = new TreePath(childNode1.getPath());
-									cloudTree.setSelectionPath(path);
-									cloudTree.scrollPathToVisible(path);
-									return path;
+									path = setSelection(childNode1, jTree );
 								}
 							}
 						}
@@ -266,17 +254,12 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 										DefaultMutableTreeNode childNode2 = (DefaultMutableTreeNode) childNode1.getChildAt(y);
 										if (childNode2.getUserObject() instanceof PokerPosition) {
 											if (((PokerPosition) (childNode2.getUserObject())).getNodeText().equals(pathNodes[2])) {
-												path = new TreePath(childNode2.getPath());
-												cloudTree.setSelectionPath(path);
-												cloudTree.scrollPathToVisible(path);
-												return path;
+												path = setSelection(childNode2, jTree );
 											}
 										} else if (childNode2.getUserObject() instanceof PokerOpponentPosition) {
-											if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(Integer.toString(y + 1) + pathNodes[1])) {
-												path = new TreePath(childNode2.getPath());
-												cloudTree.setSelectionPath(path);
-												cloudTree.scrollPathToVisible(path);
-												return path;
+											if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText()
+													.equals(Integer.toString(y + 1) + pathNodes[1])) {
+												path = setSelection(childNode2, jTree );
 											}
 										}
 									}
@@ -285,11 +268,9 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 								if (((PokerPosition) (childNode1.getUserObject())).getNodeText().equals(pathNodes[1])) {
 									for (int y = 0; y < childCount2; y++) {
 										DefaultMutableTreeNode childNode2 = (DefaultMutableTreeNode) childNode1.getChildAt(y);
-										if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(Integer.toString(y + 1) + pathNodes[2])) {
-											path = new TreePath(childNode2.getPath());
-											cloudTree.setSelectionPath(path);
-											cloudTree.scrollPathToVisible(path);
-											return path;
+										if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText()
+												.equals(Integer.toString(y + 1) + pathNodes[2])) {
+											path = setSelection(childNode2, jTree );
 										}
 									}
 								}
@@ -298,10 +279,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 									for (int y = 0; y < childCount2; y++) {
 										DefaultMutableTreeNode childNode2 = (DefaultMutableTreeNode) childNode1.getChildAt(y);
 										if (((PokerPosition) (childNode2.getUserObject())).getNodeText().equals(pathNodes[2])) {
-											path = new TreePath(childNode2.getPath());
-											cloudTree.setSelectionPath(path);
-											cloudTree.scrollPathToVisible(path);
-											return path;
+											path = setSelection(childNode2, jTree );
 										}
 									}
 								}
@@ -313,14 +291,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			}
 		}
 		return path;
-	}
-
-	public void setCloudTree(JTree cloudTree) {
-		this.cloudTree = cloudTree;
-	}
-
-	public void setTreeModel(DefaultTreeModel treeModel) {
-		this.treeModel = treeModel;
 	}
 
 	/**
@@ -336,6 +306,8 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 
 	/**
 	 * Register a tree selection listener to detect when the user selects a node in a tree. <br>
+	 *
+	 * @param e the e
 	 */
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
@@ -345,6 +317,12 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			return;
 	}
 
+	/**
+	 * Builds the tree nodes from structure of files on the file system.
+	 *
+	 * @param node the node
+	 * @param treeNode the tree node
+	 */
 	private void buildTreeNodes(File node, DefaultMutableTreeNode treeNode) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
 		if (level == 0) {
@@ -358,7 +336,8 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
 					pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-					pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+					pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/"
+							+ pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
 					DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 					pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
 				}
@@ -379,16 +358,19 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				if (!node.getName().contains("png")) {
 					if (pokerPosition == null) {
 						PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+						pokerOpponentPosition.setChartPaneTitle(
+								pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 						pokerOpponentPosition.setChartImagePath(
-								"Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+								"Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText()
+										+ "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
 						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 						pokerHandSizingTreeNode.add(pokerOpponentPositionTreeNode);
 					} else {
 						PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-						pokerOpponentPosition
-								.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+						pokerOpponentPosition.setChartPaneTitle(
+								pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+						pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/"
+								+ pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
 						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 						pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
 					}
@@ -405,9 +387,10 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
 				pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
 				pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
-				pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-				pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
-						+ pokerOpponentPosition.getNodeText() + ".jpg");
+				pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText()
+						+ "-" + pokerOpponentPosition.getNodeText().substring(1));
+				pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText()
+						+ "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
 				pokerOpponentPosition.getNodeText();
 				pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 				pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
@@ -422,45 +405,33 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		}
 	}
 
-	/*private int checkIfAnythingSelected(DefaultMutableTreeNode node, Set<Boolean> selections) {
-		int childCount = node.getChildCount();
-		for (int i = 0; i < childCount; i++) {
-			DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) node.getChildAt(i);
-			if (childNode.getChildCount() > 0) {
-				checkIfAnythingSelected(childNode, selections);
-			} else {
-				if (childNode.getUserObject() instanceof PokerOpponentPosition) {
-					boolean seleceed = ((PokerOpponentPosition) childNode.getUserObject()).isSelected();
-					if (seleceed) {
-					}
-					selections.add(seleceed);
-				}
-			}
-		}
-		return selections.size();
-	}*/
-
 	/**
 	 * Populate tree with data. <br>
 	 * Defines the behavior of the tree interface and adds it to the JPanel<br>
 	 *
-	 * @param top root node
+	 * @param top
+	 *            root node
 	 *
 	 */
 	private void createNodes(DefaultMutableTreeNode top) throws Exception {
 		buildTreeNodes(new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText()), top);
-		expandTwoDeep();
 	}
 
 	/**
-	 * Expand nodes below selected node after tree refresh. <br>
+	 * Expand nodes below selected node.<br>
+	 *
+	 * @param node the node
 	 */
 	private void expandNodesBelow(DefaultMutableTreeNode node) {
-		cloudTree.expandPath(new TreePath(((DefaultTreeModel) cloudTree.getModel()).getPathToRoot(node)));
+		jTree.expandPath(new TreePath(((DefaultTreeModel) jTree.getModel()).getPathToRoot(node)));
 	}
 
 	/**
 	 * Add menu items to PopUp menu with various actions defined. <br>
+	 *
+	 * @param s the menu item text
+	 * @param al the Action listener
+	 * @return the menu item
 	 */
 	private JMenuItem getMenuItem(String s, ActionListener al) {
 		JMenuItem menuItem = new JMenuItem(s);
@@ -471,6 +442,11 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 
 	/**
 	 * Add PopUp menu to cluster icons in the tree to initiate actions on them. <br>
+	 *
+	 * @param servicesTree the services tree
+	 * @param editable the editable
+	 * @return the tree pop up menu
+	 * @throws Exception the exception
 	 */
 	private void getTreePopUpMenu(JTree servicesTree, boolean editable) throws Exception {
 		JPopupMenu popup = null;
@@ -487,6 +463,12 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		}
 	}
 
+	/**
+	 * Checks if branch node is one of the Poker Position nodes not sizing or strategy node.
+	 *
+	 * @param nodeText the node text
+	 * @return true, if is poker position
+	 */
 	private boolean isPokerPosition(String nodeText) {
 		String[] handScreenNames = { "BB", "SB", "BU", "CO", "HJ", "LJ", "UTG", "UTG1", "UTG2" };
 		boolean isPokerPosition = false;
@@ -499,5 +481,20 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			x++;
 		}
 		return isPokerPosition;
+	}
+
+	/**
+	 * Sets selected node, scrolls to it, and expand children.
+	 *
+	 * @param node the node
+	 * @param tree the tree
+	 * @return the tree path
+	 */
+	private TreePath setSelection(DefaultMutableTreeNode node, JTree tree) {
+		TreePath treePath = new TreePath(node.getPath());
+		tree.setSelectionPath(treePath);
+		tree.scrollPathToVisible(treePath);
+		expandNodesBelow(node,tree);
+		return treePath;
 	}
 }

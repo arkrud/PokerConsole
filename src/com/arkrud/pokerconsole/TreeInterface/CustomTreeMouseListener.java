@@ -154,7 +154,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 	private String constructNewTabname(JTabbedPane jTabbedPane) {
 		String newName = "";
 		CustomTree customTree = (CustomTree) ((JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex())).getViewport().getView();
-		Object elements[] = customTree.getCloudTree().getSelectionPath().getPath();
+		Object elements[] = customTree.getTheTree().getSelectionPath().getPath();
 		for (int i = 0, n = elements.length; i < n; i++) {
 			Object userObject = ((DefaultMutableTreeNode) elements[i]).getUserObject();
 			if (userObject instanceof PokerStrategy) {

@@ -29,9 +29,7 @@ import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.UI.ChartPanel;
-import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
-import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
@@ -63,56 +61,15 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 		path = tree.getPathForLocation(cml.getLoc().x, cml.getLoc().y);
 		node = (DefaultMutableTreeNode) path.getLastPathComponent();
 		Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-		// For leaf objects
 		if (obj instanceof PokerStrategy) {
 			if (ac.equals("REFRESH")) {
 				theTree.refreshTreeNode(node, ((PokerStrategy) obj).getNodeText());
 			} else if (ac.equals("ADD ACTION")) {
-				String s = (String) JOptionPane.showInputDialog(dash, "New Action", "Add Action", JOptionPane.PLAIN_MESSAGE, null, null, null);
-				if (s != null) {
-					if (checkForNewObjectName(node, s)) {
-						JOptionPane.showConfirmDialog(null, "The Action is Already there", "Duplicated Action Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
-					} else {
-						if ((s != null) && (s.length() > 0)) {
-							PokerAction pokerAction = new PokerAction(s);
-							File actionDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) obj).getNodeText() + "/" + s);
-							UtilMethodsFactory.createFolder(actionDir);
-							DefaultMutableTreeNode actionNode = new DefaultMutableTreeNode(pokerAction);
-							DefaultMutableTreeNode root = (DefaultMutableTreeNode) theTree.getTreeModel().getRoot();
-							((DefaultTreeModel) tree.getModel()).insertNodeInto(actionNode, root, root.getChildCount());
-							theTree.expandNodesBelow(root, tree);
-						}
-					}
-				} else {
-				}
+				addPokerAction(node, obj);
 			} else if (ac.equals("REMOVE")) {
-				String treeName = ((PokerStrategy) node.getUserObject()).getNodeText();
-				String treeTabTitle = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
-				int response = JOptionPane.showConfirmDialog(null, "Do you want to remove this Tree With All Copies", "Solution Tree Complete removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if (response == JOptionPane.NO_OPTION) {
-				} else if (response == JOptionPane.YES_OPTION) {
-					int x = 0;
-					ArrayList<String> treesArrayLIst = new ArrayList<String>();
-					while (x < dash.getTreeTabbedPane().getTabCount()) {
-						if (dash.getTreeTabbedPane().getTitleAt(x).contains(treeTabTitle)) {
-							String title = dash.getTreeTabbedPane().getTitleAt(x);
-							dash.removeTreeTabPaneTab(title);
-							treesArrayLIst.add(title);
-						}
-						;
-						x++;
-					}
-					String[] trees = treesArrayLIst.toArray(new String[treesArrayLIst.size()]);
-					INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", trees);
-					INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Selections", trees);
-					String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + treeName;
-					UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
-				} else if (response == JOptionPane.CLOSED_OPTION) {
-				}
+				removePokerAction(node);
 			} else if (ac.equals("DUPLICATE")) {
-				String treeName = ((PokerStrategy) node.getUserObject()).getNodeText();
-				INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", treeName + "-copy", true);
-				dash.addTreeTabPaneTab(treeName + "-copy");
+				duplicateSolution(node);
 			}
 		} else if (obj instanceof PokerAction) {
 			if (ac.equals("ADD SIZING")) {
@@ -220,7 +177,7 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 						((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
 					} else if (((DefaultMutableTreeNode) node.getParent()).getUserObject() instanceof PokerAction) {
 						PokerAction pokerAction = (PokerAction) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
-						String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" 
+						String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/"
 								+ pokerPosition.getNodeText();
 						UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
 						((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
@@ -335,6 +292,58 @@ public class CustomTreePopupHandler implements ActionListener, PropertyChangeLis
 			}
 		} else {
 		}
+	}
+
+	private void addPokerAction(DefaultMutableTreeNode node, Object obj) {
+		String s = (String) JOptionPane.showInputDialog(dash, "New Action", "Add Action", JOptionPane.PLAIN_MESSAGE, null, null, null);
+		if (s != null) {
+			if (checkForNewObjectName(node, s)) {
+				JOptionPane.showConfirmDialog(null, "The Action is Already there", "Duplicated Action Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				if ((s != null) && (s.length() > 0)) {
+					PokerAction pokerAction = new PokerAction(s);
+					File actionDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) obj).getNodeText() + "/" + s);
+					UtilMethodsFactory.createFolder(actionDir);
+					DefaultMutableTreeNode actionNode = new DefaultMutableTreeNode(pokerAction);
+					DefaultMutableTreeNode root = (DefaultMutableTreeNode) theTree.getTreeModel().getRoot();
+					((DefaultTreeModel) tree.getModel()).insertNodeInto(actionNode, root, root.getChildCount());
+					theTree.expandNodesBelow(root, tree);
+				}
+			}
+		} else {
+		}
+	}
+
+	private void removePokerAction(DefaultMutableTreeNode node) {
+		String treeName = ((PokerStrategy) node.getUserObject()).getNodeText();
+		String treeTabTitle = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
+		int response = JOptionPane.showConfirmDialog(null, "Do you want to remove this Tree With All Copies", "Solution Tree Complete removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (response == JOptionPane.NO_OPTION) {
+		} else if (response == JOptionPane.YES_OPTION) {
+			int x = 0;
+			ArrayList<String> treesArrayLIst = new ArrayList<String>();
+			while (x < dash.getTreeTabbedPane().getTabCount()) {
+				if (dash.getTreeTabbedPane().getTitleAt(x).contains(treeTabTitle)) {
+					String title = dash.getTreeTabbedPane().getTitleAt(x);
+					dash.removeTreeTabPaneTab(title);
+					treesArrayLIst.add(title);
+				}
+				;
+				x++;
+			}
+			String[] trees = treesArrayLIst.toArray(new String[treesArrayLIst.size()]);
+			INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Applications", trees);
+			INIFilesFactory.removeINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Selections", trees);
+			String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + treeName;
+			UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
+		} else if (response == JOptionPane.CLOSED_OPTION) {
+		}
+	}
+
+	private void duplicateSolution (DefaultMutableTreeNode node) {
+		String treeName = ((PokerStrategy) node.getUserObject()).getNodeText();
+		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", treeName + "-copy", true);
+		dash.addTreeTabPaneTab(treeName + "-copy");
 	}
 
 	private int countRelevantNodes(DefaultMutableTreeNode node) {
