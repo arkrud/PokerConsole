@@ -1,4 +1,4 @@
-package com.arkrud.pokerconsole.TreeInterface;
+package com.arkrud.pokerconsole.Poker;
 
 public interface TreeNodeState {
 	String getNodeText();

@@ -29,13 +29,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 
-import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.AddHandsDialog;
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
-import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.RenameTreeDialog;
+import com.arkrud.pokerconsole.UI.TableChartPanel;
 import com.arkrud.pokerconsole.UI.Dashboard.AddUserDialog;
 import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
@@ -49,7 +48,13 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  */
 public class UtilMethodsFactory {
 	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action", "Add Hands", "Add Opponents Position", "Duplicate" };
-	private static HashMap<String, ChartPanel> charts = new HashMap<String, ChartPanel>();
+	private static HashMap<String, TableChartPanel> charts = new HashMap<String, TableChartPanel>();
+
+	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, JScrollableDesktopPane jScrollableDesktopPane) {
+		TableChartPanel chartPanel = new TableChartPanel(chartImagePath, editable);
+		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
+		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
+	}
 
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
 		if (Dashboard.INTERNAL_FRAMES.get(frameTitle) == null) {
@@ -62,27 +67,38 @@ public class UtilMethodsFactory {
 			Dashboard.INTERNAL_FRAMES.put(frameTitle, theFrame);
 		}
 	}
-	
-	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, JScrollableDesktopPane  jScrollableDesktopPane ) {
-		ChartPanel chartPanel = new ChartPanel(chartImagePath, editable);
-		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
-		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
-	}
 
-	public static void addToCharts(String path, ChartPanel chartPanel) {
+	public static void addToCharts(String path, TableChartPanel chartPanel) {
 		charts.put(path, chartPanel);
 	}
 
-	public static void removeFromCharts(String path) {
-		charts.remove(path);
+	public static boolean checkIfGroupNameHasLettersOnly(String name) {
+		return name.matches("[a-zA-Z]+");
 	}
 
-	public static ChartPanel getChart(String path) {
-		return charts.get(path);
+	public static void copyFileUsingJava7Files(File source, File dest) throws IOException {
+		Files.copy(source.toPath(), dest.toPath());
 	}
 
-	public static boolean hasChart(String path) {
-		return charts.containsKey(path);
+	public static void createChartINIFile(File file) {
+		// Create the file
+		try {
+			if (file.createNewFile()) {
+				// System.out.println("File is created!");
+			} else {
+				// System.out.println("File already exists.");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void createFolder(File file) {
+		if (file.mkdir()) {
+			System.out.println("Dir is created!");
+		} else {
+			System.out.println("Dir already exists.");
+		}
 	}
 
 	/**
@@ -106,10 +122,42 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	public static boolean deleteDirectory(File directoryToBeDeleted) {
+		File[] allContents = directoryToBeDeleted.listFiles();
+		if (allContents != null) {
+			for (File file : allContents) {
+				deleteDirectory(file);
+			}
+		}
+		return directoryToBeDeleted.delete();
+	}
+
+	public static void deleteFile(String fileName) {
+		try {
+			File file = new File(fileName);
+			if (file.delete()) {
+				System.out.println(file.getName() + " is deleted!");
+			} else {
+				System.out.println("Delete operation is failed.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void exitApp() {
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "editable");
 		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "manualtreenaming");
 		System.exit(0);
+	}
+
+	public static String firstLetterOccurence(String text) {
+		String matchPosition = "";
+		Matcher m = Pattern.compile("[^a-zA-Z]*([a-zA-Z]+).*").matcher(text);
+		if (m.matches()) {
+			matchPosition = m.group(1);
+		}
+		return matchPosition;
 	}
 
 	// Retrieve the path of the root of the solution - src\
@@ -141,12 +189,6 @@ public class UtilMethodsFactory {
 		return encryptor;
 	}
 
-	private static String[] getFileNames(String location) {
-		File folder = new File(getConfigPath() + location);
-		String[] files = folder.list();
-		return files;
-	}
-
 	public static int getIndexOfFirstIntInString(String str) {
 		Matcher matcher = Pattern.compile("\\d+").matcher(str);
 		matcher.find();
@@ -162,6 +204,14 @@ public class UtilMethodsFactory {
 			images.put(objectIcon.split("\\.")[0], icon);
 		}
 		return images;
+	}
+
+	public static void removeFromCharts(String path) {
+		charts.remove(path);
+	}
+
+	public static <T> Reversed<T> reversed(List<T> original) {
+		return new Reversed<T>(original);
 	}
 
 	public static void showDialogToDesctop(String frameType, int invalid, int invalid2, Dashboard dash, JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node, JTabbedPane tabbedPane, JMenuItem addUser) {
@@ -198,50 +248,6 @@ public class UtilMethodsFactory {
 		dialog.setVisible(true);
 	}
 
-	public static void createChartINIFile(File file) {
-		// Create the file
-		try {
-			if (file.createNewFile()) {
-				// System.out.println("File is created!");
-			} else {
-				// System.out.println("File already exists.");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void createFolder(File file) {
-		if (file.mkdir()) {
-			System.out.println("Dir is created!");
-		} else {
-			System.out.println("Dir already exists.");
-		}
-	}
-
-	public static void deleteFile(String fileName) {
-		try {
-			File file = new File(fileName);
-			if (file.delete()) {
-				System.out.println(file.getName() + " is deleted!");
-			} else {
-				System.out.println("Delete operation is failed.");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static boolean deleteDirectory(File directoryToBeDeleted) {
-		File[] allContents = directoryToBeDeleted.listFiles();
-		if (allContents != null) {
-			for (File file : allContents) {
-				deleteDirectory(file);
-			}
-		}
-		return directoryToBeDeleted.delete();
-	}
-
 	public static void tableToImage(CustomTable table, String imagePath) {
 		int w = Math.max(table.getWidth(), table.getTableHeader().getWidth());
 		int h = table.getHeight() + table.getTableHeader().getHeight();
@@ -256,27 +262,6 @@ public class UtilMethodsFactory {
 		} catch (IOException ioe) {
 			System.out.println("write: " + ioe.getMessage());
 		}
-	}
-
-	public static <T> Reversed<T> reversed(List<T> original) {
-		return new Reversed<T>(original);
-	}
-
-	public static void copyFileUsingJava7Files(File source, File dest) throws IOException {
-		Files.copy(source.toPath(), dest.toPath());
-	}
-
-	public static String firstLetterOccurence(String text) {
-		String matchPosition = "";
-		Matcher m = Pattern.compile("[^a-zA-Z]*([a-zA-Z]+).*").matcher(text);
-		if (m.matches()) {
-			matchPosition = m.group(1);
-		}
-		return matchPosition;
-	}
-
-	public static boolean checkIfGroupNameHasLettersOnly(String name) {
-		return name.matches("[a-zA-Z]+");
 	}
 
 	public static void unZipUpdate(String pathToUpdateZip, String destinationPath) {
@@ -310,6 +295,9 @@ public class UtilMethodsFactory {
 		}
 	}
 
-
-
+	private static String[] getFileNames(String location) {
+		File folder = new File(getConfigPath() + location);
+		String[] files = folder.list();
+		return files;
+	}
 }

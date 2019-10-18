@@ -58,6 +58,7 @@ public class MongoDBFactory {
 	public static void updateDocuments(String filterString, File file) {
 		MongoDatabase database = mongo.getDatabase("POKER_CHARTS");
 		MongoCollection<Document> collection = database.getCollection("charts");
+		@SuppressWarnings("deprecation")
 		DB db = mongo.getDB("POKER_CHARTS");
 		GridFS gfsPhoto = new GridFS(db, "photo");
 		GridFSInputFile gfsFile = null;
@@ -72,6 +73,7 @@ public class MongoDBFactory {
 	}
 
 	public static void getImage(String newFileName) {
+		@SuppressWarnings("deprecation")
 		DB db = mongo.getDB("POKER_CHARTS");
 		GridFS gfsPhoto = new GridFS(db, "photo");
 		GridFSDBFile imageForOutput = gfsPhoto.findOne(newFileName);
@@ -92,6 +94,7 @@ public class MongoDBFactory {
 		Iterator<Document> it = charts.iterator();
 		while (it.hasNext()) {
 			Document document = (Document) it.next();
+			@SuppressWarnings("unchecked")
 			Map<String, Document> map = (Map<String, Document>) document.get("colors");
 			for (Map.Entry<String, Document> entry : map.entrySet()) {
 				Map<String, String> colorsMap = new HashMap<String, String>();

@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.pokercardchart.CustomTable;
 
-public class ChartPanel extends JPanel {
+public class TableChartPanel extends JPanel {
 	/**
 	 * 
 	 */
@@ -17,7 +17,7 @@ public class ChartPanel extends JPanel {
 	private HashMap<String, HashMap<String, String>> iniData = new HashMap<String, HashMap<String, String>>();
 	private CustomTable table;
 
-	public ChartPanel(String imagePath, boolean editable) {
+	public TableChartPanel(String imagePath, boolean editable) {
 		super();
 		CustomTable table = new CustomTable(imagePath, this, editable);
 		this.table = table;

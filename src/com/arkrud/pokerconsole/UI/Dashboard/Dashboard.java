@@ -28,7 +28,7 @@ import javax.swing.tree.TreePath;
 
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
-import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.TableChartPanel;
 import com.arkrud.pokerconsole.UI.CustomMouseAdapter;
 import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;

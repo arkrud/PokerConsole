@@ -1,7 +1,5 @@
 package com.arkrud.pokerconsole.Poker;
 
-import com.arkrud.pokerconsole.TreeInterface.TreeNodeState;
-
 public class PokerPosition implements TreeNodeState {
 
 	private String nodeText;

@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
-import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.TableChartPanel;
 import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 
@@ -25,8 +25,8 @@ public class CustomTableViewInternalFrame extends BaseInternalFrame implements I
 		setTitle(title);
 		JPanel contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout());
-		if (contents instanceof ChartPanel) {
-			ChartPanel chartPanel = (ChartPanel) contents;
+		if (contents instanceof TableChartPanel) {
+			TableChartPanel chartPanel = (TableChartPanel) contents;
 			chartPanel.setTheTableViewInternalFrame(this);
 			contentPanel.add(getPane(title, chartPanel));
 			setSize(540, 550);

@@ -16,7 +16,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
-import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.TableChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
@@ -207,7 +207,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	private void generateChart(File node, boolean editable) {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
-		ChartPanel chartPanel = new ChartPanel(imagePath, editable);
+		TableChartPanel chartPanel = new TableChartPanel(imagePath, editable);
 		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
 		JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
 		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);

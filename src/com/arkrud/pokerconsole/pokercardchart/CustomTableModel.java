@@ -15,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import com.arkrud.pokerconsole.UI.ChartPanel;
+import com.arkrud.pokerconsole.UI.TableChartPanel;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.MongoDBFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
@@ -28,7 +28,7 @@ public class CustomTableModel extends AbstractTableModel {
 	private ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 	private HashMap<String, HashMap<String, String>> iniData = new HashMap<String, HashMap<String, String>>();
 	private ArrayList<String> columns = new ArrayList<String>();
-	private ChartPanel chart;
+	private TableChartPanel chart;
 	private String[][] pokerHands = { { "AA", "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s" }, { "AKo", "KK", "KQs", "KJs", "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s" },
 			{ "AQo", "KQo", "QQ", "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s", "Q4s", "Q3s", "Q2s" }, { "AJo", "KJO", "QJO", "JJ", "JTs", "J9s", "J8s", "J7s", "J6s", "J5s", "J4s", "J3s", "J2s" },
 			{ "ATo", "KTo", "QTO", "JTo", "TT", "T9s", "T8s", "T7s", "T6s", "T5s", "T4s", "T3s", "T2s" }, { "A9o", "K9o", "Q9o", "J9o", "T9o", "99", "98s", "97s", "96s", "95s", "94s", "93s", "92s" },
@@ -39,7 +39,7 @@ public class CustomTableModel extends AbstractTableModel {
 	private HashMap<String, HashMap<String, String>> colorsMap;
 	private boolean useINI = true;
 
-	public CustomTableModel(ChartPanel chart) {
+	public CustomTableModel(TableChartPanel chart) {
 		this.chart = chart;
 	}
 
@@ -93,18 +93,12 @@ public class CustomTableModel extends AbstractTableModel {
 			// handle exception...
 		}
 		File inifile = new File(UtilMethodsFactory.getConfigPath() + imagePath.substring(0, imagePath.length() - 3) + "ini");
-		String path = imagePath.substring(0, imagePath.length() - 3) + "jpg";
 		if (inifile.exists()) {
 			if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "mongo").equals("true")) {
 				MongoDBFactory.crateMongoConnection();
 				colorsMap = MongoDBFactory.getColorMap(imagePath.split("\\.")[0]);
 			} else {
 				colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
-				/*if (!UtilMethodsFactory.hasChart(path) || UtilMethodsFactory.getChart(path).getIniData().isEmpty()) {
-					colorsMap = INIFilesFactory.getItemValuesFromINI(inifile);
-				} else {
-					colorsMap = UtilMethodsFactory.getChart(path).getIniData();
-				}*/
 			}
 		} else {
 			useINI = false;

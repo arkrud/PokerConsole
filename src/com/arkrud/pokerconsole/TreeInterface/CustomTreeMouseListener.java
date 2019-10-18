@@ -25,7 +25,6 @@ import com.arkrud.pokerconsole.Poker.PokerHandSizing;
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
-import com.arkrud.pokerconsole.UI.ChartPanel;
 import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
@@ -47,56 +46,8 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		this.dash = dash;
 	}
 
-	private void checkForPopup(MouseEvent e) {
-		// Set all tree nodes drop-down menus not visible for all nodes
-		for (int i = 0; i < UtilMethodsFactory.dropDownsNames.length; i++) {
-			dropDownMenus.put(UtilMethodsFactory.dropDownsNames[i], false);
-		}
-		// Set drop-down menu visible on specific tree nodes right click
-		if (e.isPopupTrigger()) {
-			loc = e.getPoint();
-			TreePath path = ((JTree) e.getSource()).getPathForLocation(loc.x, loc.y);
-			Object treeObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-			((JTree) e.getSource()).setSelectionPath(path);
-			if (path != null) {
-				if (treeObject instanceof PokerStrategy) {
-					dropDownMenus.put("Refresh", true);
-					dropDownMenus.put("Remove", true);
-					dropDownMenus.put("Add Action", true);
-					dropDownMenus.put("Duplicate", true);
-				} else if (treeObject instanceof PokerOpponentPosition) {
-					dropDownMenus.put("Apply Template", true);
-					dropDownMenus.put("Remove", true);
-				} else if (treeObject instanceof PokerPosition) {
-					dropDownMenus.put("Remove", true);
-					dropDownMenus.put("Add Opponents Position", true);
-				} else if (treeObject instanceof PokerAction) {
-					dropDownMenus.put("Add Sizing", true);
-					dropDownMenus.put("Add Hands", true);
-					dropDownMenus.put("Add Opponents Position", true);
-					dropDownMenus.put("Remove", true);
-				} else if (treeObject instanceof PokerHandSizing) {
-					dropDownMenus.put("Delete Sizing", true);
-					dropDownMenus.put("Add Hands", true);
-					dropDownMenus.put("Add Opponents Position", true);
-				} else {
-				}
-				// Set menu attributes
-				int i = 0;
-				while (i < popup.getComponentCount()) {
-					JMenuItem item = (JMenuItem) popup.getComponents()[i];
-					for (Map.Entry<String, Boolean> entry : dropDownMenus.entrySet()) {
-						if (item.getText().equals(entry.getKey())) {
-							item.setEnabled(entry.getValue());
-							item.setVisible(entry.getValue());
-						}
-					}
-					i++;
-				}
-				// Show pop-up
-				popup.show((JTree) e.getSource(), loc.x, loc.y);
-			}
-		}
+	public Point getLoc() {
+		return loc;
 	}
 
 	@Override
@@ -109,7 +60,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 				if (path != null) {
 					JTabbedPane jTabbedPane = dash.getTreeTabbedPane();
-					String newName = constructNewTabname(jTabbedPane);
+					String newName = constructNewTabName(jTabbedPane);
 					String oldTreeName = jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
 					if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", newName)) {
 						JOptionPane.showMessageDialog(dash, "This position is selected in another Solution Tree copy", "Error", JOptionPane.ERROR_MESSAGE);
@@ -151,7 +102,91 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		}
 	}
 
-	private String constructNewTabname(JTabbedPane jTabbedPane) {
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		checkForPopup(e);
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+	}
+
+	public void setLoc(Point loc) {
+		this.loc = loc;
+	}
+
+	private void checkForPopup(MouseEvent e) {
+		// Set all tree nodes drop-down menus not visible for all nodes
+		hideAllMenuItems ();
+		// Set drop-down menu visible on specific tree nodes right click
+		if (e.isPopupTrigger()) {
+			loc = e.getPoint();
+			TreePath path = ((JTree) e.getSource()).getPathForLocation(loc.x, loc.y);
+			Object treeObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+			((JTree) e.getSource()).setSelectionPath(path);
+			if (path != null) {
+				if (treeObject instanceof PokerStrategy) {
+					dropDownMenus.put("Refresh", true);
+					dropDownMenus.put("Remove", true);
+					dropDownMenus.put("Add Action", true);
+					dropDownMenus.put("Duplicate", true);
+				} else if (treeObject instanceof PokerOpponentPosition) {
+					dropDownMenus.put("Apply Template", true);
+					dropDownMenus.put("Remove", true);
+				} else if (treeObject instanceof PokerPosition) {
+					dropDownMenus.put("Remove", true);
+					dropDownMenus.put("Add Opponents Position", true);
+				} else if (treeObject instanceof PokerAction) {
+					dropDownMenus.put("Add Sizing", true);
+					dropDownMenus.put("Add Hands", true);
+					dropDownMenus.put("Add Opponents Position", true);
+					dropDownMenus.put("Remove", true);
+				} else if (treeObject instanceof PokerHandSizing) {
+					dropDownMenus.put("Delete Sizing", true);
+					dropDownMenus.put("Add Hands", true);
+					dropDownMenus.put("Add Opponents Position", true);
+				} else {
+				}
+				setMenuAttributes();
+				// Show pop-up
+				popup.show((JTree) e.getSource(), loc.x, loc.y);
+			}
+		}
+	}
+	
+	private void hideAllMenuItems () {
+		for (int i = 0; i < UtilMethodsFactory.dropDownsNames.length; i++) {
+			dropDownMenus.put(UtilMethodsFactory.dropDownsNames[i], false);
+		}
+	}
+	
+	private void setMenuAttributes() {
+		int i = 0;
+		while (i < popup.getComponentCount()) {
+			JMenuItem item = (JMenuItem) popup.getComponents()[i];
+			for (Map.Entry<String, Boolean> entry : dropDownMenus.entrySet()) {
+				if (item.getText().equals(entry.getKey())) {
+					item.setEnabled(entry.getValue());
+					item.setVisible(entry.getValue());
+				}
+			}
+			i++;
+		}
+	}
+
+	private String constructNewTabName(JTabbedPane jTabbedPane) {
 		String newName = "";
 		CustomTree customTree = (CustomTree) ((JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex())).getViewport().getView();
 		Object elements[] = customTree.getTheTree().getSelectionPath().getPath();
@@ -203,34 +238,5 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			
 		}
 		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", treeTabName, iniItemName);
-	}
-
-	public Point getLoc() {
-		return loc;
-	}
-
-	public void setLoc(Point loc) {
-		this.loc = loc;
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		checkForPopup(e);
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
 	}
 }
