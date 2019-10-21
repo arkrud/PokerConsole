@@ -95,6 +95,14 @@ public class INIFilesFactory {
 		return data;
 	}
 
+	public static String[] getIniItemNamesFromSection(File iniFile, String secionName) {
+		IniFile ini = readINI(iniFile);
+		IniSection iniSection = ini.getSection(secionName);
+		iniSection.getItemNames();
+		String[] itemNames = iniSection.getItemNames().toArray(new String[iniSection.getItemNames().size()]);
+		return itemNames;
+	}
+
 	public static String getSolutionCopySelectionItemName(File iniFile, String solutionName) {
 		String solutionCopySelectionItemName = "";
 		IniFile ini = readINI(iniFile);
@@ -187,7 +195,20 @@ public class INIFilesFactory {
 		}
 		writeINI(iniFile, ini);
 	}
-	
+
+	public static void removeINIFileItemsWithPattern(File iniFile, String section, String pattern) {
+		IniFile ini = readINI(iniFile);
+		IniSection iniSection = ini.getSection(section);
+		Iterator<String> it = iniSection.getItemNames().iterator();
+		while (it.hasNext()) {
+			String itemName = it.next();
+			if (itemName.contains(pattern)) {
+			iniSection.removeItem(itemName);
+			}
+		}
+		writeINI(iniFile, ini);
+	}
+
 	// Remove section from INI file
 	public static void removeINIFileSection(File iniFile, String sectionName) {
 		IniFile ini = readINI(iniFile);
@@ -207,10 +228,22 @@ public class INIFilesFactory {
 	}
 
 	// Update INI file items in section
-	public static void updateINIFileItems(File iniFile, String section, String newItemValue, String itemName) {
+	public static void updateINIFileItem(File iniFile, String section, String newItemValue, String itemName) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
 		iniSection.getItem(itemName).setValue(newItemValue);
+		writeINI(iniFile, ini);
+	}
+
+	// Update INI file items in section
+	public static void updateINIFileItems(File iniFile, String section, String newItemValue, String[] itemNames) {
+		IniFile ini = readINI(iniFile);
+		IniSection iniSection = ini.getSection(section);
+		int x = 0;
+		while (x < itemNames.length) {
+			iniSection.getItem(itemNames[x]).setValue(newItemValue);
+			x++;
+		}
 		writeINI(iniFile, ini);
 	}
 

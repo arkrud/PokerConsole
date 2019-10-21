@@ -176,6 +176,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * @return The TreePath object of selected node
 	 */
 	public TreePath selectTreeNode(DefaultMutableTreeNode node, String pathString, CustomTree tree) {
+		System.out.println(pathString);
 		String[] pathNodes = pathString.split("-");
 		int childCount = node.getChildCount();
 		TreePath path = null;
@@ -490,7 +491,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * @param tree the tree
 	 * @return the tree path
 	 */
-	private TreePath setSelection(DefaultMutableTreeNode node, JTree tree) {
+	public TreePath setSelection(DefaultMutableTreeNode node, JTree tree) {
 		TreePath treePath = new TreePath(node.getPath());
 		tree.setSelectionPath(treePath);
 		tree.scrollPathToVisible(treePath);

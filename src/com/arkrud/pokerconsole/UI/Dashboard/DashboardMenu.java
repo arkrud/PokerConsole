@@ -12,6 +12,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
@@ -59,7 +60,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		this.editable = editable;
 		setText("Edit");
 		exit = new JMenuItem("Exit");
-		addTree = new JMenuItem("Add Tree");
+		addTree = new JMenuItem("Add Solution");
 		loadSolution = new JMenuItem("Load Solution");
 		manualSolutionNaming = new JMenuItem("Enable Manual Solution Copy Naming");
 		manageTrees = new JMenuItem("Hide/Show Trees");
@@ -121,7 +122,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			UtilMethodsFactory.exitApp();
 		} else if (menuText.contains("Add User")) {
 			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser);
-		} else if (menuText.contains("Add Tree")) {
+		} else if (menuText.contains("Add Solution")) {
 			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash, null, null, null, null, null, null);
 		} else if (menuText.contains("Load Solution")) {
 			loadSolution();
@@ -239,7 +240,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * Imports solution from solution package ZIP file.<br>
 	 * <ul>
 	 * <li>Opens File dialog to select solution package ZIP file from filesystem.
-	 * <li>Add solution name to INI file Application section.
+	 * <li>Add solution name item to INI file Application section with status true visible.
+	 * <li>Add solution name item to INI file Autonaming section with status false visible.
 	 * <li>Create strategy directory.
 	 * <li>Instantiate new tree and add it to new solution tree tab.
 	 * <li>Unzip solution files to the solution directory.
@@ -259,6 +261,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			solutionPackagePath = file.getAbsolutePath().replace("\\", "/");
 			String strategyName = file.getName().split("\\.")[0];
 			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", strategyName, "true");
+			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", strategyName, "false");
 			File strategyDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + strategyName);
 			UtilMethodsFactory.createFolder(strategyDir);
 			CustomTree tree = dash.addTreeTabPaneTab(strategyName);
@@ -266,6 +269,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			UtilMethodsFactory.unZipUpdate(solutionPackagePath, destDirectory);
 			tree.refreshTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), strategyName);
 			dash.getTreeTabbedPane().setSelectedIndex(dash.getTreeTabbedPane().indexOfTab(strategyName));
+			
+			tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(),  tree.getTheTree());
 		} else {
 		}
 	}
@@ -284,19 +289,21 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) customTree.getTreeModel().getRoot();
 		PokerStrategy pokerStrategy = (PokerStrategy) node.getUserObject();
 		generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()), editable);
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "editable");
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "editable");
 		showDashboard(false);
 	}
 
 	/**
 	 * Enable manual naming.
 	 * <ul>
+	 * <li>Retrieve the currently selected tab.
 	 * <li>Update INI configuration file to set manual naming of the tree tab headers flag to true (editable).
 	 * <li>Set appropriate menu item text.
 	 * </ul>
 	 */
 	private void enableManualNaming() {
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "manualtreenaming");
+		String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming","true" ,selectedTabName);
 		manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
 	}
 	
@@ -308,7 +315,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * </ul>
 	 */
 	private void disableManualNaming() {
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "manualtreenaming");
+		String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", selectedTabName);
 		manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 	}
 	
@@ -335,8 +343,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * </ul>
 	 */
 	private void useMongo() {
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "mongo");
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "ini");
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "mongo");
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "ini");
 		showDashboard(true);
 	}
 	
@@ -349,8 +357,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * </ul>
 	 */
 	private void useINI() {
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "mongo");
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "ini");
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "mongo");
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "ini");
 		showDashboard(true);
 	}
 

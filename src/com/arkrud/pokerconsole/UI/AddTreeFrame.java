@@ -10,10 +10,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.arkrud.Shareware.SpringUtilities;
+import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
@@ -69,13 +72,18 @@ public class AddTreeFrame extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();
 		if (theButton.getText().equals("Add")) {
-			String application = appTreeTextField.getText();
+			String solution = appTreeTextField.getText();
 			Boolean visibility = treeStateCheckBox.isSelected();
-			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", application, visibility);
-			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", application, "false");
-			File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + application);
+			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", solution, visibility);
+			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", solution, "false");
+			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", solution, solution);
+			File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + solution);
 			UtilMethodsFactory.createFolder(sizingDir);
-			dash.addTreeTabPaneTab(application);
+			dash.addTreeTabPaneTab(solution);
+			dash.getTreeTabbedPane().setSelectedIndex(dash.getTreeTabbedPane().indexOfTab(solution));
+			JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
+			CustomTree tree = (CustomTree) scroll.getViewport().getView();
+			tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(),tree.getTheTree());
 			this.dispose();
 		} else {
 			this.dispose();

@@ -47,7 +47,9 @@ public class CustomMouseAdapter extends MouseAdapter {
 						renameStrategyTab(tabbedPane);
 					}
 				});
-				if(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "manualtreenaming").equals("false")) {
+				String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
+				System.out.println("selectedTabName: " + selectedTabName);
+				if(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", selectedTabName).equals("false")) {
 					setName.setEnabled(false);
 				}
 				popupMenu.add(setName);
@@ -67,7 +69,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 
 	private void renameStrategyTab(JTabbedPane tabbedPane) {
 		UtilMethodsFactory.showDialogToDesctop("RenameSolutioTab", 250, 140, dash, null, null, null, null, tabbedPane, null);
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "true", tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()).split("-")[0]);
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "true", tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
 	}
 
 	private void removeTreeCopy(JTabbedPane tabbedPane, Dashboard dash) {

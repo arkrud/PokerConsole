@@ -62,6 +62,10 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					JTabbedPane jTabbedPane = dash.getTreeTabbedPane();
 					String newName = constructNewTabName(jTabbedPane);
 					String oldTreeName = jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
+					System.out.println("oldTreeName: " + oldTreeName);
+					System.out.println("newName: " + newName);
+					INIFilesFactory.removeINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
+					INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newName, "false");
 					if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", newName)) {
 						JOptionPane.showMessageDialog(dash, "This position is selected in another Solution Tree copy", "Error", JOptionPane.ERROR_MESSAGE);
 						int x = 0;
@@ -83,18 +87,19 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 						} else {
 							showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
 						}
-						if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newName.split("-")[0]).equals("false")) {
+						if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newName).equals("false")) {
 							String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", oldTreeName);
 							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", newName, oldTreeName);
 							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName, oldTreeName);
-							INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Selections", oldItemValue, newName);
+							System.out.println("oldItemValue: " + oldItemValue);
+							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", oldItemValue, newName);
 							jTabbedPane.setTitleAt(jTabbedPane.getSelectedIndex(), newName);
 						} else {
 							String newPosition = newName.substring(newName.indexOf("-") + 1, newName.length());
 							//System.out.println("oldTreeName: "  + oldTreeName);
 							//String positionItem = INIFilesFactory.getSolutionCopySelectionItemName(UtilMethodsFactory.getConsoleConfig(), oldTreeName.split("-")[0]);
 							//System.out.println("positionItem: " +  positionItem);
-							INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Selections", newPosition, oldTreeName);
+							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", newPosition, oldTreeName);
 						}
 					}
 				}

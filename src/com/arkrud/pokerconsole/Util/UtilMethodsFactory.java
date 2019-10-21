@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -76,8 +77,8 @@ public class UtilMethodsFactory {
 		return name.matches("[a-zA-Z]+");
 	}
 
-	public static void copyFileUsingJava7Files(File source, File dest) throws IOException {
-		Files.copy(source.toPath(), dest.toPath());
+	public static void copyFile(File source, File dest) throws IOException {
+		Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	public static void createChartINIFile(File file) {
@@ -146,8 +147,8 @@ public class UtilMethodsFactory {
 	}
 
 	public static void exitApp() {
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "editable");
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "manualtreenaming");
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "editable");
+		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", INIFilesFactory.getIniItemNamesFromSection (UtilMethodsFactory.getConsoleConfig(), "Autonaming"));
 		System.exit(0);
 	}
 
@@ -251,16 +252,18 @@ public class UtilMethodsFactory {
 	public static void tableToImage(CustomTable table, String imagePath) {
 		int w = Math.max(table.getWidth(), table.getTableHeader().getWidth());
 		int h = table.getHeight() + table.getTableHeader().getHeight();
-		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g2 = bi.createGraphics();
-		table.getTableHeader().paint(g2);
-		g2.translate(0, table.getTableHeader().getHeight());
-		table.paint(g2);
-		g2.dispose();
-		try {
-			ImageIO.write(bi, "png", new File(imagePath + ".png"));
-		} catch (IOException ioe) {
-			System.out.println("write: " + ioe.getMessage());
+		if (w > 0 && h > 0) {
+			BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+			Graphics2D g2 = bi.createGraphics();
+			table.getTableHeader().paint(g2);
+			g2.translate(0, table.getTableHeader().getHeight());
+			table.paint(g2);
+			g2.dispose();
+			try {
+				ImageIO.write(bi, "png", new File(imagePath + ".png"));
+			} catch (IOException ioe) {
+				System.out.println("write: " + ioe.getMessage());
+			}
 		}
 	}
 

@@ -218,7 +218,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
 			ImageChartPanel imageChartPanel;
 			if (path != null) {
-				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
+				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
 					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());					
 				} else {
