@@ -28,7 +28,6 @@ import javax.swing.tree.TreePath;
 
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
-import com.arkrud.pokerconsole.UI.TableChartPanel;
 import com.arkrud.pokerconsole.UI.CustomMouseAdapter;
 import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
@@ -211,16 +210,21 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
 		closeAllFrames();
+		System.out.println("text: " + INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index)));
 		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
 			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
 			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
 			ImageChartPanel imageChartPanel;
+			System.out.println("path: " + path);
 			if (path != null) {
+				System.out.println(((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject().getClass().getName());
+
 				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
 					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());					
+
+					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
 				} else {
 					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 					@SuppressWarnings("unchecked")

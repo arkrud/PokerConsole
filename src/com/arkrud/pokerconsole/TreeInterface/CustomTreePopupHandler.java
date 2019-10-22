@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -130,7 +129,7 @@ public class CustomTreePopupHandler implements ActionListener {
 
 	/**
 	 * Adds the PokerOpponentPosition (POP) node to the solution tree PokerAction(PA), PokerSizing(PZ), or PokerPosition(PP) branch.
-	 * 
+	 *
 	 * <ul>
 	 * <li>Opens input dialog for user to provide the name of the POP and convert user input to all upper case letters.
 	 * <li>Get top of the tree representing poker solution user is working with.
@@ -182,6 +181,14 @@ public class CustomTreePopupHandler implements ActionListener {
 								+ Integer.toString(opponentsHandsNodesCount + 1) + s + ".ini";
 						copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 						pokerOpponentPosition.setChartPaneTitle(pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + s);
+						String newTabTitle = ((PokerStrategy) top.getUserObject()).getNodeText() + "-" + pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + s;
+						dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), newTabTitle);
+						INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", newTabTitle, oldTreeName);
+						INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + s, newTabTitle);
+						INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newTabTitle, oldTreeName);
+						INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Applications", oldAppStatus, newTabTitle);
+						INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newTabTitle, oldTreeName);
+						INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldAutoNamingStatus, newTabTitle);
 						pokerOpponentPosition.setChartImagePath(relativePath);
 					} else if (node.getUserObject() instanceof PokerPosition) {
 						PokerPosition pokerPosition = (PokerPosition) (node.getUserObject());
@@ -219,7 +226,7 @@ public class CustomTreePopupHandler implements ActionListener {
 	 * <li>Add PA node as a last child of root node.
 	 * <li>Expand all nodes in the branch to show all PA nodes including new one.
 	 * </ul>
-	 * 
+	 *
 	 * @param node The parent Solution node
 	 * @param obj The parent node user object
 	 */
@@ -233,22 +240,22 @@ public class CustomTreePopupHandler implements ActionListener {
 					String oldTreeName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
 					String oldAppStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName);
 					String oldAutoNamingStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
-					
 					PokerAction pokerAction = new PokerAction(s);
 					File actionDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) obj).getNodeText() + "/" + s);
-					
 					UtilMethodsFactory.createFolder(actionDir);
 					DefaultMutableTreeNode actionNode = new DefaultMutableTreeNode(pokerAction);
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
 					((DefaultTreeModel) tree.getModel()).insertNodeInto(actionNode, top, top.getChildCount());
 					theTree.setSelection(actionNode, theTree.getTheTree());
-					dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), constructNewTabName(dash.getTreeTabbedPane()));
-					INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", constructNewTabName(dash.getTreeTabbedPane()), oldTreeName);
-					INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", constructNewTabName(dash.getTreeTabbedPane()), oldTreeName);
-					INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Autonaming", constructNewTabName(dash.getTreeTabbedPane()), oldTreeName);
-					INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", s, constructNewTabName(dash.getTreeTabbedPane()));
-					INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Applications", oldAppStatus, constructNewTabName(dash.getTreeTabbedPane()));
-					INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldAutoNamingStatus, constructNewTabName(dash.getTreeTabbedPane()));
+					JTabbedPane pane = dash.getTreeTabbedPane();
+					pane.setTitleAt(pane.getSelectedIndex(), constructNewTabName(pane));
+					String newTabName = constructNewTabName(pane);
+					INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", newTabName, oldTreeName);
+					INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newTabName, oldTreeName);
+					INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newTabName, oldTreeName);
+					INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", s, newTabName);
+					INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Applications", oldAppStatus, newTabName);
+					INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldAutoNamingStatus, newTabName);
 				}
 			}
 		} else {
@@ -291,7 +298,7 @@ public class CustomTreePopupHandler implements ActionListener {
 	 * <li>Add PS node as a last child of root node.
 	 * <li>Expand all nodes in the branch to show all PA nodes including new one.
 	 * </ul>
-	 * 
+	 *
 	 * @param node The parent PA node
 	 * @param obj The parent node user object
 	 */
@@ -306,10 +313,10 @@ public class CustomTreePopupHandler implements ActionListener {
 					String oldAppStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName);
 					String oldAutoNamingStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
-					
+
 					PokerHandSizing sizing = new PokerHandSizing(s, ((PokerAction) obj));
 					File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + ((PokerAction) obj).getNodeText() + "/" + s);
-					
+
 					UtilMethodsFactory.createFolder(sizingDir);
 					DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
 					((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, node, sizingNode.getChildCount());
@@ -340,7 +347,7 @@ public class CustomTreePopupHandler implements ActionListener {
 	 * <li>Close all frames in the dashboard desktop.
 	 * <li>Add new chart to dashboard desktop.
 	 * </ul>
-	 * 
+	 *
 	 * @param obj The PokerOpponentPosition (POP) node user object
 	 */
 	private void applyTemplate(Object obj) {
@@ -375,7 +382,7 @@ public class CustomTreePopupHandler implements ActionListener {
 	 * <li>Brake the loop if match found.
 	 * <li>For POP object name make sure to exclude sorting number prefix.
 	 * </ul>
-	 * 
+	 *
 	 * @param node The object node parent.
 	 * @param name The object name.
 	 * @return true, if node with this name already exists
