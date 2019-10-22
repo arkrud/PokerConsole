@@ -48,7 +48,6 @@ public class CustomMouseAdapter extends MouseAdapter {
 					}
 				});
 				String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
-				System.out.println("selectedTabName: " + selectedTabName);
 				if(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", selectedTabName).equals("false")) {
 					setName.setEnabled(false);
 				}

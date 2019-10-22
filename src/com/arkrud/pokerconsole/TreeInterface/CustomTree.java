@@ -176,7 +176,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * @return The TreePath object of selected node
 	 */
 	public TreePath selectTreeNode(DefaultMutableTreeNode node, String pathString, CustomTree tree) {
-		System.out.println(pathString);
 		String[] pathNodes = pathString.split("-");
 		int childCount = node.getChildCount();
 		TreePath path = null;
@@ -197,9 +196,17 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 						int childCount1 = childNode.getChildCount();
 						for (int x = 0; x < childCount1; x++) {
 							DefaultMutableTreeNode childNode1 = (DefaultMutableTreeNode) childNode.getChildAt(x);
-							if (((PokerOpponentPosition) (childNode1.getUserObject())).getNodeText().equals(Integer.toString(x + 1) + pathNodes[1])) {
-								path = setSelection(childNode1, jTree );
+							if(childNode1.getUserObject() instanceof PokerOpponentPosition ) {
+								if (((PokerOpponentPosition) (childNode1.getUserObject())).getNodeText().equals(Integer.toString(x + 1) + pathNodes[1])) {
+									path = setSelection(childNode1, jTree );
+								}
+							} else if (childNode1.getUserObject() instanceof PokerHandSizing){
+								if (((PokerHandSizing) (childNode1.getUserObject())).getNodeText().equals(pathNodes[1])) {
+									path = setSelection(childNode1, jTree );
+								}
+								
 							}
+							
 						}
 					}
 				}
@@ -249,6 +256,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 						for (int x = 0; x < childCount1; x++) {
 							DefaultMutableTreeNode childNode1 = (DefaultMutableTreeNode) childNode.getChildAt(x);
 							int childCount2 = childNode1.getChildCount();
+							
 							if (childNode1.getUserObject() instanceof PokerHandSizing) {
 								if (((PokerHandSizing) (childNode1.getUserObject())).getNodeText().equals(pathNodes[1])) {
 									for (int y = 0; y < childCount2; y++) {
@@ -259,7 +267,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 											}
 										} else if (childNode2.getUserObject() instanceof PokerOpponentPosition) {
 											if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText()
-													.equals(Integer.toString(y + 1) + pathNodes[1])) {
+													.equals(Integer.toString(y + 1) + pathNodes[2])) {
 												path = setSelection(childNode2, jTree );
 											}
 										}

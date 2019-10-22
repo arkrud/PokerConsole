@@ -62,8 +62,6 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					JTabbedPane jTabbedPane = dash.getTreeTabbedPane();
 					String newName = constructNewTabName(jTabbedPane);
 					String oldTreeName = jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
-					System.out.println("oldTreeName: " + oldTreeName);
-					System.out.println("newName: " + newName);
 					INIFilesFactory.removeINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
 					INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newName, "false");
 					if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", newName)) {
@@ -91,14 +89,10 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 							String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", oldTreeName);
 							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", newName, oldTreeName);
 							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newName, oldTreeName);
-							System.out.println("oldItemValue: " + oldItemValue);
 							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", oldItemValue, newName);
 							jTabbedPane.setTitleAt(jTabbedPane.getSelectedIndex(), newName);
 						} else {
 							String newPosition = newName.substring(newName.indexOf("-") + 1, newName.length());
-							//System.out.println("oldTreeName: "  + oldTreeName);
-							//String positionItem = INIFilesFactory.getSolutionCopySelectionItemName(UtilMethodsFactory.getConsoleConfig(), oldTreeName.split("-")[0]);
-							//System.out.println("positionItem: " +  positionItem);
 							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", newPosition, oldTreeName);
 						}
 					}
@@ -239,8 +233,8 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 			iniItemName = ((PokerAction) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
 		} else if (obj instanceof PokerPosition) {
 			iniItemName = ((PokerPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle();
-		} else {
-			
+		} else if (obj instanceof PokerHandSizing){
+			iniItemName = ((PokerHandSizing) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getPokerAction().getNodeText() + "-" + ((PokerHandSizing) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getNodeText();
 		}
 		INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", treeTabName, iniItemName);
 	}
