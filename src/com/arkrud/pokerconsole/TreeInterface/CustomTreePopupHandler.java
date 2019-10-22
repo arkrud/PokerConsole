@@ -199,12 +199,28 @@ public class CustomTreePopupHandler implements ActionListener {
 									+ Integer.toString(node.getChildCount() + 1) + s + ".ini";
 							copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 							pokerOpponentPosition.setChartPaneTitle(pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s);
+							String newTabTitle = ((PokerStrategy) top.getUserObject()).getNodeText() + "-" + pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s;
+							dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), newTabTitle);
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", newTabTitle, oldTreeName);
+							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s, newTabTitle);
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newTabTitle, oldTreeName);
+							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Applications", oldAppStatus, newTabTitle);
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newTabTitle, oldTreeName);
+							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldAutoNamingStatus, newTabTitle);
 							pokerOpponentPosition.setChartImagePath(relativePath);
 						} else if (treeObject instanceof PokerAction) {
 							PokerAction pokerAction = (PokerAction) treeObject;
 							String relativePath = "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini";
 							copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s);
+							String newTabTitle = ((PokerStrategy) top.getUserObject()).getNodeText() + "-" + pokerAction.getNodeText() +  "-" + pokerPosition.getNodeText() + "-" + s;
+							dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), newTabTitle);
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", newTabTitle, oldTreeName);
+							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s, newTabTitle);
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newTabTitle, oldTreeName);
+							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Applications", oldAppStatus, newTabTitle);
+							INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newTabTitle, oldTreeName);
+							INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldAutoNamingStatus, newTabTitle);
 							pokerOpponentPosition.setChartImagePath(relativePath);
 						}
 					}
