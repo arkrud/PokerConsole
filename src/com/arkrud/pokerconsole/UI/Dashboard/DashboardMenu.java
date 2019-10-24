@@ -63,6 +63,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		addTree = new JMenuItem("Add Solution");
 		loadSolution = new JMenuItem("Load Solution");
 		manualSolutionNaming = new JMenuItem("Enable Manual Solution Copy Naming");
+		manualSolutionNaming.setEnabled(false);
 		manageTrees = new JMenuItem("Hide/Show Trees");
 		openReadOnlyDash = new JMenuItem("Open Read Only Dashboard");
 		populateChartDB = new JMenuItem("Load Charts in MongoDB");
@@ -314,7 +315,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * <li>Set appropriate menu item text.
 	 * </ul>
 	 */
-	private void disableManualNaming() {
+	public void disableManualNaming() {
 		String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", selectedTabName);
 		manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
@@ -438,4 +439,15 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		File pngfile = new File(UtilMethodsFactory.getConfigPath() + imagePath + ".png");
 		MongoDBFactory.updateDocuments(imagePath, pngfile);
 	}
+	
+	public void setManualEditingMenu (boolean state) {
+		manualSolutionNaming.setEnabled(true);
+		if (state) {
+			manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
+		} else {
+			manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
+		}
+	}
+	
+	
 }

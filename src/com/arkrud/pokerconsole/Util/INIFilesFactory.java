@@ -246,6 +246,18 @@ public class INIFilesFactory {
 		}
 		writeINI(iniFile, ini);
 	}
+	
+	// Update INI file items in section
+		public static void updateAllINIFileItemsInSection(File iniFile, String section, String newItemsValue) {
+			IniFile ini = readINI(iniFile);
+			IniSection iniSection = ini.getSection(section);
+			Iterator<IniItem> it = iniSection.getItems().iterator();
+			while (it.hasNext()) {
+				IniItem iniItem = (IniItem) it.next();
+				iniItem.setValue(newItemsValue);
+			}
+			writeINI(iniFile, ini);
+		}
 
 	private static Collection<IniItem> getAllItemsFromSection(File iniFile, String iniSectionName) {
 		IniFile ini = readINI(iniFile);

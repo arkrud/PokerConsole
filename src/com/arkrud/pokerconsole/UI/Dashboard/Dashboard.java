@@ -59,6 +59,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 * And define limited interface controls set in non-editable state
 	 */
 	private boolean editable;
+	private DashboardMenu dashboardMenu;
 
 	/**
 	 * Sole constructor of Dashboard object. <br>
@@ -209,6 +210,11 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	public void stateChanged(ChangeEvent changeEvent) {
 		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
+		if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", sourceTabbedPane.getTitleAt(sourceTabbedPane.getSelectedIndex())).equals("true")) {
+			dashboardMenu.setManualEditingMenu(true);
+		} else {
+			dashboardMenu.setManualEditingMenu(false);
+		}
 		closeAllFrames();
 		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
 			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
@@ -317,7 +323,8 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 */
 	private void addMenu() {
 		jJMenuBar = new JMenuBar();
-		jJMenuBar.add(new DashboardMenu(this, editable));
+		dashboardMenu = new DashboardMenu(this, editable);
+		jJMenuBar.add(dashboardMenu);
 		this.setJMenuBar(jJMenuBar);
 	}
 

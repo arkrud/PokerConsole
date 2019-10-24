@@ -634,6 +634,7 @@ public class CustomTreePopupHandler implements ActionListener {
 			}
 		} else if (response == JOptionPane.CLOSED_OPTION) {
 		}
+		dash.closeAllFrames();
 	}
 
 	/**
@@ -687,7 +688,7 @@ public class CustomTreePopupHandler implements ActionListener {
 		} else if (response == JOptionPane.CLOSED_OPTION) {
 		}
 	}
-
+    
 	private boolean hasTabWithTitle(JTabbedPane pane, String title) {
 		int tabCount = pane.getTabCount();
 		boolean hasTabWithTitle = false;

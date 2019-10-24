@@ -148,7 +148,6 @@ public class UtilMethodsFactory {
 
 	public static void exitApp() {
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "editable");
-		INIFilesFactory.updateINIFileItems(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", INIFilesFactory.getIniItemNamesFromSection (UtilMethodsFactory.getConsoleConfig(), "Autonaming"));
 		System.exit(0);
 	}
 
@@ -290,7 +289,6 @@ public class UtilMethodsFactory {
 				}
 				inZipEntry = inZip.getNextEntry();
 			}
-			// inZipEntry.close();
 			inZip.close();
 			System.out.println("Finished Unzipping");
 		} catch (IOException e) {
