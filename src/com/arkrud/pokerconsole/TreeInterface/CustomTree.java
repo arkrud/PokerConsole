@@ -204,9 +204,9 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 								if (((PokerHandSizing) (childNode1.getUserObject())).getNodeText().equals(pathNodes[1])) {
 									path = setSelection(childNode1, jTree );
 								}
-								
+
 							}
-							
+
 						}
 					}
 				}
@@ -214,6 +214,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		} else if (pathNodes.length == 4) {
 			for (int i = 0; i < childCount; i++) {
 				DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) node.getChildAt(i);
+
 				if (childNode.getUserObject() instanceof PokerAction) {
 					if (((PokerAction) (childNode.getUserObject())).getNodeText().equals(pathNodes[0])) {
 						int childCount1 = childNode.getChildCount();
@@ -229,6 +230,8 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 											if (((PokerPosition) (childNode2.getUserObject())).getNodeText().equals(pathNodes[2])) {
 												for (int z = 0; z < childCount3; z++) {
 													DefaultMutableTreeNode childNode3 = (DefaultMutableTreeNode) childNode2.getChildAt(z);
+													System.out.println("nodeText: "  + ((PokerOpponentPosition) (childNode3.getUserObject())).getNodeText());
+													System.out.println("path: " + Integer.toString(z + 1) + pathNodes[3]);
 													if (((PokerOpponentPosition) (childNode3.getUserObject())).getNodeText()
 															.equals(Integer.toString(z + 1) + pathNodes[3])) {
 														path = setSelection(childNode3, jTree );
@@ -239,6 +242,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 									}
 								}
 							} else if (childNode1.getUserObject() instanceof PokerOpponentPosition) {
+								System.out.println("pathNodes[2]: "  + pathNodes[2]);
 								if (((PokerOpponentPosition) (childNode1.getUserObject())).getNodeText().equals(Integer.toString(x + 1) + pathNodes[2])) {
 									path = setSelection(childNode1, jTree );
 								}
@@ -256,7 +260,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 						for (int x = 0; x < childCount1; x++) {
 							DefaultMutableTreeNode childNode1 = (DefaultMutableTreeNode) childNode.getChildAt(x);
 							int childCount2 = childNode1.getChildCount();
-							
+
 							if (childNode1.getUserObject() instanceof PokerHandSizing) {
 								if (((PokerHandSizing) (childNode1.getUserObject())).getNodeText().equals(pathNodes[1])) {
 									for (int y = 0; y < childCount2; y++) {

@@ -218,9 +218,11 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		closeAllFrames();
 		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
 			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
+			System.out.println("pathString: " + pathString);
 			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
+			System.out.println("path: " + path);
 			ImageChartPanel imageChartPanel;
 			if (path != null) {
 				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
