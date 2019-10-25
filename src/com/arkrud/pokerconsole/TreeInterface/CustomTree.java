@@ -347,7 +347,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
 					pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 					pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/"
-							+ pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+							+ pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
 					DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 					pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
 				}
@@ -372,7 +372,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 								pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 						pokerOpponentPosition.setChartImagePath(
 								"Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText()
-										+ "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+										+ "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
 						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 						pokerHandSizingTreeNode.add(pokerOpponentPositionTreeNode);
 					} else {
@@ -380,7 +380,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 						pokerOpponentPosition.setChartPaneTitle(
 								pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 						pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/"
-								+ pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+								+ pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
 						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 						pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
 					}
@@ -400,7 +400,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText()
 						+ "-" + pokerOpponentPosition.getNodeText().substring(1));
 				pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText()
-						+ "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".jpg");
+						+ "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
 				pokerOpponentPosition.getNodeText();
 				pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 				pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
