@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
@@ -146,6 +148,17 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	public static void renameFile(String oldFileName, String newFileName) {
+		File oldFile = new File(oldFileName);
+		File newFile = new File(newFileName);
+		try {
+			Files.move(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public static void exitApp() {
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "editable");
 		System.exit(0);
@@ -191,6 +204,12 @@ public class UtilMethodsFactory {
 
 	public static int getIndexOfFirstIntInString(String str) {
 		Matcher matcher = Pattern.compile("\\d+").matcher(str);
+		matcher.find();
+		return str.indexOf(matcher.group());
+	}
+
+	public static int getIndexOfFirstLiteralInString(String str) {
+		Matcher matcher = Pattern.compile("\\D+").matcher(str);
 		matcher.find();
 		return str.indexOf(matcher.group());
 	}

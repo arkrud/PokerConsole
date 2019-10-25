@@ -76,7 +76,6 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 			INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", newSolutionCopyName, oldTreeName);
 			INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newSolutionCopyName, oldTreeName);
 			INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", oldItemValue, newSolutionCopyName);
-			System.out.println(newSolutionCopyName);
 			//INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", newSolutionCopyName);
 			tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), tabName);
 			
