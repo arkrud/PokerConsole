@@ -14,10 +14,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -104,6 +107,22 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	
+	public static List<String> listFiles  (String path) {
+		List<String> result = new ArrayList<String>();
+		try (Stream<Path> walk = Files.walk(Paths.get(path))) {
+
+			 result = walk.filter(Files::isRegularFile)
+					.map(x -> x.toString()).collect(Collectors.toList());
+
+			
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	/**
 	 * Create image icon for tree nodes. <br>
 	 *

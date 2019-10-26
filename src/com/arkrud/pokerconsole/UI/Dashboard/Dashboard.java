@@ -1,6 +1,7 @@
 package com.arkrud.pokerconsole.UI.Dashboard;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Rectangle;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -115,6 +117,11 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 
 	public void closeAllFrames() {
 		jScrollableDesktopPane.getDesktopMediator().closeAllFrames();
+	}
+
+	public JInternalFrame[] getAllFrames() {
+		JInternalFrame[] frames = jScrollableDesktopPane.getDesktopMediator().getAllFrames();
+		return frames;
 	}
 
 	@Override
@@ -245,6 +252,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 				}
 			}
 		}
+		// getAllFrames();
 	}
 
 	@Override

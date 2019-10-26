@@ -5,7 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringJoiner;
 
+import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -48,7 +54,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 					}
 				});
 				String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
-				if(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", selectedTabName).equals("false")) {
+				if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", selectedTabName).equals("false")) {
 					setName.setEnabled(false);
 				}
 				popupMenu.add(setName);
@@ -60,6 +66,14 @@ public class CustomMouseAdapter extends MouseAdapter {
 					}
 				});
 				popupMenu.add(removeTreeCopy);
+				final JMenuItem saveChartsLayout = new JMenuItem("Save Charts Layout");
+				saveChartsLayout.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						saveChartsLayout(tabbedPane, dash);
+					}
+				});
+				popupMenu.add(saveChartsLayout);
 				final Rectangle tabBounds = tabbedPane.getBoundsAt(index);
 				popupMenu.show(tabbedPane, tabBounds.x, tabBounds.y + tabBounds.height);
 			}
@@ -80,6 +94,35 @@ public class CustomMouseAdapter extends MouseAdapter {
 			INIFilesFactory.removeINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Applications", treeTabTitle);
 			INIFilesFactory.removeINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", treeTabTitle);
 		} else if (response == JOptionPane.CLOSED_OPTION) {
+		}
+	}
+
+	private void saveChartsLayout(JTabbedPane tabbedPane, Dashboard dash) {
+		dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
+		String tabTitle = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+		String solutionName = tabTitle.split("-")[0];
+		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + solutionName + "/";
+		JInternalFrame[] frames = dash.getAllFrames();
+		StringJoiner joiner = new StringJoiner("/");
+		for (JInternalFrame jInternalFrame : frames) {
+			int x = 0;
+			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
+			while (x < fileSystemPathTockens.length - 1) {
+				joiner.add(fileSystemPathTockens[x]);
+				x++;
+			}
+			break;
+		}
+		fileSystemPath = (fileSystemPath + joiner.toString()).replace("/", "\\");
+		List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
+		int y = 0;
+		int prefix = 1;
+		Collections.reverse(Arrays.asList(frames));
+		for (JInternalFrame jInternalFrame : frames) {
+			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
+			UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+			prefix++;
+			y++;
 		}
 	}
 }

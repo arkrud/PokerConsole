@@ -212,6 +212,10 @@ public class DesktopMediator implements DesktopConstants {
       public void closeAllFrames() {
     	  desktopScrollpane.closeAllFrames();
     }
+      
+      public JInternalFrame[] getAllFrames() {
+    	  return desktopScrollpane.getAllFrames();
+    }
 
       /**
         * propogates tileInternalFrames to DesktopScrollPane
