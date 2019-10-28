@@ -5,8 +5,9 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.StringJoiner;
+import java.util.Map;
 
 import javax.swing.JInternalFrame;
 
@@ -25,7 +26,8 @@ public class FramePositioning implements DesktopConstants {
 	/**
 	 * creates the FramePositioning object
 	 *
-	 * @param desktopScrollpane a reference to the DesktopScrollpane object
+	 * @param desktopScrollpane
+	 *            a reference to the DesktopScrollpane object
 	 */
 	public FramePositioning(DesktopScrollPane desktopScrollpane) {
 		this.desktopScrollpane = desktopScrollpane;
@@ -34,8 +36,9 @@ public class FramePositioning implements DesktopConstants {
 	/**
 	 * turns autoTile on or off
 	 *
-	 * @param autoTile <code>boolean</code> representing autoTile mode. If <code>true</code>, then all new frames are tiled automatically. If <code>false</code>, then all new frames are cascaded
-	 *            automatically.
+	 * @param autoTile
+	 *            <code>boolean</code> representing autoTile mode. If <code>true</code>, then all new frames are tiled automatically. If <code>false</code>,
+	 *            then all new frames are cascaded automatically.
 	 */
 	public void setAutoTile(boolean autoTile) {
 		this.autoTile = autoTile;
@@ -75,7 +78,8 @@ public class FramePositioning implements DesktopConstants {
 	/**
 	 * cascades the given internal frame based upon the current number of internal frames
 	 *
-	 * @param f the internal frame to cascade
+	 * @param f
+	 *            the internal frame to cascade
 	 *
 	 * @return a Point object representing the location assigned to the internal frame upon the virtual desktop
 	 */
@@ -86,7 +90,8 @@ public class FramePositioning implements DesktopConstants {
 	/**
 	 * cascades the given internal frame based upon supplied count
 	 *
-	 * @param f the internal frame to cascade
+	 * @param f
+	 *            the internal frame to cascade
 	 * @count the count to use in cascading the internal frame
 	 *
 	 * @return a Point object representing the location assigned to the internal frame upon the virtual desktop
@@ -119,7 +124,8 @@ public class FramePositioning implements DesktopConstants {
 	 * <BR>
 	 * - take the sqroot of the total frames rounded down, that gives the number of columns. <BR>
 	 * <BR>
-	 * - divide the total frames by the # of columns to get the # of rows in each column, and any remainder is distributed amongst the remaining rows from right to left) <BR>
+	 * - divide the total frames by the # of columns to get the # of rows in each column, and any remainder is distributed amongst the remaining rows from right
+	 * to left) <BR>
 	 * <BR>
 	 * eg) <BR>
 	 * 1 frame, remainder 0, 1 row<BR>
@@ -147,25 +153,29 @@ public class FramePositioning implements DesktopConstants {
 		// Rectangle viewP = desktopScrollpane.getViewport().getViewRect();
 		int totalNonIconFrames = 0;
 		JInternalFrame[] rawFrames = desktopScrollpane.getAllFrames();
-		List<JInternalFrame> sortedFrameList = new ArrayList<JInternalFrame>();
-		int x = 0;
-		while (x < 3) {
-			for (JInternalFrame jInternalFrame : rawFrames) {
-				String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
-				String fileTocken = fileSystemPathTockens[fileSystemPathTockens.length - 1];
-				if (fileTocken.contains(getFrameChartSequenceNumber(jInternalFrame.getName()))) {
-					sortedFrameList.add(jInternalFrame);
-				}
-			}
-			x++;
+		getInternalFramesPositions(rawFrames);
+		HashMap<Integer, JInternalFrame> frameMap = new HashMap<Integer, JInternalFrame>();
+		int n = 0;
+		while (n < rawFrames.length) {
+			String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/"
+					+ rawFrames[n].getName();
+			System.out.println("fileSystemPath: " + fileSystemPath);
+			String fileName = fileSystemPath.split("/")[fileSystemPath.split("/").length - 1].split("\\.")[0];
+			int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(fileName);
+			int sequenceNumber = Integer.valueOf(fileName.substring(0, theIndesOfFirstLiteral));
+			frameMap.put(sequenceNumber - 1, rawFrames[n]);
+			n++;
 		}
-		JInternalFrame[] frames = desktopScrollpane.getAllFrames();
-		// Collections.reverse(Arrays.asList(frames));
-		for (int i = 0; i < frames.length; i++) {
-			if (!frames[i].isIcon()) { // don't include iconified frames...
+		List<JInternalFrame> frameslist = new ArrayList<JInternalFrame>();
+		for (Map.Entry<Integer, JInternalFrame> entry : frameMap.entrySet()) {
+			JInternalFrame frame = entry.getValue();
+			frameslist.add(frame);
+			if (!frame.isIcon()) { // don't include iconified frames...
 				totalNonIconFrames++;
 			}
 		}
+		JInternalFrame[] frames = frameslist.stream().toArray(JInternalFrame[]::new);
+		Collections.reverse(Arrays.asList(frames));
 		int curCol = 0;
 		int curRow = 0;
 		int i = 0;
@@ -196,11 +206,14 @@ public class FramePositioning implements DesktopConstants {
 		}
 	}
 
-	private String getFrameChartSequenceNumber(String frameName) {
-		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + frameName;
-		String fileName = fileSystemPath.split("/")[fileSystemPath.split("/").length - 1].split("\\.")[0];
-		int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(fileName);
-		String sequenceNumber = fileName.substring(theIndesOfFirstLiteral, fileName.length() - theIndesOfFirstLiteral + 1);
-		return sequenceNumber;
+	public void getInternalFramesPositions(JInternalFrame[] rawFrames) {
+		//JInternalFrame[] rawFrames = desktopScrollpane.getAllFrames();
+		int x = 0;
+		while (x < rawFrames.length) {
+			System.out.println(rawFrames[x].getBounds().getX());
+			System.out.println(rawFrames[x].getBounds().getY());
+
+			x++;
+		}
 	}
 }

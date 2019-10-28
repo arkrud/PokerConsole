@@ -17,6 +17,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +43,7 @@ import javax.swing.tree.TreePath;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 
+import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.AddHandsDialog;
@@ -345,7 +347,8 @@ public class UtilMethodsFactory {
 
 	public static void saveChartsLayout(JTabbedPane tabbedPane, Dashboard dash) {
 		System.out.println("Working");
-		dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
+		String newFilePath = "";
+		//dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
 		String tabTitle = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
 		String solutionName = tabTitle.split("-")[0];
 		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + solutionName + "/";
@@ -368,6 +371,7 @@ public class UtilMethodsFactory {
 		// renaming files
 		for (JInternalFrame jInternalFrame : frames) {
 			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
+			//newFilePath = fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini";
 			if (filesList.get(y).contains("png")) {
 				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
 				if (hasPNGFile(filesList)) {
@@ -376,11 +380,12 @@ public class UtilMethodsFactory {
 			} else {
 				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
 			}
+			//updatePOPFilePathParameter (dash, newFilePath);
 			prefix++;
 			y++;
 		}
-		
-		JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
+
+		/*JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
 		CustomTree tree = (CustomTree) scroll.getViewport().getView();
 		TreePath selectedPath = tree.getTheTree().getSelectionPaths()[0];
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) (selectedPath.getLastPathComponent());
@@ -388,15 +393,42 @@ public class UtilMethodsFactory {
 			PokerPosition pokerPosition =  (PokerPosition)node.getUserObject();
 			node.children();
 		}
-		//System.out.println(node.getUserObject().getClass().getName());
-		
+*/		//System.out.println(node.getUserObject().getClass().getName());
+
+	}
+
+	private static void updatePOPFilePathParameter (Dashboard dash, String newFilePath) {
+		JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
+		CustomTree tree = (CustomTree) scroll.getViewport().getView();
+		TreePath selectedPath = tree.getTheTree().getSelectionPaths()[0];
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) (selectedPath.getLastPathComponent());
+		if (node.getUserObject() instanceof PokerPosition) {
+			Enumeration<?> en = node.children();
+			@SuppressWarnings("unchecked")
+			List<DefaultMutableTreeNode> children = (List<DefaultMutableTreeNode>) Collections.list(en);
+			for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(children)) {
+				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+				String newPOPName = newFilePath.split("\\\\")[newFilePath.split("\\\\").length - 1];
+				int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(pokerOpponentPosition.getNodeText());
+				String pokerOpponentPositionname = pokerOpponentPosition.getNodeText().substring(theIndesOfFirstLiteral, pokerOpponentPosition.getNodeText().length() - theIndesOfFirstLiteral + 1);
+				System.out.println("newPOPName: " +  newPOPName);
+				System.out.println("pokerOpponentPositionname: " +  pokerOpponentPositionname);
+				if(newPOPName.contains(pokerOpponentPositionname)) {
+					System.out.println("old: " + pokerOpponentPosition.getChartImagePath());
+					System.out.println("new: " + newFilePath.substring(newFilePath.indexOf("Images")).replace("\\", "/"));
+					break;
+				}
+
+			}
+		}
+
 	}
 
 	public static boolean hasPNGFile(List<String> filesList) {
 		Iterator<String> it = filesList.iterator();
 		boolean hasPNG = false;
 		while (it.hasNext()) {
-			String fileName = (String) it.next();
+			String fileName = it.next();
 			if (fileName.contains("png")) {
 				hasPNG = true;
 				break;
