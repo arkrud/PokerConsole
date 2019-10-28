@@ -2,8 +2,15 @@ package com.arkrud.pokerconsole.UI.scrollabledesktop;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringJoiner;
 
 import javax.swing.JInternalFrame;
+
+import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 /**
  * This class provides internal frame positioning methods for use by {@link com.tomtessier.scrollabledesktop.DesktopScrollPane DesktopScrollPane}.
@@ -137,9 +144,23 @@ public class FramePositioning implements DesktopConstants {
 	 *     } </code><BR>
 	 */
 	public void tileInternalFrames() {
-		//Rectangle viewP = desktopScrollpane.getViewport().getViewRect();
+		// Rectangle viewP = desktopScrollpane.getViewport().getViewRect();
 		int totalNonIconFrames = 0;
+		JInternalFrame[] rawFrames = desktopScrollpane.getAllFrames();
+		List<JInternalFrame> sortedFrameList = new ArrayList<JInternalFrame>();
+		int x = 0;
+		while (x < 3) {
+			for (JInternalFrame jInternalFrame : rawFrames) {
+				String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
+				String fileTocken = fileSystemPathTockens[fileSystemPathTockens.length - 1];
+				if (fileTocken.contains(getFrameChartSequenceNumber(jInternalFrame.getName()))) {
+					sortedFrameList.add(jInternalFrame);
+				}
+			}
+			x++;
+		}
 		JInternalFrame[] frames = desktopScrollpane.getAllFrames();
+		// Collections.reverse(Arrays.asList(frames));
 		for (int i = 0; i < frames.length; i++) {
 			if (!frames[i].isIcon()) { // don't include iconified frames...
 				totalNonIconFrames++;
@@ -154,24 +175,32 @@ public class FramePositioning implements DesktopConstants {
 			if (numRows > 2) {
 				numRows = 2;
 			}
-			//int frameHeight = viewP.height / numRows;
+			// int frameHeight = viewP.height / numRows;
 			for (curRow = 0; curRow < numRows; curRow++) {
 				int numCols = totalNonIconFrames / numRows;
 				int remainder = totalNonIconFrames % numRows;
 				if ((numRows - curRow) <= remainder) {
 					numCols++; // add an extra row for this guy
 				}
-				//int frameWidth = viewP.width / numCols;
+				// int frameWidth = viewP.width / numCols;
 				for (curCol = 0; curCol < numCols; curCol++) {
 					while (frames[i].isIcon()) { // find the next visible frame
 						i++;
 					}
 					frames[i].setBounds(curCol * 430, curRow * 440, 430, 440);
-					//System.out.println(frameWidth);
-					//System.out.println(frameHeight);
+					// System.out.println(frameWidth);
+					// System.out.println(frameHeight);
 					i++;
 				}
 			}
 		}
+	}
+
+	private String getFrameChartSequenceNumber(String frameName) {
+		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + frameName;
+		String fileName = fileSystemPath.split("/")[fileSystemPath.split("/").length - 1].split("\\.")[0];
+		int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(fileName);
+		String sequenceNumber = fileName.substring(theIndesOfFirstLiteral, fileName.length() - theIndesOfFirstLiteral + 1);
+		return sequenceNumber;
 	}
 }

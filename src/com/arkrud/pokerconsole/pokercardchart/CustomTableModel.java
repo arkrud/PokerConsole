@@ -89,6 +89,7 @@ public class CustomTableModel extends AbstractTableModel {
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(new File(UtilMethodsFactory.getConfigPath() + imagePath));
+			 
 		} catch (IOException ex) {
 			// handle exception...
 		}

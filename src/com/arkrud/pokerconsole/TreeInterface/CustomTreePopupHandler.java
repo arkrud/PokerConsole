@@ -176,7 +176,6 @@ public class CustomTreePopupHandler implements ActionListener {
 				if ((s != null) && (s.length() > 0)) {
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
 					int opponentsHandsNodesCount = countRelevantNodes(node);
-					System.out.println("opponentsHandsNodesCount: " + opponentsHandsNodesCount);
 					String oldTreeName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
 					String oldAppStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Applications", oldTreeName);
 					String oldAutoNamingStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);

@@ -221,6 +221,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				} else {
 					imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
 					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
+					theFrame.setName(pokerOpponentPosition.getChartImagePath());
 					UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), pane, theFrame);
 				}
 			}

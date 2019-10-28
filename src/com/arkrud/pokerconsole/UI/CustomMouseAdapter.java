@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -70,7 +71,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 				saveChartsLayout.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						saveChartsLayout(tabbedPane, dash);
+						UtilMethodsFactory.saveChartsLayout(tabbedPane, dash);
 					}
 				});
 				popupMenu.add(saveChartsLayout);
@@ -118,11 +119,32 @@ public class CustomMouseAdapter extends MouseAdapter {
 		int y = 0;
 		int prefix = 1;
 		Collections.reverse(Arrays.asList(frames));
+		// renaming files
 		for (JInternalFrame jInternalFrame : frames) {
 			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
-			UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+			if (filesList.get(y).contains("png")) {
+				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+				if (hasPNGFile(filesList)) {
+					UtilMethodsFactory.renameFile(filesList.get(y).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".png");
+				}
+			} else {
+				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+			}
 			prefix++;
 			y++;
 		}
+	}
+
+	private boolean hasPNGFile(List<String> filesList) {
+		Iterator<String> it = filesList.iterator();
+		boolean hasPNG = false;
+		while (it.hasNext()) {
+			String fileName = (String) it.next();
+			if (fileName.contains("png")) {
+				hasPNG = true;
+				break;
+			}
+		}
+		return hasPNG;
 	}
 }

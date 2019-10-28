@@ -211,6 +211,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
 		TableChartPanel chartPanel = new TableChartPanel(imagePath, editable);
 		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
+		theFrame.setName(imagePath);
 		JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
 		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);
 		UtilMethodsFactory.tableToImage(chartPanel.getTable(), imagePath.split("\\.")[0]);

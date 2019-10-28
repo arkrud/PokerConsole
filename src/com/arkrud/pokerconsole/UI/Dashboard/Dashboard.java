@@ -234,6 +234,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
 				} else {
+					//UtilMethodsFactory.saveChartsLayout(getTreeTabbedPane(), this);
 					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 					@SuppressWarnings("unchecked")
 					List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
@@ -245,6 +246,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 							} else {
 								imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
 								BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
+								theFrame.setName(pokerOpponentPosition.getChartImagePath());
 								UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
 							}
 						}
@@ -252,7 +254,6 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 				}
 			}
 		}
-		// getAllFrames();
 	}
 
 	@Override

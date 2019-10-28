@@ -36,7 +36,7 @@ public class DesktopMediator implements DesktopConstants {
             desktopScrollpane.setAutoTile(true);
             desktopResizableToolbar = new DesktopResizableToolBar(this);
             dListener = new DesktopListener(this);
-
+            
             mainPane.add(desktopResizableToolbar, BorderLayout.NORTH);
             mainPane.add(desktopScrollpane, BorderLayout.CENTER);
             mainPane.addComponentListener(dListener);

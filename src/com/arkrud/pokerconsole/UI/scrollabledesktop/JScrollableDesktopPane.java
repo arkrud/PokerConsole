@@ -88,8 +88,8 @@ public class JScrollableDesktopPane extends JPanel
       private ImageIcon defaultFrameIcon;
 
       private DesktopMediator desktopMediator;
-
-
+      
+      
 
 
     public DesktopMediator getDesktopMediator() {
@@ -116,11 +116,17 @@ public class JScrollableDesktopPane extends JPanel
      * @param mb the menubar with which to register the scrollable desktop
      */
       public JScrollableDesktopPane(JMenuBar mb) {
-            this();
+            this();           
             registerMenuBar(mb);
       }
+      
+      
 
-    /**
+    
+    
+    
+
+	/**
      * creates the JScrollableDesktopPane object.
      */
       public JScrollableDesktopPane() {
@@ -301,5 +307,7 @@ public class JScrollableDesktopPane extends JPanel
             desktopMediator.flagContentsChanged(f);
       }
 
+	
 
+       
 }

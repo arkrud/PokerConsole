@@ -15,8 +15,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -27,14 +31,18 @@ import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 
+import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.AddHandsDialog;
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
@@ -59,6 +67,7 @@ public class UtilMethodsFactory {
 	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, JScrollableDesktopPane jScrollableDesktopPane) {
 		TableChartPanel chartPanel = new TableChartPanel(chartImagePath, editable);
 		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
+		theFrame.setName(chartImagePath);
 		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
 	}
 
@@ -107,22 +116,16 @@ public class UtilMethodsFactory {
 		}
 	}
 
-	
-	public static List<String> listFiles  (String path) {
+	public static List<String> listFiles(String path) {
 		List<String> result = new ArrayList<String>();
 		try (Stream<Path> walk = Files.walk(Paths.get(path))) {
-
-			 result = walk.filter(Files::isRegularFile)
-					.map(x -> x.toString()).collect(Collectors.toList());
-
-			
-
+			result = walk.filter(Files::isRegularFile).map(x -> x.toString()).collect(Collectors.toList());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Create image icon for tree nodes. <br>
 	 *
@@ -338,5 +341,67 @@ public class UtilMethodsFactory {
 		File folder = new File(getConfigPath() + location);
 		String[] files = folder.list();
 		return files;
+	}
+
+	public static void saveChartsLayout(JTabbedPane tabbedPane, Dashboard dash) {
+		System.out.println("Working");
+		dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
+		String tabTitle = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+		String solutionName = tabTitle.split("-")[0];
+		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + solutionName + "/";
+		JInternalFrame[] frames = dash.getAllFrames();
+		StringJoiner joiner = new StringJoiner("/");
+		for (JInternalFrame jInternalFrame : frames) {
+			int x = 0;
+			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
+			while (x < fileSystemPathTockens.length - 1) {
+				joiner.add(fileSystemPathTockens[x]);
+				x++;
+			}
+			break;
+		}
+		fileSystemPath = (fileSystemPath + joiner.toString()).replace("/", "\\");
+		List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
+		int y = 0;
+		int prefix = 1;
+		Collections.reverse(Arrays.asList(frames));
+		// renaming files
+		for (JInternalFrame jInternalFrame : frames) {
+			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
+			if (filesList.get(y).contains("png")) {
+				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+				if (hasPNGFile(filesList)) {
+					UtilMethodsFactory.renameFile(filesList.get(y).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".png");
+				}
+			} else {
+				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+			}
+			prefix++;
+			y++;
+		}
+		
+		JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
+		CustomTree tree = (CustomTree) scroll.getViewport().getView();
+		TreePath selectedPath = tree.getTheTree().getSelectionPaths()[0];
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) (selectedPath.getLastPathComponent());
+		if (node.getUserObject() instanceof PokerPosition) {
+			PokerPosition pokerPosition =  (PokerPosition)node.getUserObject();
+			node.children();
+		}
+		//System.out.println(node.getUserObject().getClass().getName());
+		
+	}
+
+	public static boolean hasPNGFile(List<String> filesList) {
+		Iterator<String> it = filesList.iterator();
+		boolean hasPNG = false;
+		while (it.hasNext()) {
+			String fileName = (String) it.next();
+			if (fileName.contains("png")) {
+				hasPNG = true;
+				break;
+			}
+		}
+		return hasPNG;
 	}
 }
