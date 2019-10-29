@@ -207,13 +207,66 @@ public class FramePositioning implements DesktopConstants {
 	}
 
 	public void getInternalFramesPositions(JInternalFrame[] rawFrames) {
-		//JInternalFrame[] rawFrames = desktopScrollpane.getAllFrames();
-		int x = 0;
-		while (x < rawFrames.length) {
-			System.out.println(rawFrames[x].getBounds().getX());
-			System.out.println(rawFrames[x].getBounds().getY());
-
-			x++;
+		//Collections.reverse(Arrays.asList(rawFrames));
+		int totalNonIconFrames = 0; 
+		int z = 0;
+		while (z < rawFrames.length) {
+			if (!rawFrames[z].isIcon()) { // don't include iconified frames...
+				totalNonIconFrames++;
+			}
+			z++;
 		}
+		
+		int curCol = 0;
+		int curRow = 0;
+		int i = 0;
+		if (totalNonIconFrames > 0) {
+			// compute number of columns and rows then tile the frames
+			int numRows = (int) Math.sqrt(totalNonIconFrames);
+			if (numRows > 2) {
+				numRows = 2;
+			}
+			// int frameHeight = viewP.height / numRows;
+			for (curRow = 0; curRow < numRows; curRow++) {
+				int numCols = totalNonIconFrames / numRows;
+				int remainder = totalNonIconFrames % numRows;
+				if ((numRows - curRow) <= remainder) {
+					numCols++; // add an extra row for this guy
+				}
+				// int frameWidth = viewP.width / numCols;
+				for (curCol = 0; curCol < numCols; curCol++) {
+					while (rawFrames[i].isIcon()) { // find the next visible frame
+						i++;
+					}
+					double xposition = rawFrames[i].getBounds().getX();
+					double yposition = rawFrames[i].getBounds().getY();
+					System.out.println("xposition " + xposition);
+					System.out.println("yposition " +  yposition);
+					System.out.println("curRow " + (curRow+1)*430/2);
+					System.out.println("curCol " + (curCol+1)*440/2);
+					if (xposition < (curCol+1)*430/2 && yposition < (curRow+1)*440/2) {
+						if (curRow == 0) {
+							System.out.println("Frame position: " + (curRow + curCol +  1));
+						} else {
+							System.out.println("Frame position: " + (curRow + curCol +  3));
+						}
+						
+					}
+					i++;
+				}
+			}
+		}
+		/*int x = 0;
+		while (x < rawFrames.length) {
+			double xposition = rawFrames[x].getBounds().getX();
+			double yposition = rawFrames[x].getBounds().getY();
+			System.out.println(xposition);
+			System.out.println(yposition);
+			if (xposition < 430/2 && yposition < 440/2) {
+				System.out.println("Frame position: " + rawFrames.length);
+			}
+			
+			x++;
+		}*/
 	}
 }
