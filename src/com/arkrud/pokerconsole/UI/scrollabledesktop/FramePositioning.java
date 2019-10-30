@@ -26,8 +26,7 @@ public class FramePositioning implements DesktopConstants {
 	/**
 	 * creates the FramePositioning object
 	 *
-	 * @param desktopScrollpane
-	 *            a reference to the DesktopScrollpane object
+	 * @param desktopScrollpane a reference to the DesktopScrollpane object
 	 */
 	public FramePositioning(DesktopScrollPane desktopScrollpane) {
 		this.desktopScrollpane = desktopScrollpane;
@@ -36,9 +35,8 @@ public class FramePositioning implements DesktopConstants {
 	/**
 	 * turns autoTile on or off
 	 *
-	 * @param autoTile
-	 *            <code>boolean</code> representing autoTile mode. If <code>true</code>, then all new frames are tiled automatically. If <code>false</code>,
-	 *            then all new frames are cascaded automatically.
+	 * @param autoTile <code>boolean</code> representing autoTile mode. If <code>true</code>, then all new frames are tiled automatically. If <code>false</code>, then all new frames are cascaded
+	 *            automatically.
 	 */
 	public void setAutoTile(boolean autoTile) {
 		this.autoTile = autoTile;
@@ -78,8 +76,7 @@ public class FramePositioning implements DesktopConstants {
 	/**
 	 * cascades the given internal frame based upon the current number of internal frames
 	 *
-	 * @param f
-	 *            the internal frame to cascade
+	 * @param f the internal frame to cascade
 	 *
 	 * @return a Point object representing the location assigned to the internal frame upon the virtual desktop
 	 */
@@ -90,8 +87,7 @@ public class FramePositioning implements DesktopConstants {
 	/**
 	 * cascades the given internal frame based upon supplied count
 	 *
-	 * @param f
-	 *            the internal frame to cascade
+	 * @param f the internal frame to cascade
 	 * @count the count to use in cascading the internal frame
 	 *
 	 * @return a Point object representing the location assigned to the internal frame upon the virtual desktop
@@ -124,8 +120,7 @@ public class FramePositioning implements DesktopConstants {
 	 * <BR>
 	 * - take the sqroot of the total frames rounded down, that gives the number of columns. <BR>
 	 * <BR>
-	 * - divide the total frames by the # of columns to get the # of rows in each column, and any remainder is distributed amongst the remaining rows from right
-	 * to left) <BR>
+	 * - divide the total frames by the # of columns to get the # of rows in each column, and any remainder is distributed amongst the remaining rows from right to left) <BR>
 	 * <BR>
 	 * eg) <BR>
 	 * 1 frame, remainder 0, 1 row<BR>
@@ -157,8 +152,7 @@ public class FramePositioning implements DesktopConstants {
 		HashMap<Integer, JInternalFrame> frameMap = new HashMap<Integer, JInternalFrame>();
 		int n = 0;
 		while (n < rawFrames.length) {
-			String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/"
-					+ rawFrames[n].getName();
+			String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + rawFrames[n].getName();
 			System.out.println("fileSystemPath: " + fileSystemPath);
 			String fileName = fileSystemPath.split("/")[fileSystemPath.split("/").length - 1].split("\\.")[0];
 			int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(fileName);
@@ -207,8 +201,9 @@ public class FramePositioning implements DesktopConstants {
 	}
 
 	public void getInternalFramesPositions(JInternalFrame[] rawFrames) {
-		//Collections.reverse(Arrays.asList(rawFrames));
-		int totalNonIconFrames = 0; 
+		List<String> frameTitles = new ArrayList<String>();
+		List<Integer> framePositions = new ArrayList<Integer>();
+		int totalNonIconFrames = 0;
 		int z = 0;
 		while (z < rawFrames.length) {
 			if (!rawFrames[z].isIcon()) { // don't include iconified frames...
@@ -216,57 +211,45 @@ public class FramePositioning implements DesktopConstants {
 			}
 			z++;
 		}
-		
-		int curCol = 0;
-		int curRow = 0;
 		int i = 0;
+		double xposition = 0;
+		double yposition = 0;
 		if (totalNonIconFrames > 0) {
-			// compute number of columns and rows then tile the frames
-			int numRows = (int) Math.sqrt(totalNonIconFrames);
-			if (numRows > 2) {
-				numRows = 2;
-			}
-			// int frameHeight = viewP.height / numRows;
-			for (curRow = 0; curRow < numRows; curRow++) {
-				int numCols = totalNonIconFrames / numRows;
-				int remainder = totalNonIconFrames % numRows;
-				if ((numRows - curRow) <= remainder) {
-					numCols++; // add an extra row for this guy
+			while (i < totalNonIconFrames) {
+				// compute number of columns and rows then tile the frames
+				int curCol = 0;
+				int curRow = 0;
+				int numRows = (int) Math.sqrt(totalNonIconFrames);
+				if (numRows > 2) {
+					numRows = 2;
 				}
-				// int frameWidth = viewP.width / numCols;
-				for (curCol = 0; curCol < numCols; curCol++) {
-					while (rawFrames[i].isIcon()) { // find the next visible frame
-						i++;
+				for (curRow = 0; curRow < numRows; curRow++) {
+					int numCols = totalNonIconFrames / numRows;
+					int remainder = totalNonIconFrames % numRows;
+					if ((numRows - curRow) <= remainder) {
+						numCols++; // add an extra row for this guy
 					}
-					double xposition = rawFrames[i].getBounds().getX();
-					double yposition = rawFrames[i].getBounds().getY();
-					System.out.println("xposition " + xposition);
-					System.out.println("yposition " +  yposition);
-					System.out.println("curRow " + (curRow+1)*430/2);
-					System.out.println("curCol " + (curCol+1)*440/2);
-					if (xposition < (curCol+1)*430/2 && yposition < (curRow+1)*440/2) {
-						if (curRow == 0) {
-							System.out.println("Frame position: " + (curRow + curCol +  1));
-						} else {
-							System.out.println("Frame position: " + (curRow + curCol +  3));
+					for (curCol = 0; curCol < numCols; curCol++) {
+						xposition = rawFrames[i].getBounds().getX();
+						yposition = rawFrames[i].getBounds().getY();
+						if (curCol * 430 <= xposition && xposition < (curCol + 1) * 430 - 215 && curRow * 440 <= yposition && yposition < (curRow + 1) * 440 - 220) {
+							
+							frameTitles.add(rawFrames[i].getTitle());
+							framePositions.add(numCols * curRow + curCol + 1);
+							System.out.println("Frame position: " + (numCols * curRow + curCol + 1));
+							System.out.println(rawFrames[i].getTitle());
 						}
-						
 					}
-					i++;
 				}
+				i++;
 			}
 		}
-		/*int x = 0;
-		while (x < rawFrames.length) {
-			double xposition = rawFrames[x].getBounds().getX();
-			double yposition = rawFrames[x].getBounds().getY();
-			System.out.println(xposition);
-			System.out.println(yposition);
-			if (xposition < 430/2 && yposition < 440/2) {
-				System.out.println("Frame position: " + rawFrames.length);
-			}
-			
-			x++;
+		/*Collections.reverse(framePositions);
+		int y = 0;
+		while (y < framePositions.size()) {
+			System.out.println(framePositions.get(y));
+			System.out.println(frameTitles.get(y));
+			y++;
 		}*/
 	}
 }
