@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -105,15 +106,23 @@ public class CustomMouseAdapter extends MouseAdapter {
 	}
 
 	private void saveChartsLayout(JTabbedPane tabbedPane, Dashboard dash) {
-		//dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
+		
 		String tabTitle = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
 		String solutionName = tabTitle.split("-")[0];
 		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + solutionName + "/";
 		JInternalFrame[] frames = dash.getAllFrames();
+		List<?>[] framesAndLocations = getInternalFramesPositions(frames);
+		@SuppressWarnings("unchecked")
+		List<String> frameTitles = (List<String>)framesAndLocations[1];
+		printList(frameTitles);
+		@SuppressWarnings("unchecked")
+		
+		List<String> framePositions = (List<String>)framesAndLocations[0];
+		printList(framePositions);
 		StringJoiner joiner = new StringJoiner("/");
-		for (JInternalFrame jInternalFrame : frames) {
+		for (String title : frameTitles) {
 			int x = 0;
-			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
+			String[] fileSystemPathTockens = title.split("-");
 			while (x < fileSystemPathTockens.length - 1) {
 				joiner.add(fileSystemPathTockens[x]);
 				x++;
@@ -122,30 +131,88 @@ public class CustomMouseAdapter extends MouseAdapter {
 		}
 		fileSystemPath = (fileSystemPath + joiner.toString()).replace("/", "\\");
 		List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
+		
 		String newFilePath = "";
 		int y = 0;
-		int prefix = 1;
-		Collections.reverse(Arrays.asList(frames));
+		Collections.reverse(filesList);
 		// renaming files
-		for (JInternalFrame jInternalFrame : frames) {
-			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
-			newFilePath = fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini";
+		for (String title : frameTitles) {
+			String[] fileSystemPathTockens = title.split("-");
+			newFilePath = fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini";
 			if (filesList.get(y).contains("png")) {
 				UtilMethodsFactory.renameFile(filesList.get(y),
-						fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+						fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
 				if (hasPNGFile(filesList)) {
-					UtilMethodsFactory.renameFile(filesList.get(y).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".png");
+					UtilMethodsFactory.renameFile(filesList.get(y).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".png");
 				}
 			} else {
-				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+				for (String theTitle : frameTitles) {
+					if (theTitle.split("-")[theTitle.split("-").length - 1].contains(fileSystemPathTockens[fileSystemPathTockens.length - 1])) {
+						UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+						System.out.println("From:" + findTockenInTheList(filesList,fileSystemPathTockens[fileSystemPathTockens.length - 1]));
+						System.out.println("To: " + fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+						updatePOPFilePathParameter (dash,  newFilePath);
+					}
+				}
+				
 			}
-			prefix++;
+			
 			y++;
 		}
-		updatePOPFilePathParameter (dash,  newFilePath);
-		//dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
+		dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
+		
 	}
 
+	public List<?>[] getInternalFramesPositions(JInternalFrame[] rawFrames) {
+		
+		List<?>[] result = new List<?>[2];
+		List<String> frameTitles = new ArrayList<String>();
+		List<Integer> framePositions = new ArrayList<Integer>();
+		int totalNonIconFrames = 0;
+		int z = 0;
+		while (z < rawFrames.length) {
+			if (!rawFrames[z].isIcon()) { // don't include iconified frames...
+				totalNonIconFrames++;
+			}
+			z++;
+		}
+		int i = 0;
+		double xposition = 0;
+		double yposition = 0;
+		if (totalNonIconFrames > 0) {
+			while (i < totalNonIconFrames) {
+				// compute number of columns and rows then tile the frames
+				int curCol = 0;
+				int curRow = 0;
+				int numRows = (int) Math.sqrt(totalNonIconFrames);
+				if (numRows > 2) {
+					numRows = 2;
+				}
+				for (curRow = 0; curRow < numRows; curRow++) {
+					int numCols = totalNonIconFrames / numRows;
+					int remainder = totalNonIconFrames % numRows;
+					if ((numRows - curRow) <= remainder) {
+						numCols++; // add an extra row for this guy
+					}
+					for (curCol = 0; curCol < numCols; curCol++) {
+						xposition = rawFrames[i].getBounds().getX();
+						yposition = rawFrames[i].getBounds().getY();
+						if (curCol * 430 <= xposition && xposition < (curCol + 1) * 430 - 215 && curRow * 440 <= yposition && yposition < (curRow + 1) * 440 - 220) {
+							frameTitles.add(rawFrames[i].getTitle());
+							framePositions.add(numCols * curRow + curCol + 1);
+						}
+					}
+				}
+				i++;
+			}
+		}
+		
+		result[0] = framePositions;
+		result[1] = frameTitles;
+		return result;
+		
+	}
+	
 	private boolean hasPNGFile(List<String> filesList) {
 		Iterator<String> it = filesList.iterator();
 		boolean hasPNG = false;
@@ -185,4 +252,27 @@ public class CustomMouseAdapter extends MouseAdapter {
 		}
 
 	}
+	
+	private String findTockenInTheList (List<String> filesList, String tocken)  {
+		int y = 0;
+		String path = "";
+		while (y < filesList.size()) {
+			String filePath =  filesList.get(y);
+			if(filePath.split("/")[filePath.split("/").length - 1].contains(tocken)) {
+				path = filePath;
+			}
+			
+			y++;
+		}
+		return path;
+	}
+	
+	private void printList (List<?> list) {
+		int y = 0;
+		while (y < list.size()) {
+			System.out.println(list.get(y));
+			y++;
+		}
+	}
+	
 }

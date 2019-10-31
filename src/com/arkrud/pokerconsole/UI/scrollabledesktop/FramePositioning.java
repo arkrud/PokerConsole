@@ -148,7 +148,6 @@ public class FramePositioning implements DesktopConstants {
 		// Rectangle viewP = desktopScrollpane.getViewport().getViewRect();
 		int totalNonIconFrames = 0;
 		JInternalFrame[] rawFrames = desktopScrollpane.getAllFrames();
-		getInternalFramesPositions(rawFrames);
 		HashMap<Integer, JInternalFrame> frameMap = new HashMap<Integer, JInternalFrame>();
 		int n = 0;
 		while (n < rawFrames.length) {
@@ -200,56 +199,5 @@ public class FramePositioning implements DesktopConstants {
 		}
 	}
 
-	public void getInternalFramesPositions(JInternalFrame[] rawFrames) {
-		List<String> frameTitles = new ArrayList<String>();
-		List<Integer> framePositions = new ArrayList<Integer>();
-		int totalNonIconFrames = 0;
-		int z = 0;
-		while (z < rawFrames.length) {
-			if (!rawFrames[z].isIcon()) { // don't include iconified frames...
-				totalNonIconFrames++;
-			}
-			z++;
-		}
-		int i = 0;
-		double xposition = 0;
-		double yposition = 0;
-		if (totalNonIconFrames > 0) {
-			while (i < totalNonIconFrames) {
-				// compute number of columns and rows then tile the frames
-				int curCol = 0;
-				int curRow = 0;
-				int numRows = (int) Math.sqrt(totalNonIconFrames);
-				if (numRows > 2) {
-					numRows = 2;
-				}
-				for (curRow = 0; curRow < numRows; curRow++) {
-					int numCols = totalNonIconFrames / numRows;
-					int remainder = totalNonIconFrames % numRows;
-					if ((numRows - curRow) <= remainder) {
-						numCols++; // add an extra row for this guy
-					}
-					for (curCol = 0; curCol < numCols; curCol++) {
-						xposition = rawFrames[i].getBounds().getX();
-						yposition = rawFrames[i].getBounds().getY();
-						if (curCol * 430 <= xposition && xposition < (curCol + 1) * 430 - 215 && curRow * 440 <= yposition && yposition < (curRow + 1) * 440 - 220) {
-							
-							frameTitles.add(rawFrames[i].getTitle());
-							framePositions.add(numCols * curRow + curCol + 1);
-							System.out.println("Frame position: " + (numCols * curRow + curCol + 1));
-							System.out.println(rawFrames[i].getTitle());
-						}
-					}
-				}
-				i++;
-			}
-		}
-		/*Collections.reverse(framePositions);
-		int y = 0;
-		while (y < framePositions.size()) {
-			System.out.println(framePositions.get(y));
-			System.out.println(frameTitles.get(y));
-			y++;
-		}*/
-	}
+	
 }
