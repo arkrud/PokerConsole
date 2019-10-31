@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -145,6 +144,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				} else if (treeObject instanceof PokerPosition) {
 					dropDownMenus.put("Remove", true);
 					dropDownMenus.put("Add Opponents Position", true);
+					dropDownMenus.put("Change Charts Order", true);
 				} else if (treeObject instanceof PokerAction) {
 					dropDownMenus.put("Add Sizing", true);
 					dropDownMenus.put("Add Hands", true);

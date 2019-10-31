@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -106,7 +105,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 	}
 
 	private void saveChartsLayout(JTabbedPane tabbedPane, Dashboard dash) {
-		
+
 		String tabTitle = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
 		String solutionName = tabTitle.split("-")[0];
 		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + solutionName + "/";
@@ -116,7 +115,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 		List<String> frameTitles = (List<String>)framesAndLocations[1];
 		printList(frameTitles);
 		@SuppressWarnings("unchecked")
-		
+
 		List<String> framePositions = (List<String>)framesAndLocations[0];
 		printList(framePositions);
 		StringJoiner joiner = new StringJoiner("/");
@@ -131,7 +130,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 		}
 		fileSystemPath = (fileSystemPath + joiner.toString()).replace("/", "\\");
 		List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
-		
+
 		String newFilePath = "";
 		int y = 0;
 		Collections.reverse(filesList);
@@ -149,22 +148,22 @@ public class CustomMouseAdapter extends MouseAdapter {
 				for (String theTitle : frameTitles) {
 					if (theTitle.split("-")[theTitle.split("-").length - 1].contains(fileSystemPathTockens[fileSystemPathTockens.length - 1])) {
 						UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
-						System.out.println("From:" + findTockenInTheList(filesList,fileSystemPathTockens[fileSystemPathTockens.length - 1]));
-						System.out.println("To: " + fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
+						//System.out.println("From:" + findTockenInTheList(filesList,fileSystemPathTockens[fileSystemPathTockens.length - 1]));
+						//System.out.println("To: " + fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
 						updatePOPFilePathParameter (dash,  newFilePath);
 					}
 				}
-				
+
 			}
-			
+
 			y++;
 		}
 		dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
-		
+
 	}
 
 	public List<?>[] getInternalFramesPositions(JInternalFrame[] rawFrames) {
-		
+
 		List<?>[] result = new List<?>[2];
 		List<String> frameTitles = new ArrayList<String>();
 		List<Integer> framePositions = new ArrayList<Integer>();
@@ -206,13 +205,13 @@ public class CustomMouseAdapter extends MouseAdapter {
 				i++;
 			}
 		}
-		
+
 		result[0] = framePositions;
 		result[1] = frameTitles;
 		return result;
-		
+
 	}
-	
+
 	private boolean hasPNGFile(List<String> filesList) {
 		Iterator<String> it = filesList.iterator();
 		boolean hasPNG = false;
@@ -240,11 +239,11 @@ public class CustomMouseAdapter extends MouseAdapter {
 				String newPOPName = newFilePath.split("\\\\")[newFilePath.split("\\\\").length - 1];
 				int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(pokerOpponentPosition.getNodeText());
 				String pokerOpponentPositionname = pokerOpponentPosition.getNodeText().substring(theIndesOfFirstLiteral, pokerOpponentPosition.getNodeText().length() - theIndesOfFirstLiteral + 1);
-				System.out.println("newPOPName: " +  newPOPName);
+				//System.out.println("newPOPName: " +  newPOPName);
 				System.out.println("pokerOpponentPositionname: " +  pokerOpponentPositionname);
 				if(newPOPName.contains(pokerOpponentPositionname)) {
-					System.out.println("old: " + pokerOpponentPosition.getChartImagePath());
-					System.out.println("new: " + newFilePath.substring(newFilePath.indexOf("Images")).replace("\\", "/"));
+					//.out.println("old: " + pokerOpponentPosition.getChartImagePath());
+					//.out.println("new: " + newFilePath.substring(newFilePath.indexOf("Images")).replace("\\", "/"));
 					break;
 				}
 
@@ -252,7 +251,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 		}
 
 	}
-	
+
 	private String findTockenInTheList (List<String> filesList, String tocken)  {
 		int y = 0;
 		String path = "";
@@ -261,12 +260,12 @@ public class CustomMouseAdapter extends MouseAdapter {
 			if(filePath.split("/")[filePath.split("/").length - 1].contains(tocken)) {
 				path = filePath;
 			}
-			
+
 			y++;
 		}
 		return path;
 	}
-	
+
 	private void printList (List<?> list) {
 		int y = 0;
 		while (y < list.size()) {
@@ -274,5 +273,5 @@ public class CustomMouseAdapter extends MouseAdapter {
 			y++;
 		}
 	}
-	
+
 }

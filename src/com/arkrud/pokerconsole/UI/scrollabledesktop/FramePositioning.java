@@ -152,7 +152,7 @@ public class FramePositioning implements DesktopConstants {
 		int n = 0;
 		while (n < rawFrames.length) {
 			String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + rawFrames[n].getName();
-			System.out.println("fileSystemPath: " + fileSystemPath);
+			//System.out.println("fileSystemPath: " + fileSystemPath);
 			String fileName = fileSystemPath.split("/")[fileSystemPath.split("/").length - 1].split("\\.")[0];
 			int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(fileName);
 			int sequenceNumber = Integer.valueOf(fileName.substring(0, theIndesOfFirstLiteral));
@@ -199,5 +199,5 @@ public class FramePositioning implements DesktopConstants {
 		}
 	}
 
-	
+
 }

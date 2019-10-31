@@ -48,6 +48,7 @@ import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.AddHandsDialog;
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
+import com.arkrud.pokerconsole.UI.ChnageChartsOrderDialog;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.RenameTreeDialog;
 import com.arkrud.pokerconsole.UI.TableChartPanel;
@@ -63,7 +64,8 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action", "Add Hands", "Add Opponents Position", "Duplicate" };
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template",
+			"Add Action", "Add Hands", "Add Opponents Position", "Duplicate", "Change Charts Order" };
 	private static HashMap<String, TableChartPanel> charts = new HashMap<String, TableChartPanel>();
 
 	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, JScrollableDesktopPane jScrollableDesktopPane) {
@@ -275,6 +277,10 @@ public class UtilMethodsFactory {
 		case "AddUser":
 			dialog = new AddUserDialog(addUser);
 			break;
+		case "ChnageChartsOrderDialog":
+			dialog = new ChnageChartsOrderDialog(tree, node, dash, obj, theTree);
+			break;
+
 		default:
 			break;
 		}
@@ -435,5 +441,13 @@ public class UtilMethodsFactory {
 			}
 		}
 		return hasPNG;
+	}
+
+	public static void printList (List<?> list) {
+		int y = 0;
+		while (y < list.size()) {
+			System.out.println(list.get(y));
+			y++;
+		}
 	}
 }
