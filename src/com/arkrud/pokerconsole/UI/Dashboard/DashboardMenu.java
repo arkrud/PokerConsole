@@ -134,7 +134,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (menuText.contains("Hide/Show Trees")) {
 			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null, null, null);
 		} else if (menuText.contains("Update User")) {
-			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser);
+			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser );
 		} else if (menuText.contains("Open Read Only Dashboard")) {
 			openReadOnlyDashboard();
 		} else if (menuText.contains("Load Charts in MongoDB")) {

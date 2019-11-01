@@ -123,7 +123,11 @@ public class CustomTreePopupHandler implements ActionListener {
 				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null, null);
 			} else if (ac.equals("ADD OPPONENTS POSITION")) {
 				addOpponentPosition(node);
-			} else {
+			} else if (ac.equals("CHANGE CHARTS ORDER")) {
+				Enumeration<?> en = node.children();
+				@SuppressWarnings("unchecked")
+				List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+				UtilMethodsFactory.showDialogToDesctop("ChnageChartsOrderDialog", 150 + list.size() * 50, 120, dash, tree, theTree, obj, node, null, null);
 			}
 		} else if (obj instanceof PokerPosition) {
 			if (ac.equals("REMOVE")) {
@@ -134,7 +138,7 @@ public class CustomTreePopupHandler implements ActionListener {
 				Enumeration<?> en = node.children();
 				@SuppressWarnings("unchecked")
 				List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-				UtilMethodsFactory.showDialogToDesctop("ChnageChartsOrderDialog", 150 + list.size() * 40, 140, dash, tree, theTree, obj, node, null, null);
+				UtilMethodsFactory.showDialogToDesctop("ChnageChartsOrderDialog", 150 + list.size() * 50, 120, dash, tree, theTree, obj, node, null, null);
 			}
 		} else if (obj instanceof PokerOpponentPosition) {
 			if (ac.equals("APPLY TEMPLATE")) {

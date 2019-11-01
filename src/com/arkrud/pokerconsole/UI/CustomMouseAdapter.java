@@ -113,11 +113,11 @@ public class CustomMouseAdapter extends MouseAdapter {
 		List<?>[] framesAndLocations = getInternalFramesPositions(frames);
 		@SuppressWarnings("unchecked")
 		List<String> frameTitles = (List<String>)framesAndLocations[1];
-		printList(frameTitles);
+		//UtilMethodsFactory.printList(frameTitles);
 		@SuppressWarnings("unchecked")
 
 		List<String> framePositions = (List<String>)framesAndLocations[0];
-		printList(framePositions);
+		//UtilMethodsFactory.printList(framePositions);
 		StringJoiner joiner = new StringJoiner("/");
 		for (String title : frameTitles) {
 			int x = 0;
@@ -239,8 +239,6 @@ public class CustomMouseAdapter extends MouseAdapter {
 				String newPOPName = newFilePath.split("\\\\")[newFilePath.split("\\\\").length - 1];
 				int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(pokerOpponentPosition.getNodeText());
 				String pokerOpponentPositionname = pokerOpponentPosition.getNodeText().substring(theIndesOfFirstLiteral, pokerOpponentPosition.getNodeText().length() - theIndesOfFirstLiteral + 1);
-				//System.out.println("newPOPName: " +  newPOPName);
-				System.out.println("pokerOpponentPositionname: " +  pokerOpponentPositionname);
 				if(newPOPName.contains(pokerOpponentPositionname)) {
 					//.out.println("old: " + pokerOpponentPosition.getChartImagePath());
 					//.out.println("new: " + newFilePath.substring(newFilePath.indexOf("Images")).replace("\\", "/"));
@@ -266,12 +264,6 @@ public class CustomMouseAdapter extends MouseAdapter {
 		return path;
 	}
 
-	private void printList (List<?> list) {
-		int y = 0;
-		while (y < list.size()) {
-			System.out.println(list.get(y));
-			y++;
-		}
-	}
+	
 
 }

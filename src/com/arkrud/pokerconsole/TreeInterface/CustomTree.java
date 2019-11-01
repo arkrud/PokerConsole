@@ -178,6 +178,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	public TreePath selectTreeNode(DefaultMutableTreeNode node, String pathString, CustomTree tree) {
 		String[] pathNodes = pathString.split("-");
 		int childCount = node.getChildCount();
+		System.out.println(pathNodes.length);
 		TreePath path = null;
 		if (pathNodes.length == 1) {
 			for (int i = 0; i < childCount; i++) {
@@ -201,12 +202,16 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 									path = setSelection(childNode1, jTree );
 								}
 							} else if (childNode1.getUserObject() instanceof PokerHandSizing){
+								
 								if (((PokerHandSizing) (childNode1.getUserObject())).getNodeText().equals(pathNodes[1])) {
 									path = setSelection(childNode1, jTree );
 								}
-
 							}
-
+							
+							
+							
+							
+							
 						}
 					}
 				}
@@ -264,12 +269,11 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 										DefaultMutableTreeNode childNode2 = (DefaultMutableTreeNode) childNode1.getChildAt(y);
 										if (childNode2.getUserObject() instanceof PokerPosition) {
 											if (((PokerPosition) (childNode2.getUserObject())).getNodeText().equals(pathNodes[2])) {
-												path = setSelection(childNode2, jTree );
+												path = setSelection(childNode2, jTree);
 											}
 										} else if (childNode2.getUserObject() instanceof PokerOpponentPosition) {
-											if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText()
-													.equals(Integer.toString(y + 1) + pathNodes[2])) {
-												path = setSelection(childNode2, jTree );
+											if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(Integer.toString(y + 1) + pathNodes[2])) {
+												path = setSelection(childNode2, jTree);
 											}
 										}
 									}
@@ -366,8 +370,8 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		} else if (level == 4) {
 			if (node.isFile()) {
 				if (!node.getName().contains("png")) {
-					if (pokerPosition == null) {
-						PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
+					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
+					if (pokerOpponentPosition.getPokerPosition() == null) {
 						pokerOpponentPosition.setChartPaneTitle(
 								pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 						pokerOpponentPosition.setChartImagePath(
@@ -376,7 +380,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 						pokerHandSizingTreeNode.add(pokerOpponentPositionTreeNode);
 					} else {
-						PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 						pokerOpponentPosition.setChartPaneTitle(
 								pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 						pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/"

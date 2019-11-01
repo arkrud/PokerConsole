@@ -17,7 +17,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,17 +33,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 
-import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
-import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.AddHandsDialog;
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
@@ -64,8 +59,7 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template",
-			"Add Action", "Add Hands", "Add Opponents Position", "Duplicate", "Change Charts Order" };
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action", "Add Hands", "Add Opponents Position", "Duplicate", "Change Charts Order" };
 	private static HashMap<String, TableChartPanel> charts = new HashMap<String, TableChartPanel>();
 
 	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, JScrollableDesktopPane jScrollableDesktopPane) {
@@ -280,7 +274,6 @@ public class UtilMethodsFactory {
 		case "ChnageChartsOrderDialog":
 			dialog = new ChnageChartsOrderDialog(tree, node, dash, obj, theTree);
 			break;
-
 		default:
 			break;
 		}
@@ -351,85 +344,6 @@ public class UtilMethodsFactory {
 		return files;
 	}
 
-	public static void saveChartsLayout(JTabbedPane tabbedPane, Dashboard dash) {
-		System.out.println("Working");
-		String newFilePath = "";
-		//dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
-		String tabTitle = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
-		String solutionName = tabTitle.split("-")[0];
-		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + solutionName + "/";
-		JInternalFrame[] frames = dash.getAllFrames();
-		StringJoiner joiner = new StringJoiner("/");
-		for (JInternalFrame jInternalFrame : frames) {
-			int x = 0;
-			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
-			while (x < fileSystemPathTockens.length - 1) {
-				joiner.add(fileSystemPathTockens[x]);
-				x++;
-			}
-			break;
-		}
-		fileSystemPath = (fileSystemPath + joiner.toString()).replace("/", "\\");
-		List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
-		int y = 0;
-		int prefix = 1;
-		Collections.reverse(Arrays.asList(frames));
-		// renaming files
-		for (JInternalFrame jInternalFrame : frames) {
-			String[] fileSystemPathTockens = jInternalFrame.getTitle().split("-");
-			//newFilePath = fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini";
-			if (filesList.get(y).contains("png")) {
-				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
-				if (hasPNGFile(filesList)) {
-					UtilMethodsFactory.renameFile(filesList.get(y).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".png");
-				}
-			} else {
-				UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(prefix) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
-			}
-			//updatePOPFilePathParameter (dash, newFilePath);
-			prefix++;
-			y++;
-		}
-
-		/*JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
-		CustomTree tree = (CustomTree) scroll.getViewport().getView();
-		TreePath selectedPath = tree.getTheTree().getSelectionPaths()[0];
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) (selectedPath.getLastPathComponent());
-		if (node.getUserObject() instanceof PokerPosition) {
-			PokerPosition pokerPosition =  (PokerPosition)node.getUserObject();
-			node.children();
-		}
-*/		//System.out.println(node.getUserObject().getClass().getName());
-
-	}
-
-	private static void updatePOPFilePathParameter (Dashboard dash, String newFilePath) {
-		JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
-		CustomTree tree = (CustomTree) scroll.getViewport().getView();
-		TreePath selectedPath = tree.getTheTree().getSelectionPaths()[0];
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) (selectedPath.getLastPathComponent());
-		if (node.getUserObject() instanceof PokerPosition) {
-			Enumeration<?> en = node.children();
-			@SuppressWarnings("unchecked")
-			List<DefaultMutableTreeNode> children = (List<DefaultMutableTreeNode>) Collections.list(en);
-			for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(children)) {
-				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-				String newPOPName = newFilePath.split("\\\\")[newFilePath.split("\\\\").length - 1];
-				int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(pokerOpponentPosition.getNodeText());
-				String pokerOpponentPositionname = pokerOpponentPosition.getNodeText().substring(theIndesOfFirstLiteral, pokerOpponentPosition.getNodeText().length() - theIndesOfFirstLiteral + 1);
-				System.out.println("newPOPName: " +  newPOPName);
-				System.out.println("pokerOpponentPositionname: " +  pokerOpponentPositionname);
-				if(newPOPName.contains(pokerOpponentPositionname)) {
-					System.out.println("old: " + pokerOpponentPosition.getChartImagePath());
-					System.out.println("new: " + newFilePath.substring(newFilePath.indexOf("Images")).replace("\\", "/"));
-					break;
-				}
-
-			}
-		}
-
-	}
-
 	public static boolean hasPNGFile(List<String> filesList) {
 		Iterator<String> it = filesList.iterator();
 		boolean hasPNG = false;
@@ -443,7 +357,7 @@ public class UtilMethodsFactory {
 		return hasPNG;
 	}
 
-	public static void printList (List<?> list) {
+	public static void printList(List<?> list) {
 		int y = 0;
 		while (y < list.size()) {
 			System.out.println(list.get(y));
