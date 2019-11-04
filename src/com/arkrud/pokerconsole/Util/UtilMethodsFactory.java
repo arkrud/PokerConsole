@@ -15,12 +15,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -31,7 +28,6 @@ import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
-import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
@@ -272,7 +268,7 @@ public class UtilMethodsFactory {
 			dialog = new AddUserDialog(addUser);
 			break;
 		case "ChnageChartsOrderDialog":
-			dialog = new ChnageChartsOrderDialog(tree, node, dash, obj, theTree);
+			dialog = new ChnageChartsOrderDialog(tree, node, dash, theTree);
 			break;
 		default:
 			break;

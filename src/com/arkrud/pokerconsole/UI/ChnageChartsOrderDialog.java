@@ -37,31 +37,30 @@ import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
+import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 /**
+ * Class to build chart ordering dialog.<br>
+ * 
  * @author arkrud
- *
  */
 public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 	private JTree tree;
 	private Dashboard dash;
 	private CustomTree theTree;
 	private JButton applyButton, cancelButton;
-	private JPanel chartsPanel, popNamesPanel, popChartOrderPrefixesPanel, chartDataPanel, buttonsPanel;
+	private JPanel chartsPanel, chartDataPanel, buttonsPanel;
 	private List<String> popNames = new ArrayList<String>();
 	private List<String> popChartOrderPrefixes = new ArrayList<String>();
 	private TreeMap<String, JComboBox<String>> positionMap = new TreeMap<String, JComboBox<String>>();
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 *
 	 */
-	public ChnageChartsOrderDialog(JTree tree, DefaultMutableTreeNode node, Dashboard dash, Object obj, CustomTree theTree) {
+	public ChnageChartsOrderDialog(JTree tree, DefaultMutableTreeNode node, Dashboard dash, CustomTree theTree) {
 		this.tree = tree;
 		this.dash = dash;
 		this.theTree = theTree;
@@ -110,33 +109,45 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * Listens to click on Apply button
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();
 		if (theButton.getText().equals(" Apply")) {
+			// Get tree root node (poker solution)
 			DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
+			// Get solution name
 			String solutionName = ((PokerStrategy) top.getUserObject()).getNodeText();
+			// Construct file system path to solution folder
 			String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + solutionName + "/";
-			StringJoiner joiner = new StringJoiner("/");
+			// Get all chart frames from desktop
 			JInternalFrame[] frames = dash.getAllFrames();
+			// Create a list of the titles of all frames
 			List<String> frameTitles = new ArrayList<String>();
 			int z = 0;
 			while (z < frames.length) {
 				frameTitles.add(frames[z].getTitle());
 				z++;
-			}
-			int x = 0;
+			}			
+			// Create joiner class to construct forward-slash delimited file path
+			StringJoiner joiner = new StringJoiner("/");
+			// Get folder path for node holding currently selected chart group
 			String[] fileSystemPathTockens = frameTitles.get(0).split("-");
+			//Populate joiner with folder names in he path
+			int x = 0;
 			while (x < fileSystemPathTockens.length - 1) {
 				joiner.add(fileSystemPathTockens[x]);
 				x++;
 			}
+			// Replace forward-slashes with backslashes   
 			fileSystemPath = (fileSystemPath + joiner.toString()).replace("/", "\\");
+			// Generate list of file paths for all files in folder with charts INI files 
 			List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
+			// Reverse the file path list order
 			Collections.reverse(filesList);
+			// Create map object to associate chart file name without sequence prefix and extension with the file path
 			int n = 0;
 			TreeMap<String, String> map = new TreeMap<String, String>();
 			while (n < filesList.size()) {
@@ -147,66 +158,40 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 				map.put(postfix, filesList.get(n));
 				n++;
 			}
+			// Check for duplicates in selected combo boxes, warn user about the error, and bring him back to correct it
 			if (checkForDupSequenceIndex(positionMap)) {
 				JOptionPane.showMessageDialog(this, "Duplicated locations. Please correct", "Error", JOptionPane.ERROR_MESSAGE);
 			} else {
-				// renaming files
+				// Rename files 
+				// Loop over frame titles 
 				for (String title : frameTitles) {
+					//Get the last token of dash-delimited frame title 
 					fileSystemPathTockens = title.split("-");
 					String lastTocken = fileSystemPathTockens[fileSystemPathTockens.length - 1];
+					// Get POP name from the map associating used inputed sequence of the frame location with frame POP name.   
 					String newSequencePrefix = (String) positionMap.get(lastTocken).getSelectedItem();
-					if (map.get(lastTocken).contains("png")) {
+					// Verify if read-only PNG images of the charts are already created
+					if (hasPNGFile(filesList, lastTocken)) {
+						// If PNG files are already created loop over frame titles list and change sequence prefix in the file names of both INI and PNG files 
 						for (String theTitle : frameTitles) {
+							// Rename only if frame title contains the name of POP object rename the INI file with sequence number requested by user
 							if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
 								UtilMethodsFactory.renameFile(map.get(lastTocken), fileSystemPath + "\\" + String.valueOf(newSequencePrefix) + lastTocken + ".ini");
+								UtilMethodsFactory.renameFile(map.get(lastTocken).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(newSequencePrefix) + lastTocken + ".png");
 							}
 						}
-						if (hasPNGFile(filesList)) {
-							for (String theTitle : frameTitles) {
-								if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
-									UtilMethodsFactory.renameFile(map.get(lastTocken).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(newSequencePrefix) + lastTocken + ".png");
-								}
-							}
-						}
+						
 					} else {
+						// If PNG files are not there yet loop over frame titles list and change sequence prefix in the file names of INI files  
 						for (String theTitle : frameTitles) {
+							// Rename only if frame title contains the name of POP object rename the INI file with sequence number requested by user
 							if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
 								UtilMethodsFactory.renameFile(map.get(lastTocken), fileSystemPath + "\\" + String.valueOf(newSequencePrefix) + lastTocken + ".ini");
 							}
 						}
 					}
 				}
-				theTree.refreshTreeNode(top, solutionName);
-				JTabbedPane sourceTabbedPane = dash.getTreeTabbedPane();
-				int index = sourceTabbedPane.getSelectedIndex();
-				dash.closeAllFrames();
-				if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
-					String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
-					JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
-					CustomTree tree = (CustomTree) scroll.getViewport().getView();
-					TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
-					System.out.println(((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject());
-					if (path != null) {
-						System.out.println("herr");
-						if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
-							PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, dash.getJScrollableDesktopPane());
-						} else {
-							Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
-							@SuppressWarnings("unchecked")
-							List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-							System.out.println(list);
-							for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
-								if (s.getUserObject() instanceof PokerOpponentPosition) {
-									System.out.println("herr");
-									PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-									UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, dash.getJScrollableDesktopPane());
-								} else if (s.getUserObject() instanceof PokerPosition) {
-								}
-							}
-						}
-					}
-				}
+				repositionCharts(top, solutionName);
 				this.dispose();
 			}
 		} else {
@@ -214,17 +199,35 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		}
 	}
 
-	private boolean hasPNGFile(List<String> filesList) {
-		Iterator<String> it = filesList.iterator();
-		boolean hasPNG = false;
-		while (it.hasNext()) {
-			String fileName = it.next();
-			if (fileName.contains("png")) {
-				hasPNG = true;
-				break;
+	private void repositionCharts(DefaultMutableTreeNode top, String solutionName) {
+		theTree.refreshTreeNode(top, solutionName);
+		JTabbedPane sourceTabbedPane = dash.getTreeTabbedPane();
+		int index = sourceTabbedPane.getSelectedIndex();
+		dash.closeAllFrames();
+		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
+			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
+			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
+			JScrollableDesktopPane desctopPane = dash.getJScrollableDesktopPane();
+			CustomTree tree = (CustomTree) scroll.getViewport().getView();
+			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
+			if (path != null) {
+				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
+					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, desctopPane);
+				} else {
+					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
+					@SuppressWarnings("unchecked")
+					List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+					for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
+						if (s.getUserObject() instanceof PokerOpponentPosition) {
+							PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, desctopPane);
+						} else if (s.getUserObject() instanceof PokerPosition) {
+						}
+					}
+				}
 			}
 		}
-		return hasPNG;
 	}
 
 	private boolean checkForDupSequenceIndex(TreeMap<String, JComboBox<String>> comboBoxes) {
@@ -240,6 +243,29 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 			if (allItems.get(i).equals(allItems.get(i + 1))) {
 				return true;
 			}
+		}
+		return false;
+	}
+	
+	private boolean hasPNGFile(List<String> filesList, String commonElement) {
+		int x = 0;
+		List<String> pngFiles = new ArrayList<String>();
+		List<String> iniFiles = new ArrayList<String>();
+		while (x < filesList.size()) {
+			if (filesList.get(x).contains("png")) {
+				pngFiles.add(filesList.get(x).split("\\.")[0]);
+			} else if (filesList.get(x).contains("ini")) {
+				iniFiles.add(filesList.get(x).split("\\.")[0]);
+			}
+			x++;
+		}
+		iniFiles.retainAll(pngFiles);
+		int y = 0;
+		while (y < iniFiles.size()) {
+			if (iniFiles.get(y).contains(commonElement)) {
+				return true;
+			}
+			y++;
 		}
 		return false;
 	}

@@ -150,6 +150,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					dropDownMenus.put("Add Hands", true);
 					dropDownMenus.put("Add Opponents Position", true);
 					dropDownMenus.put("Remove", true);
+					dropDownMenus.put("Change Charts Order", true);
 				} else if (treeObject instanceof PokerHandSizing) {
 					dropDownMenus.put("Delete Sizing", true);
 					dropDownMenus.put("Add Hands", true);

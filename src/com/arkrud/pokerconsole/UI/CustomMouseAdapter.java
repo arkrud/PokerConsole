@@ -6,11 +6,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.TreeMap;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
@@ -24,8 +26,10 @@ import javax.swing.tree.TreePath;
 
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
 import com.arkrud.pokerconsole.Poker.PokerPosition;
+import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
+import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
@@ -105,68 +109,115 @@ public class CustomMouseAdapter extends MouseAdapter {
 	}
 
 	private void saveChartsLayout(JTabbedPane tabbedPane, Dashboard dash) {
-
-		String tabTitle = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
-		String solutionName = tabTitle.split("-")[0];
+		// Get tree root node (poker solution)
+		JScrollPane scroll = (JScrollPane) (tabbedPane.getSelectedComponent());
+		CustomTree tree = (CustomTree) scroll.getViewport().getView();
+		DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getTreeModel().getRoot();
+		// Get solution name
+		String solutionName = ((PokerStrategy) top.getUserObject()).getNodeText();
+		// Construct file system path to solution folder
 		String fileSystemPath = UtilMethodsFactory.getConfigPath().substring(1, UtilMethodsFactory.getConfigPath().length()) + "Images/" + solutionName + "/";
+		// Get all chart frames from desktop
 		JInternalFrame[] frames = dash.getAllFrames();
-		List<?>[] framesAndLocations = getInternalFramesPositions(frames);
-		@SuppressWarnings("unchecked")
-		List<String> frameTitles = (List<String>)framesAndLocations[1];
-		//UtilMethodsFactory.printList(frameTitles);
-		@SuppressWarnings("unchecked")
-
-		List<String> framePositions = (List<String>)framesAndLocations[0];
-		//UtilMethodsFactory.printList(framePositions);
-		StringJoiner joiner = new StringJoiner("/");
-		for (String title : frameTitles) {
-			int x = 0;
-			String[] fileSystemPathTockens = title.split("-");
-			while (x < fileSystemPathTockens.length - 1) {
-				joiner.add(fileSystemPathTockens[x]);
-				x++;
-			}
-			break;
+		// Create a list of the titles of all frames
+		List<String> frameTitles = new ArrayList<String>();
+		int z = 0;
+		while (z < frames.length) {
+			frameTitles.add(frames[z].getTitle());
+			z++;
 		}
+		// Create joiner class to construct forward-slash delimited file path
+		StringJoiner joiner = new StringJoiner("/");
+		// Get folder path for node holding currently selected chart group
+		String[] fileSystemPathTockens = frameTitles.get(0).split("-");
+		// Populate joiner with folder names in he path
+		int x = 0;
+		while (x < fileSystemPathTockens.length - 1) {
+			joiner.add(fileSystemPathTockens[x]);
+			x++;
+		}
+		// Replace forward-slashes with backslashes
 		fileSystemPath = (fileSystemPath + joiner.toString()).replace("/", "\\");
+		// Generate list of file paths for all files in folder with charts INI files
 		List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
-
-		String newFilePath = "";
-		int y = 0;
+		// Reverse the file path list order
 		Collections.reverse(filesList);
-		// renaming files
+		// Create map object to associate chart file name without sequence prefix and extension with the file path
+		int n = 0;
+		TreeMap<String, String> map = new TreeMap<String, String>();
+		while (n < filesList.size()) {
+			String noExtensionPath = filesList.get(n).split("\\.")[0];
+			String lastTocken = noExtensionPath.split("\\\\")[noExtensionPath.split("\\\\").length - 1];
+			int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(lastTocken);
+			String postfix = lastTocken.substring(theIndesOfFirstLiteral, lastTocken.length() - theIndesOfFirstLiteral + 1);
+			map.put(postfix, filesList.get(n));
+			n++;
+		}
+		// Check for duplicates in selected combo boxes, warn user about the error, and bring him back to correct it
+		// Rename files
+		// Loop over frame titles
 		for (String title : frameTitles) {
-			String[] fileSystemPathTockens = title.split("-");
-			newFilePath = fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini";
-			if (filesList.get(y).contains("png")) {
-				UtilMethodsFactory.renameFile(filesList.get(y),
-						fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
-				if (hasPNGFile(filesList)) {
-					UtilMethodsFactory.renameFile(filesList.get(y).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".png");
-				}
-			} else {
+			// Get the last token of dash-delimited frame title
+			fileSystemPathTockens = title.split("-");
+			String lastTocken = fileSystemPathTockens[fileSystemPathTockens.length - 1];
+			// Get POP name from the map associating used inputed sequence of the frame location with frame POP name.
+			String newSequencePrefix = String.valueOf(getInternalFramesPositions(frames).get(lastTocken));
+			//System.out.println(newSequencePrefix);
+			// Verify if read-only PNG images of the charts are already created
+			if (hasPNGFile(filesList, lastTocken)) {
+				// If PNG files are already created loop over frame titles list and change sequence prefix in the file names of both INI and PNG files
 				for (String theTitle : frameTitles) {
-					if (theTitle.split("-")[theTitle.split("-").length - 1].contains(fileSystemPathTockens[fileSystemPathTockens.length - 1])) {
-						UtilMethodsFactory.renameFile(filesList.get(y), fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
-						//System.out.println("From:" + findTockenInTheList(filesList,fileSystemPathTockens[fileSystemPathTockens.length - 1]));
-						//System.out.println("To: " + fileSystemPath + "\\" + String.valueOf(framePositions.get(y)) + fileSystemPathTockens[fileSystemPathTockens.length - 1] + ".ini");
-						updatePOPFilePathParameter (dash,  newFilePath);
+					// Rename only if frame title contains the name of POP object rename the INI file with sequence number requested by user
+					if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
+						UtilMethodsFactory.renameFile(map.get(lastTocken), fileSystemPath + "\\" + newSequencePrefix + lastTocken + ".ini");
+						UtilMethodsFactory.renameFile(map.get(lastTocken).replace("ini", "png"), fileSystemPath + "\\" + newSequencePrefix + lastTocken + ".png");
 					}
 				}
-
+			} else {
+				// If PNG files are not there yet loop over frame titles list and change sequence prefix in the file names of INI files
+				for (String theTitle : frameTitles) {
+					// Rename only if frame title contains the name of POP object rename the INI file with sequence number requested by user
+					if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
+						UtilMethodsFactory.renameFile(map.get(lastTocken), fileSystemPath + "\\" + newSequencePrefix + lastTocken + ".ini");
+					}
+				}
 			}
-
-			y++;
 		}
-		dash.getJScrollableDesktopPane().getDesktopMediator().tileInternalFrames();
-
+		repositionCharts(top, solutionName, tree);
+	}
+	private void repositionCharts(DefaultMutableTreeNode top, String solutionName, CustomTree tree) {
+		tree.refreshTreeNode(top, solutionName);
+		JTabbedPane sourceTabbedPane = dash.getTreeTabbedPane();
+		int index = sourceTabbedPane.getSelectedIndex();
+		dash.closeAllFrames();
+		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
+			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
+			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
+			JScrollableDesktopPane desctopPane = dash.getJScrollableDesktopPane();
+			CustomTree theTree = (CustomTree) scroll.getViewport().getView();
+			TreePath path = theTree.selectTreeNode((DefaultMutableTreeNode) theTree.getTreeModel().getRoot(), pathString, theTree);
+			if (path != null) {
+				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
+					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, desctopPane);
+				} else {
+					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
+					@SuppressWarnings("unchecked")
+					List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+					for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
+						if (s.getUserObject() instanceof PokerOpponentPosition) {
+							PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, desctopPane);
+						} else if (s.getUserObject() instanceof PokerPosition) {
+						}
+					}
+				}
+			}
+		}
 	}
 
-	public List<?>[] getInternalFramesPositions(JInternalFrame[] rawFrames) {
-
-		List<?>[] result = new List<?>[2];
-		List<String> frameTitles = new ArrayList<String>();
-		List<Integer> framePositions = new ArrayList<Integer>();
+	public TreeMap<String, Integer> getInternalFramesPositions(JInternalFrame[] rawFrames) {
+		TreeMap<String, Integer> positionMap = new TreeMap<String, Integer>();
 		int totalNonIconFrames = 0;
 		int z = 0;
 		while (z < rawFrames.length) {
@@ -197,22 +248,25 @@ public class CustomMouseAdapter extends MouseAdapter {
 						xposition = rawFrames[i].getBounds().getX();
 						yposition = rawFrames[i].getBounds().getY();
 						if (curCol * 430 <= xposition && xposition < (curCol + 1) * 430 - 215 && curRow * 440 <= yposition && yposition < (curRow + 1) * 440 - 220) {
-							frameTitles.add(rawFrames[i].getTitle());
-							framePositions.add(numCols * curRow + curCol + 1);
+							System.out.println(rawFrames[i].getTitle().split("-")[rawFrames[i].getTitle().split("-").length -1]);
+							int position = 0;
+							if (curRow == 0) {
+								position = curCol + 1;
+							} else if (curRow == 1) {
+								position = curCol + 4;
+							}
+							System.out.println(position);
+							positionMap.put(rawFrames[i].getTitle().split("-")[rawFrames[i].getTitle().split("-").length -1], position );
 						}
 					}
 				}
 				i++;
 			}
 		}
-
-		result[0] = framePositions;
-		result[1] = frameTitles;
-		return result;
-
+		return positionMap;
 	}
 
-	private boolean hasPNGFile(List<String> filesList) {
+	/*private boolean hasPNGFile(List<String> filesList) {
 		Iterator<String> it = filesList.iterator();
 		boolean hasPNG = false;
 		while (it.hasNext()) {
@@ -225,7 +279,7 @@ public class CustomMouseAdapter extends MouseAdapter {
 		return hasPNG;
 	}
 
-	private static void updatePOPFilePathParameter (Dashboard dash, String newFilePath) {
+	private static void updatePOPFilePathParameter(Dashboard dash, String newFilePath) {
 		JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
 		CustomTree tree = (CustomTree) scroll.getViewport().getView();
 		TreePath selectedPath = tree.getTheTree().getSelectionPaths()[0];
@@ -239,31 +293,48 @@ public class CustomMouseAdapter extends MouseAdapter {
 				String newPOPName = newFilePath.split("\\\\")[newFilePath.split("\\\\").length - 1];
 				int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(pokerOpponentPosition.getNodeText());
 				String pokerOpponentPositionname = pokerOpponentPosition.getNodeText().substring(theIndesOfFirstLiteral, pokerOpponentPosition.getNodeText().length() - theIndesOfFirstLiteral + 1);
-				if(newPOPName.contains(pokerOpponentPositionname)) {
-					//.out.println("old: " + pokerOpponentPosition.getChartImagePath());
-					//.out.println("new: " + newFilePath.substring(newFilePath.indexOf("Images")).replace("\\", "/"));
+				if (newPOPName.contains(pokerOpponentPositionname)) {
+					// .out.println("old: " + pokerOpponentPosition.getChartImagePath());
+					// .out.println("new: " + newFilePath.substring(newFilePath.indexOf("Images")).replace("\\", "/"));
 					break;
 				}
-
 			}
 		}
+	}*/
 
-	}
-
-	private String findTockenInTheList (List<String> filesList, String tocken)  {
+	/*private String findTockenInTheList(List<String> filesList, String tocken) {
 		int y = 0;
 		String path = "";
 		while (y < filesList.size()) {
-			String filePath =  filesList.get(y);
-			if(filePath.split("/")[filePath.split("/").length - 1].contains(tocken)) {
+			String filePath = filesList.get(y);
+			if (filePath.split("/")[filePath.split("/").length - 1].contains(tocken)) {
 				path = filePath;
 			}
-
 			y++;
 		}
 		return path;
+	}*/
+
+	private boolean hasPNGFile(List<String> filesList, String commonElement) {
+		int x = 0;
+		List<String> pngFiles = new ArrayList<String>();
+		List<String> iniFiles = new ArrayList<String>();
+		while (x < filesList.size()) {
+			if (filesList.get(x).contains("png")) {
+				pngFiles.add(filesList.get(x).split("\\.")[0]);
+			} else if (filesList.get(x).contains("ini")) {
+				iniFiles.add(filesList.get(x).split("\\.")[0]);
+			}
+			x++;
+		}
+		iniFiles.retainAll(pngFiles);
+		int y = 0;
+		while (y < iniFiles.size()) {
+			if (iniFiles.get(y).contains(commonElement)) {
+				return true;
+			}
+			y++;
+		}
+		return false;
 	}
-
-	
-
 }

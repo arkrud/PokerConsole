@@ -114,7 +114,11 @@ public class CustomTreePopupHandler implements ActionListener {
 				addOpponentPosition(node);
 			} else if (ac.equals("REMOVE")) {
 				removePokerAction(node, obj);
-			} else {
+			} else if (ac.equals("CHANGE CHARTS ORDER")) {
+				Enumeration<?> en = node.children();
+				@SuppressWarnings("unchecked")
+				List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+				UtilMethodsFactory.showDialogToDesctop("ChnageChartsOrderDialog", 150 + list.size() * 50, 120, dash, tree, theTree, obj, node, null, null);
 			}
 		} else if (obj instanceof PokerHandSizing) {
 			if (ac.equals("DELETE SIZING")) {
@@ -197,6 +201,7 @@ public class CustomTreePopupHandler implements ActionListener {
 						copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + s);
 						pokerOpponentPosition.setChartImagePath(relativePath);
+						//pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
 						String newTabTitle = ((PokerStrategy) top.getUserObject()).getNodeText() + "-" + pokerAction.getNodeText() + "-" + s;
 						if (!editable) {
 							dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), newTabTitle);
@@ -218,6 +223,7 @@ public class CustomTreePopupHandler implements ActionListener {
 								+ Integer.toString(opponentsHandsNodesCount + 1) + s + ".ini";
 						copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 						pokerOpponentPosition.setChartPaneTitle(pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + s);
+						//pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
 						String newTabTitle = ((PokerStrategy) top.getUserObject()).getNodeText() + "-" + pokerHandSizing.getPokerAction().getNodeText() + "-"
 								+ pokerHandSizing.getNodeText() + "-" + s;
 						if (!editable) {
@@ -245,6 +251,7 @@ public class CustomTreePopupHandler implements ActionListener {
 							copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 							pokerOpponentPosition.setChartPaneTitle(pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-"
 									+ pokerPosition.getNodeText() + "-" + s);
+							//pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
 							String newTabTitle = ((PokerStrategy) top.getUserObject()).getNodeText() + "-" + pokerHandSizing.getPokerAction().getNodeText()
 									+ "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s;
 							if (!editable) {
@@ -271,6 +278,7 @@ public class CustomTreePopupHandler implements ActionListener {
 									+ pokerPosition.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini";
 							copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s);
+							//pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
 							String newTabTitle = ((PokerStrategy) top.getUserObject()).getNodeText() + "-" + pokerAction.getNodeText() + "-"
 									+ pokerPosition.getNodeText() + "-" + s;
 							if (!editable) {
