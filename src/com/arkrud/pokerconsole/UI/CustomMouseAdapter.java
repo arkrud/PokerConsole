@@ -162,13 +162,15 @@ public class CustomMouseAdapter extends MouseAdapter {
 			String lastTocken = fileSystemPathTockens[fileSystemPathTockens.length - 1];
 			// Get POP name from the map associating used inputed sequence of the frame location with frame POP name.
 			String newSequencePrefix = String.valueOf(getInternalFramesPositions(frames).get(lastTocken));
-			//System.out.println(newSequencePrefix);
+			System.out.println(lastTocken);
+			System.out.println(newSequencePrefix);
 			// Verify if read-only PNG images of the charts are already created
 			if (hasPNGFile(filesList, lastTocken)) {
 				// If PNG files are already created loop over frame titles list and change sequence prefix in the file names of both INI and PNG files
 				for (String theTitle : frameTitles) {
 					// Rename only if frame title contains the name of POP object rename the INI file with sequence number requested by user
 					if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
+						
 						UtilMethodsFactory.renameFile(map.get(lastTocken), fileSystemPath + "\\" + newSequencePrefix + lastTocken + ".ini");
 						UtilMethodsFactory.renameFile(map.get(lastTocken).replace("ini", "png"), fileSystemPath + "\\" + newSequencePrefix + lastTocken + ".png");
 					}
@@ -178,12 +180,15 @@ public class CustomMouseAdapter extends MouseAdapter {
 				for (String theTitle : frameTitles) {
 					// Rename only if frame title contains the name of POP object rename the INI file with sequence number requested by user
 					if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
+						//System.out.println(map.get(lastTocken));
+						//System.out.println(fileSystemPath + "\\" + newSequencePrefix + lastTocken + ".ini");
 						UtilMethodsFactory.renameFile(map.get(lastTocken), fileSystemPath + "\\" + newSequencePrefix + lastTocken + ".ini");
 					}
 				}
 			}
 		}
 		repositionCharts(top, solutionName, tree);
+		
 	}
 	private void repositionCharts(DefaultMutableTreeNode top, String solutionName, CustomTree tree) {
 		tree.refreshTreeNode(top, solutionName);
@@ -248,14 +253,14 @@ public class CustomMouseAdapter extends MouseAdapter {
 						xposition = rawFrames[i].getBounds().getX();
 						yposition = rawFrames[i].getBounds().getY();
 						if (curCol * 430 <= xposition && xposition < (curCol + 1) * 430 - 215 && curRow * 440 <= yposition && yposition < (curRow + 1) * 440 - 220) {
-							System.out.println(rawFrames[i].getTitle().split("-")[rawFrames[i].getTitle().split("-").length -1]);
+							//System.out.println(rawFrames[i].getTitle().split("-")[rawFrames[i].getTitle().split("-").length -1]);
 							int position = 0;
 							if (curRow == 0) {
 								position = curCol + 1;
 							} else if (curRow == 1) {
 								position = curCol + 4;
 							}
-							System.out.println(position);
+							//System.out.println(position);
 							positionMap.put(rawFrames[i].getTitle().split("-")[rawFrames[i].getTitle().split("-").length -1], position );
 						}
 					}
@@ -265,6 +270,12 @@ public class CustomMouseAdapter extends MouseAdapter {
 		}
 		return positionMap;
 	}
+	
+	/*private TreeMap<String, Integer> reverseMap(TreeMap<String, Integer> positionMap) {
+		TreeMap<String, Integer> reversedMap = new TreeMap<String, Integer>();
+		
+		return reversedMap;
+	}*/
 
 	/*private boolean hasPNGFile(List<String> filesList) {
 		Iterator<String> it = filesList.iterator();
