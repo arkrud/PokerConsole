@@ -43,7 +43,7 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 /**
  * Class to build chart ordering dialog.<br>
- * 
+ *
  * @author arkrud
  */
 public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
@@ -130,7 +130,7 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 			while (z < frames.length) {
 				frameTitles.add(frames[z].getTitle());
 				z++;
-			}			
+			}
 			// Create joiner class to construct forward-slash delimited file path
 			StringJoiner joiner = new StringJoiner("/");
 			// Get folder path for node holding currently selected chart group
@@ -141,9 +141,9 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 				joiner.add(fileSystemPathTockens[x]);
 				x++;
 			}
-			// Replace forward-slashes with backslashes   
+			// Replace forward-slashes with backslashes
 			fileSystemPath = (fileSystemPath + joiner.toString()).replace("/", "\\");
-			// Generate list of file paths for all files in folder with charts INI files 
+			// Generate list of file paths for all files in folder with charts INI files
 			List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
 			// Reverse the file path list order
 			Collections.reverse(filesList);
@@ -162,17 +162,17 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 			if (checkForDupSequenceIndex(positionMap)) {
 				JOptionPane.showMessageDialog(this, "Duplicated locations. Please correct", "Error", JOptionPane.ERROR_MESSAGE);
 			} else {
-				// Rename files 
-				// Loop over frame titles 
+				// Rename files
+				// Loop over frame titles
 				for (String title : frameTitles) {
-					//Get the last token of dash-delimited frame title 
+					//Get the last token of dash-delimited frame title
 					fileSystemPathTockens = title.split("-");
 					String lastTocken = fileSystemPathTockens[fileSystemPathTockens.length - 1];
-					// Get POP name from the map associating used inputed sequence of the frame location with frame POP name.   
+					// Get POP name from the map associating used inputed sequence of the frame location with frame POP name.
 					String newSequencePrefix = (String) positionMap.get(lastTocken).getSelectedItem();
 					// Verify if read-only PNG images of the charts are already created
 					if (hasPNGFile(filesList, lastTocken)) {
-						// If PNG files are already created loop over frame titles list and change sequence prefix in the file names of both INI and PNG files 
+						// If PNG files are already created loop over frame titles list and change sequence prefix in the file names of both INI and PNG files
 						for (String theTitle : frameTitles) {
 							// Rename only if frame title contains the name of POP object rename the INI file with sequence number requested by user
 							if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
@@ -180,9 +180,9 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 								UtilMethodsFactory.renameFile(map.get(lastTocken).replace("ini", "png"), fileSystemPath + "\\" + String.valueOf(newSequencePrefix) + lastTocken + ".png");
 							}
 						}
-						
+
 					} else {
-						// If PNG files are not there yet loop over frame titles list and change sequence prefix in the file names of INI files  
+						// If PNG files are not there yet loop over frame titles list and change sequence prefix in the file names of INI files
 						for (String theTitle : frameTitles) {
 							// Rename only if frame title contains the name of POP object rename the INI file with sequence number requested by user
 							if (theTitle.split("-")[theTitle.split("-").length - 1].contains(lastTocken)) {
@@ -235,7 +235,7 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		Iterator<Entry<String, JComboBox<String>>> it = set.iterator();
 		List<String> allItems = new ArrayList<String>();
 		while (it.hasNext()) {
-			Map.Entry<String, JComboBox<String>> me = (Map.Entry<String, JComboBox<String>>) it.next();
+			Map.Entry<String, JComboBox<String>> me = it.next();
 			allItems.add((String) me.getValue().getSelectedItem());
 		}
 		Collections.sort(allItems);
@@ -246,7 +246,7 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		}
 		return false;
 	}
-	
+
 	private boolean hasPNGFile(List<String> filesList, String commonElement) {
 		int x = 0;
 		List<String> pngFiles = new ArrayList<String>();

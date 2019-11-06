@@ -55,10 +55,12 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template", "Add Action", "Add Hands", "Add Opponents Position", "Duplicate", "Change Charts Order" };
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template",
+			"Add Action", "Add Hands", "Add Opponents Position", "Duplicate", "Change Charts Order" };
 	private static HashMap<String, TableChartPanel> charts = new HashMap<String, TableChartPanel>();
 
-	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, JScrollableDesktopPane jScrollableDesktopPane) {
+	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable,
+			JScrollableDesktopPane jScrollableDesktopPane) {
 		TableChartPanel chartPanel = new TableChartPanel(chartImagePath, editable);
 		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
 		theFrame.setName(chartImagePath);
@@ -124,7 +126,8 @@ public class UtilMethodsFactory {
 	 * Create image icon for tree nodes. <br>
 	 *
 	 * @return <code>ImageIcon</code> of tree user objects
-	 * @param path reference to image file name
+	 * @param path
+	 *            reference to image file name
 	 */
 	public static ImageIcon createImageIcon(String path) {
 		URL imgURL = null;
@@ -249,7 +252,8 @@ public class UtilMethodsFactory {
 		return new Reversed<T>(original);
 	}
 
-	public static void showDialogToDesctop(String frameType, int invalid, int invalid2, Dashboard dash, JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node, JTabbedPane tabbedPane, JMenuItem addUser) {
+	public static void showDialogToDesctop(String frameType, int invalid, int invalid2, Dashboard dash, JTree tree, CustomTree theTree, Object obj,
+			DefaultMutableTreeNode node, JTabbedPane tabbedPane, JMenuItem addUser) {
 		JDialog dialog = null;
 		switch (frameType) {
 		case "AddTreesFrame":
