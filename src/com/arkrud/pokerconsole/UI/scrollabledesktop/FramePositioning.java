@@ -156,6 +156,7 @@ public class FramePositioning implements DesktopConstants {
 			fileSystemPath = fileSystemPath.replace("\\", "/");
 			String fileName = fileSystemPath.split("/")[fileSystemPath.split("/").length - 1].split("\\.")[0];
 			int theIndesOfFirstLiteral = UtilMethodsFactory.getIndexOfFirstLiteralInString(fileName);
+			System.out.println("fileName: " + fileName);
 			int sequenceNumber = Integer.valueOf(fileName.substring(0, theIndesOfFirstLiteral));
 			frameMap.put(sequenceNumber - 1, rawFrames[n]);
 			n++;

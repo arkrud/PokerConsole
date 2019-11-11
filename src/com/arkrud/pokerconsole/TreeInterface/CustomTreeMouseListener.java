@@ -62,14 +62,14 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					JTabbedPane jTabbedPane = dash.getTreeTabbedPane();
 					String dynamicTreeName = "";
 					String oldTreeName = jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
-					if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName).equals("false")) {
+					if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName).equals("true")) {
 						dynamicTreeName = constructNewTabName(jTabbedPane);
 						INIFilesFactory.removeINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
-						INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", dynamicTreeName, "false");
+						INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", dynamicTreeName, "true");
 					} else {
 						dynamicTreeName = oldTreeName;
 						INIFilesFactory.removeINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
-						INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", dynamicTreeName, "true");
+						INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", dynamicTreeName, "false");
 					}
 					if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf()) {
 						if (obj instanceof PokerOpponentPosition) {
@@ -82,10 +82,10 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					} else {
 						showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
 					}
-					if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", dynamicTreeName).equals("false")) {
+					if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", dynamicTreeName).equals("true")) {
 						String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", oldTreeName);
 						INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", dynamicTreeName, oldTreeName);
-						INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Applications", dynamicTreeName, oldTreeName);
+						INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Solutions", dynamicTreeName, oldTreeName);
 						INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", oldItemValue, dynamicTreeName);
 						jTabbedPane.setTitleAt(jTabbedPane.getSelectedIndex(), dynamicTreeName);
 					} else {

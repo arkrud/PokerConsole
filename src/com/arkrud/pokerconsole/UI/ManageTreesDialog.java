@@ -94,7 +94,7 @@ public class ManageTreesDialog extends JDialog implements ActionListener {
 				} else {
 					dash.removeTreeTabPaneTab(entry.getKey().getText());
 				}
-				INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Applications", String.valueOf(entry.getValue().isSelected()) , entry.getKey().getText());
+				INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Solutions", String.valueOf(entry.getValue().isSelected()) , entry.getKey().getText());
 			}
 			this.dispose();
 		} else {

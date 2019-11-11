@@ -106,7 +106,7 @@ public class UtilMethodsFactory {
 
 	public static void createFolder(File file) {
 		if (file.mkdir()) {
-			System.out.println("Dir is created!");
+			//System.out.println("Dir is created!");
 		} else {
 			System.out.println("Dir already exists.");
 		}

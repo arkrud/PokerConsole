@@ -50,7 +50,7 @@ public class INIFilesFactory {
 		Iterator<IniSection> sections = ini.getSections().iterator();
 		while (sections.hasNext()) {
 			IniSection theSection = sections.next();
-			if (theSection.getName().equals("Applications")) {
+			if (theSection.getName().equals("Solutions")) {
 				Iterator<IniItem> params = theSection.getItems().iterator();
 				while (params.hasNext()) {
 					ArrayList<Object> appInfo = new ArrayList<Object>();
@@ -106,7 +106,7 @@ public class INIFilesFactory {
 	public static String getSolutionCopySelectionItemName(File iniFile, String solutionName) {
 		String solutionCopySelectionItemName = "";
 		IniFile ini = readINI(iniFile);
-		IniSection iniSection = ini.getSection("Applications");
+		IniSection iniSection = ini.getSection("Solutions");
 		Iterator<IniItem> params = iniSection.getItems().iterator();
 		while (params.hasNext()) {
 			IniItem item = params.next();
@@ -122,7 +122,7 @@ public class INIFilesFactory {
 
 	public static HashMap<String, Boolean> getTreesData() {
 		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
-		Iterator<IniItem> it = INIFilesFactory.getAllItemsFromSection(UtilMethodsFactory.getConsoleConfig(), "Applications").iterator();
+		Iterator<IniItem> it = INIFilesFactory.getAllItemsFromSection(UtilMethodsFactory.getConsoleConfig(), "Solutions").iterator();
 		while (it.hasNext()) {
 			IniItem iniItem = (IniItem) it.next();
 			if (iniItem.getValue().equals("true") || iniItem.getValue().equals("false")) {

@@ -181,6 +181,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 * Allows to have Navigation tree to have previously selected node to be selected and Poker hand charts placed into scrollable desktop on clicking on the header of tab pane tabs. <br>
 	 * <ul>
 	 * <li>Get selected tab index.
+	 * <li>If last solution is deleted and index is -1 do nothing. 
 	 * <li>Check if this solution tree has something previously selected.
 	 * <li>Retrieve the selection path string from the INI file <FRI-BB>.
 	 * <li>Check if selected tree node is leaf object or branch.
@@ -202,7 +203,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 * <li>Generate chart window.
 	 * <li>Add hand chart window to the Scrollable Desktop.
 	 * </ul>
-	 * <li>If the flag is set to editable.
+	 * <li>If the flag is set to not editable.
 	 * <ul>
 	 * <li>Generate the Poker hand chart ImageChartPanel object based on PokerOpponentPosition object ChartImagePath property
 	 * <li>Generate chart window.
@@ -217,36 +218,39 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	public void stateChanged(ChangeEvent changeEvent) {
 		JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
-		if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", sourceTabbedPane.getTitleAt(sourceTabbedPane.getSelectedIndex())).equals("true")) {
-			dashboardMenu.setManualEditingMenu(true);
+		if (index < 0) {
 		} else {
-			dashboardMenu.setManualEditingMenu(false);
-		}
-		closeAllFrames();
-		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
-			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
-			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
-			CustomTree tree = (CustomTree) scroll.getViewport().getView();
-			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
-			ImageChartPanel imageChartPanel;
-			if (path != null) {
-				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
-					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
-				} else {
-					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
-					@SuppressWarnings("unchecked")
-					List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-					for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
-						if (s.getUserObject() instanceof PokerOpponentPosition) {
-							PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-							if (editable) {
-								UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
-							} else {
-								imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
-								BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
-								theFrame.setName(pokerOpponentPosition.getChartImagePath());
-								UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+			if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", sourceTabbedPane.getTitleAt(sourceTabbedPane.getSelectedIndex())).equals("false")) {
+				dashboardMenu.setManualEditingMenu(true);
+			} else {
+				dashboardMenu.setManualEditingMenu(false);
+			}
+			closeAllFrames();
+			if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
+				String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
+				JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
+				CustomTree tree = (CustomTree) scroll.getViewport().getView();
+				TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
+				ImageChartPanel imageChartPanel;
+				if (path != null) {
+					if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
+						PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+						UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
+					} else {
+						Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
+						@SuppressWarnings("unchecked")
+						List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
+						for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
+							if (s.getUserObject() instanceof PokerOpponentPosition) {
+								PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+								if (editable) {
+									UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
+								} else {
+									imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
+									BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);
+									theFrame.setName(pokerOpponentPosition.getChartImagePath());
+									UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(pokerOpponentPosition.getChartPaneTitle(), getJScrollableDesktopPane(), theFrame);
+								}
 							}
 						}
 					}

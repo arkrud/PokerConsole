@@ -262,8 +262,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			file = fc.getSelectedFile();
 			solutionPackagePath = file.getAbsolutePath().replace("\\", "/");
 			String strategyName = file.getName().split("\\.")[0];
-			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Applications", strategyName, "true");
-			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", strategyName, "false");
+			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Solutions", strategyName, "true");
+			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", strategyName, "true");
 			File strategyDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + strategyName);
 			UtilMethodsFactory.createFolder(strategyDir);
 			CustomTree tree = dash.addTreeTabPaneTab(strategyName);
@@ -305,7 +305,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 */
 	private void enableManualNaming() {
 		String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
-		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming","true" ,selectedTabName);
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming","false" ,selectedTabName);
 		manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
 	}
 	
@@ -318,7 +318,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 */
 	public void disableManualNaming() {
 		String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
-		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", selectedTabName);
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "true", selectedTabName);
 		manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 	}
 	
