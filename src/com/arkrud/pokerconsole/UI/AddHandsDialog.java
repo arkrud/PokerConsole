@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -44,10 +46,9 @@ public class AddHandsDialog extends JDialog implements ActionListener {
 	private DefaultMutableTreeNode node;
 	private JButton okButton, cancelButton;
 	private JPanel handsPanel;
-	private String[] handNames = { "Big Blind", "Small Blind", "Button", "Cutoff", "HiJack", "LoJack", "Undeer The Gun", "Undeer The Gun + 1",
-			"Undeer The Gun + 2" };
+	private String[] handNames = { "Big Blind", "Small Blind", "Button", "Cutoff", "HiJack", "LoJack", "Undeer The Gun", "Undeer The Gun + 1", "Undeer The Gun + 2" };
 	private String[] handScreenNames = { "BB", "SB", "BU", "CO", "HJ", "LJ", "UTG", "UTG1", "UTG2" };
-	private HashMap<String, JCheckBox> feldsMap = new HashMap<String, JCheckBox>();
+	Map<String, JCheckBox> feldsMap = new TreeMap<String, JCheckBox>(Collections.reverseOrder());
 	/**
 	 *
 	 */
@@ -56,26 +57,22 @@ public class AddHandsDialog extends JDialog implements ActionListener {
 	/**
 	 *
 	 */
-	public AddHandsDialog( JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node) {
+	public AddHandsDialog(JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node) {
 		this.tree = tree;
 		this.obj = obj;
 		this.node = node;
 		this.theTree = theTree;
-
 		setModal(true);
-
 		ArrayList<String> alreadyAdded = new ArrayList<String>();
 		Enumeration<?> en = node.children();
 		@SuppressWarnings("unchecked")
 		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-		for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
+		for (DefaultMutableTreeNode s : list) {
 			if (s.getUserObject() instanceof PokerPosition) {
 				PokerPosition pokerPosition = (PokerPosition) s.getUserObject();
 				alreadyAdded.add(pokerPosition.getNodeText());
 			}
-			
 		}
-
 		handsPanel = new JPanel(new SpringLayout());
 		int x = 0;
 		while (x < handNames.length) {
@@ -103,29 +100,27 @@ public class AddHandsDialog extends JDialog implements ActionListener {
 
 	/*
 	 * (non-Javadoc)
-	 *
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();
 		if (theButton.getText().equals("Add")) {
-			Iterator<Map.Entry<String, JCheckBox>> itr = feldsMap.entrySet().iterator();
+			Set<Map.Entry<String, JCheckBox>> set = feldsMap.entrySet();
+			Iterator<Map.Entry<String, JCheckBox>> itr = set.iterator();
 			while (itr.hasNext()) {
 				JCheckBox jCheckBox = itr.next().getValue();
 				if (jCheckBox.isSelected() && jCheckBox.isEnabled()) {
 					PokerPosition pokerPosition = new PokerPosition(jCheckBox.getName());
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
-					if(tree.getSelectionPath().getPath().length == 3){
-					File pokerHandDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/"
-							+ ((PokerHandSizing) obj).getPokerAction().getNodeText() + "/" + ((PokerHandSizing) obj).getNodeText() + "/" + jCheckBox.getName());
-					UtilMethodsFactory.createFolder(pokerHandDir);
-					} else if (tree.getSelectionPath().getPath().length == 2){
-						File pokerHandDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/"
-								 + ((PokerAction) obj).getNodeText() + "/" + jCheckBox.getName());
+					if (tree.getSelectionPath().getPath().length == 3) {
+						File pokerHandDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + ((PokerHandSizing) obj).getPokerAction().getNodeText() + "/"
+								+ ((PokerHandSizing) obj).getNodeText() + "/" + jCheckBox.getName());
+						UtilMethodsFactory.createFolder(pokerHandDir);
+					} else if (tree.getSelectionPath().getPath().length == 2) {
+						File pokerHandDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + ((PokerAction) obj).getNodeText() + "/" + jCheckBox.getName());
 						UtilMethodsFactory.createFolder(pokerHandDir);
 					}
-					
 					DefaultMutableTreeNode pokerPositionNode = new DefaultMutableTreeNode(pokerPosition);
 					((DefaultTreeModel) tree.getModel()).insertNodeInto(pokerPositionNode, node, pokerPositionNode.getChildCount());
 				}

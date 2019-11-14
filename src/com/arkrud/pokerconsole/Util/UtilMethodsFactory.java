@@ -59,9 +59,9 @@ public class UtilMethodsFactory {
 			"Add Action", "Add Hands", "Add Opponents Position", "Duplicate", "Change Charts Order" };
 	private static HashMap<String, TableChartPanel> charts = new HashMap<String, TableChartPanel>();
 
-	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable,
-			JScrollableDesktopPane jScrollableDesktopPane) {
-		TableChartPanel chartPanel = new TableChartPanel(chartImagePath, editable);
+	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, Dashboard dash) {
+		JScrollableDesktopPane jScrollableDesktopPane = dash.getJScrollableDesktopPane();
+		TableChartPanel chartPanel = new TableChartPanel(chartImagePath, editable, dash);
 		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
 		theFrame.setName(chartImagePath);
 		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
@@ -316,7 +316,6 @@ public class UtilMethodsFactory {
 			while (inZipEntry != null) {
 				String fileName = inZipEntry.getName();
 				File unZippedFile = new File(destinationPath + File.separator + fileName);
-				System.out.println("Unzipping: " + unZippedFile.getAbsoluteFile());
 				if (inZipEntry.isDirectory()) {
 					unZippedFile.mkdirs();
 				} else {
@@ -332,7 +331,6 @@ public class UtilMethodsFactory {
 				inZipEntry = inZip.getNextEntry();
 			}
 			inZip.close();
-			System.out.println("Finished Unzipping");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -364,4 +362,17 @@ public class UtilMethodsFactory {
 			y++;
 		}
 	}
+	
+	public static void generateChart(File node, boolean editable, Dashboard dash) {
+		String absolutePath = node.getAbsoluteFile().getPath();
+		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
+		TableChartPanel chartPanel = new TableChartPanel(imagePath, editable, dash);
+		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
+		theFrame.setName(imagePath);
+		JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
+		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);
+		UtilMethodsFactory.tableToImage(chartPanel.getTable(), imagePath.split("\\.")[0]);
+		pane.remove(theFrame);
+	}
+	
 }

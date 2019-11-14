@@ -14,6 +14,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
+import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
@@ -21,12 +22,14 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 	private JPopupMenu popupMenu;
 	private String iniPath;
 	private CustomTable table;
+	private Dashboard dash;
 	private String[] menus = { "Clear all", "Red(always bet/raise)", "Orange(Mostly bet/raise and otherwise call)", "Green(Always call)", "Yellow(Sometimes bet/raise and sometimes call)", "Purple(Mostly fold otherwise raise)",
 			"Blue(Fold/call/raise equally)", "White(Sometimes call sometimes fold)", "Dark gray(Always fold)", "Light gray(Not in range)", "Save Chart" };
 
-	public CustomTablePopupListener(JPopupMenu popupMenu, String iniPath) {
+	public CustomTablePopupListener(JPopupMenu popupMenu, String iniPath, Dashboard dash) {
 		this.popupMenu = popupMenu;
 		this.iniPath = iniPath;
+		this.dash = dash;
 	}
 
 	@Override
@@ -55,6 +58,7 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 			File file = new File(UtilMethodsFactory.getConfigPath() + iniPath);
 			UtilMethodsFactory.createChartINIFile(file); // Create chart INI file if does not exist
 			updateChartINIFile(table, file); // Update file with changed coloring
+			UtilMethodsFactory.generateChart(file, true, dash);
 		} else if (menuText.contains("Clear all")) {
 			setDefaultColor(); // Set editing color to light gray
 			File file = new File(UtilMethodsFactory.getConfigPath() + iniPath);

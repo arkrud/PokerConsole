@@ -75,7 +75,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 						if (obj instanceof PokerOpponentPosition) {
 							PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) obj;
 							dash.closeAllFrames();
-							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, pane);
+							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, dash);
 							INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()),
 									((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
 						}
@@ -215,11 +215,11 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 		@SuppressWarnings("unchecked")
 		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-		for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
+		for (DefaultMutableTreeNode s : list) {
 			if (s.getUserObject() instanceof PokerOpponentPosition) {
 				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
 				if (editable) {
-					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, pane);
+					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, dash);
 				} else {
 					imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
 					BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);

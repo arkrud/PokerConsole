@@ -5,6 +5,8 @@ package com.arkrud.pokerconsole.UI.Dashboard;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -13,10 +15,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
+import com.arkrud.pokerconsole.UI.CustomProgressBar;
 import com.arkrud.pokerconsole.UI.TableChartPanel;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
@@ -27,7 +31,7 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 /**
  * Class to build dashboard drop-down menu.<br>
  */
-public class DashboardMenu extends JMenu implements ActionListener {
+public class DashboardMenu extends JMenu implements ActionListener, PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Menu item.
@@ -45,6 +49,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	/**
 	 * File chooser object to load solution package for import.<br>
 	 */
+	String solutionPackagePath = "";
 	final JFileChooser fc = new JFileChooser();
 
 	/**
@@ -108,8 +113,6 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		}
 		add(exit);
 	}
-	
-	
 
 	/**
 	 * Initiates methods to perform menu actions on menu items selection. <br>
@@ -134,7 +137,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		} else if (menuText.contains("Hide/Show Trees")) {
 			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null, null, null);
 		} else if (menuText.contains("Update User")) {
-			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser );
+			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser);
 		} else if (menuText.contains("Open Read Only Dashboard")) {
 			openReadOnlyDashboard();
 		} else if (menuText.contains("Load Charts in MongoDB")) {
@@ -171,24 +174,31 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			} else if (level == 3) {
 				if (node.isFile()) {
 					if (!node.getName().contains("png")) {
+						File testFile= new File(node.getParent() + "\\" + node.getName().split("\\.")[0] + ".png");
+						if (!testFile.exists()) {
 						generateChart(node, editable);
+						}
 					}
 				} else {
 				}
 			} else if (level == 4) {
 				if (!node.getName().contains("png")) {
+					File testFile= new File(node.getParent() + "\\" + node.getName().split("\\.")[0] + ".png");
+					if (!testFile.exists()) {
 					generateChart(node, editable);
+					}
 				}
 			} else if (level == 5) {
 				if (!node.getName().contains("png")) {
+					File testFile = new File(node.getParent() + "\\" + node.getName().split("\\.")[0] + ".png");
+					if (!testFile.exists()) {
 					generateChart(node, editable);
+					}
 				}
 			} else {
 			}
 		}
 	}
-
-
 
 	/**
 	 * Generates chart from INI file to produce PNG image and removes chart. <br>
@@ -209,7 +219,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	private void generateChart(File node, boolean editable) {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
-		TableChartPanel chartPanel = new TableChartPanel(imagePath, editable);
+		TableChartPanel chartPanel = new TableChartPanel(imagePath, editable, dash);
 		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
 		theFrame.setName(imagePath);
 		JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
@@ -225,7 +235,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 * <li>Make dashboard visible.
 	 * <li>Dispose current dashboard.
 	 * </ul>
-	 *@param editable flag to define the editable state of the Poker hand charts
+	 * 
+	 * @param editable flag to define the editable state of the Poker hand charts
 	 */
 	private void showDashboard(boolean editable) {
 		Dashboard readOnlyDash = null;
@@ -253,7 +264,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 *
 	 */
 	private void loadSolution() {
-		String solutionPackagePath = "";
+		
 		File file = null;
 		fc.setCurrentDirectory(new File(UtilMethodsFactory.getConfigPath() + "Images/"));
 		fc.setDialogTitle("Load Solution Package");
@@ -268,11 +279,33 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			UtilMethodsFactory.createFolder(strategyDir);
 			CustomTree tree = dash.addTreeTabPaneTab(strategyName);
 			String destDirectory = (UtilMethodsFactory.getConfigPath() + "Images/").substring(1);
+			
+			final CustomProgressBar progFrame = new CustomProgressBar(true, false, "Retrieving Instances Info");
+			progFrame.getPb().setIndeterminate(true);
+			SwingWorker<Void, Void> w = new SwingWorker<Void, Void>() {
+				@Override
+				protected Void doInBackground() throws Exception {
+			
 			UtilMethodsFactory.unZipUpdate(solutionPackagePath, destDirectory);
 			tree.refreshTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), strategyName);
 			dash.getTreeTabbedPane().setSelectedIndex(dash.getTreeTabbedPane().indexOfTab(strategyName));
+			tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), tree.getTheTree());
+			return null;
+				};
+
+				// this is called when the SwingWorker's doInBackground finishes
+				@Override
+				protected void done() {
+					progFrame.getPb().setIndeterminate(false);
+					progFrame.setVisible(false); // hide my progress bar JFrame
+				};
+			};
+			w.addPropertyChangeListener(this);
+			w.execute();
+			progFrame.setVisible(true);
 			
-			tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(),  tree.getTheTree());
+			
+			
 		} else {
 		}
 	}
@@ -305,10 +338,10 @@ public class DashboardMenu extends JMenu implements ActionListener {
 	 */
 	private void enableManualNaming() {
 		String selectedTabName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
-		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming","false" ,selectedTabName);
+		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", selectedTabName);
 		manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
 	}
-	
+
 	/**
 	 * Disable manual naming.
 	 * <ul>
@@ -321,7 +354,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "true", selectedTabName);
 		manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 	}
-	
+
 	/**
 	 * Load Charts To Mongo DB.
 	 * <ul>
@@ -335,7 +368,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		addDocuments(new File(UtilMethodsFactory.getConfigPath() + "Images"));
 		MongoDBFactory.closeMongoConnection();
 	}
-	
+
 	/**
 	 * Set dashboard to use Mongo DB to populate charts.
 	 * <ul>
@@ -349,7 +382,7 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "ini");
 		showDashboard(true);
 	}
-	
+
 	/**
 	 * Set dashboard to use INI files to populate charts.
 	 * <ul>
@@ -382,11 +415,12 @@ public class DashboardMenu extends JMenu implements ActionListener {
 
 	/**
 	 * Recursive Crawl file system to add chart images to Mongo DB.
-	 *<ul>
+	 * <ul>
 	 * <li>Calculate how deep the file structure is.
 	 * <li>If file object is directory run this function recursively.
 	 * <li>If file object is file add image object document to Mongo.
 	 * </ul>
+	 * 
 	 * @param node the node
 	 */
 	private void addDocuments(File node) {
@@ -440,8 +474,8 @@ public class DashboardMenu extends JMenu implements ActionListener {
 		File pngfile = new File(UtilMethodsFactory.getConfigPath() + imagePath + ".png");
 		MongoDBFactory.updateDocuments(imagePath, pngfile);
 	}
-	
-	public void setManualEditingMenu (boolean state) {
+
+	public void setManualEditingMenu(boolean state) {
 		manualSolutionNaming.setEnabled(true);
 		if (state) {
 			manualSolutionNaming.setText("Disable Manual Solution Copy Naming");
@@ -449,6 +483,9 @@ public class DashboardMenu extends JMenu implements ActionListener {
 			manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 		}
 	}
-	
-	
+
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) {
+		// TODO Auto-generated method stub
+	}
 }

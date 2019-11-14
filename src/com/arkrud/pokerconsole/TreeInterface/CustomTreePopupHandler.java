@@ -335,7 +335,7 @@ public class CustomTreePopupHandler implements ActionListener {
 				e.printStackTrace();
 			}
 			dash.closeAllFrames();
-			UtilMethodsFactory.addChartFrameToScrolableDesctop(templatePath, chartTitle, true, dash.getJScrollableDesktopPane());
+			UtilMethodsFactory.addChartFrameToScrolableDesctop(templatePath, chartTitle, true, dash);
 		} else {
 			System.out.println("Cancel was selected");
 		}
@@ -462,7 +462,7 @@ public class CustomTreePopupHandler implements ActionListener {
 		tree.setSelectionPath(new TreePath(pokerOpponentPositionNode.getPath()));
 		theTree.expandNodesBelow(node, tree);
 		dash.closeAllFrames();
-		UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, dash.getJScrollableDesktopPane());
+		UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, dash);
 	}
 
 	/**

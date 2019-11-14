@@ -7,6 +7,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.arkrud.pokerconsole.UI.TableChartPanel;
+import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 
 public class CustomTable extends JTable {
 	/**
@@ -16,7 +17,7 @@ public class CustomTable extends JTable {
 	private static Class<?>[] renderedClasses = { JTextField.class, Object.class };
 	private Color currentSelectionColor = new Color(245, 245, 245);
 
-	public CustomTable(String imagePath, TableChartPanel chart, boolean editable) {
+	public CustomTable(String imagePath, TableChartPanel chart, boolean editable, Dashboard dash) {
 		CustomTableModel tableModel = (new CustomTableModel(chart));
 		tableModel.generateTableHeaders();
 		tableModel.generateTableData(imagePath);
@@ -36,7 +37,7 @@ public class CustomTable extends JTable {
 		tableModel.adjustColumnPreferredWidths(this);
 		JPopupMenu tablePopup = new JPopupMenu();
 		if (editable) {
-		addMouseListener(new CustomTablePopupListener(tablePopup, path));
+		addMouseListener(new CustomTablePopupListener(tablePopup, path, dash));
 		}
 	}
 

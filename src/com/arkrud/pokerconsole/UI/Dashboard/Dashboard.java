@@ -1,7 +1,6 @@
 package com.arkrud.pokerconsole.UI.Dashboard;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Rectangle;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -235,16 +234,16 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 				if (path != null) {
 					if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
 						PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-						UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
+						UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, this);
 					} else {
 						Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 						@SuppressWarnings("unchecked")
 						List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-						for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
+						for (DefaultMutableTreeNode s : list) {
 							if (s.getUserObject() instanceof PokerOpponentPosition) {
 								PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
 								if (editable) {
-									UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, getJScrollableDesktopPane());
+									UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, this);
 								} else {
 									imageChartPanel = new ImageChartPanel(pokerOpponentPosition.getChartImagePath());
 									BaseInternalFrame theFrame = new CustomTableViewInternalFrame(pokerOpponentPosition.getChartPaneTitle(), imageChartPanel);

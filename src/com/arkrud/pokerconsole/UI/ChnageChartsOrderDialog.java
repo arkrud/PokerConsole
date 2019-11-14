@@ -37,7 +37,6 @@ import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
-import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
@@ -68,7 +67,7 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		Enumeration<?> en = node.children();
 		@SuppressWarnings("unchecked")
 		List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-		for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
+		for (DefaultMutableTreeNode s : list) {
 			if (s.getUserObject() instanceof PokerOpponentPosition) {
 				PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
 				String popNodeName = pokerOpponentPosition.getNodeText();
@@ -146,7 +145,7 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 			// Generate list of file paths for all files in folder with charts INI files
 			List<String> filesList = UtilMethodsFactory.listFiles(fileSystemPath);
 			// Reverse the file path list order
-			Collections.reverse(filesList);
+			//Collections.reverse(filesList);
 			// Create map object to associate chart file name without sequence prefix and extension with the file path
 			int n = 0;
 			TreeMap<String, String> map = new TreeMap<String, String>();
@@ -207,21 +206,20 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		if (INIFilesFactory.hasItemInSection(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index))) {
 			String pathString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", sourceTabbedPane.getTitleAt(index));
 			JScrollPane scroll = (JScrollPane) (sourceTabbedPane.getSelectedComponent());
-			JScrollableDesktopPane desctopPane = dash.getJScrollableDesktopPane();
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
 			TreePath path = tree.selectTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), pathString, tree);
 			if (path != null) {
 				if (((DefaultMutableTreeNode) path.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof PokerOpponentPosition) {
 					PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, desctopPane);
+					UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, dash);
 				} else {
 					Enumeration<?> en = ((DefaultMutableTreeNode) path.getLastPathComponent()).children();
 					@SuppressWarnings("unchecked")
 					List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
-					for (DefaultMutableTreeNode s : UtilMethodsFactory.reversed(list)) {
+					for (DefaultMutableTreeNode s : list) {
 						if (s.getUserObject() instanceof PokerOpponentPosition) {
 							PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
-							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, desctopPane);
+							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), true, dash);
 						} else if (s.getUserObject() instanceof PokerPosition) {
 						}
 					}
