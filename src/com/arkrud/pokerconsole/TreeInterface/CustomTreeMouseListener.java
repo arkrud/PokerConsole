@@ -143,18 +143,18 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					dropDownMenus.put("Remove", true);
 				} else if (treeObject instanceof PokerPosition) {
 					dropDownMenus.put("Remove", true);
-					dropDownMenus.put("Add Opponents Position", true);
+					dropDownMenus.put("Add Opponents Position / Hero Range", true);
 					dropDownMenus.put("Change Charts Order", true);
 				} else if (treeObject instanceof PokerAction) {
 					dropDownMenus.put("Add Sizing", true);
-					dropDownMenus.put("Add Hands", true);
-					dropDownMenus.put("Add Opponents Position", true);
+					dropDownMenus.put("Add Hero Position", true);
+					dropDownMenus.put("Add Opponents Position / Hero Range", true);
 					dropDownMenus.put("Remove", true);
 					dropDownMenus.put("Change Charts Order", true);
 				} else if (treeObject instanceof PokerHandSizing) {
 					dropDownMenus.put("Delete Sizing", true);
-					dropDownMenus.put("Add Hands", true);
-					dropDownMenus.put("Add Opponents Position", true);
+					dropDownMenus.put("Add Hero Position", true);
+					dropDownMenus.put("Add Opponents Position / Hero Range", true);
 					dropDownMenus.put("Change Charts Order", true);
 				} else {
 				}

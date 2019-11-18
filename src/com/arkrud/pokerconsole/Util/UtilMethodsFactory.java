@@ -56,7 +56,7 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  */
 public class UtilMethodsFactory {
 	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template",
-			"Add Action", "Add Hands", "Add Opponents Position", "Duplicate", "Change Charts Order" };
+			"Add Action", "Add Hero Position", "Add Opponents Position / Hero Range", "Duplicate", "Change Charts Order" };
 	private static HashMap<String, TableChartPanel> charts = new HashMap<String, TableChartPanel>();
 
 	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, Dashboard dash) {
@@ -87,6 +87,14 @@ public class UtilMethodsFactory {
 		return name.matches("[a-zA-Z]+");
 	}
 
+	public static void copyDir(Path src, Path dest) throws IOException {
+		List<Path> sources = Files.walk(src).collect(Collectors.toList());
+		for (Path source: sources) {
+			Files.copy(source, dest.resolve(src.relativize(source)),
+						StandardCopyOption.REPLACE_EXISTING);
+		}
+	}
+	
 	public static void copyFile(File source, File dest) throws IOException {
 		Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
@@ -110,16 +118,6 @@ public class UtilMethodsFactory {
 		} else {
 			System.out.println("Dir already exists.");
 		}
-	}
-
-	public static List<String> listFiles(String path) {
-		List<String> result = new ArrayList<String>();
-		try (Stream<Path> walk = Files.walk(Paths.get(path))) {
-			result = walk.filter(Files::isRegularFile).map(x -> x.toString()).collect(Collectors.toList());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 
 	/**
@@ -167,17 +165,6 @@ public class UtilMethodsFactory {
 		}
 	}
 
-	public static void renameFile(String oldFileName, String newFileName) {
-		File oldFile = new File(oldFileName);
-		File newFile = new File(newFileName);
-		try {
-			Files.move(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	public static void exitApp() {
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "editable");
 		System.exit(0);
@@ -190,6 +177,18 @@ public class UtilMethodsFactory {
 			matchPosition = m.group(1);
 		}
 		return matchPosition;
+	}
+
+	public static void generateChart(File node, boolean editable, Dashboard dash) {
+		String absolutePath = node.getAbsoluteFile().getPath();
+		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
+		TableChartPanel chartPanel = new TableChartPanel(imagePath, editable, dash);
+		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
+		theFrame.setName(imagePath);
+		JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
+		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);
+		UtilMethodsFactory.tableToImage(chartPanel.getTable(), imagePath.split("\\.")[0]);
+		pane.remove(theFrame);
 	}
 
 	// Retrieve the path of the root of the solution - src\
@@ -233,6 +232,29 @@ public class UtilMethodsFactory {
 		return str.indexOf(matcher.group());
 	}
 
+	public static boolean hasPNGFile(List<String> filesList) {
+		Iterator<String> it = filesList.iterator();
+		boolean hasPNG = false;
+		while (it.hasNext()) {
+			String fileName = it.next();
+			if (fileName.contains("png")) {
+				hasPNG = true;
+				break;
+			}
+		}
+		return hasPNG;
+	}
+
+	public static List<String> listFiles(String path) {
+		List<String> result = new ArrayList<String>();
+		try (Stream<Path> walk = Files.walk(Paths.get(path))) {
+			result = walk.filter(Files::isRegularFile).map(x -> x.toString()).collect(Collectors.toList());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	// Populate tree nodes with respective icons
 	public static HashMap<String, ImageIcon> populateInterfaceImages(String location) {
 		HashMap<String, ImageIcon> images = new HashMap<String, ImageIcon>();
@@ -244,8 +266,27 @@ public class UtilMethodsFactory {
 		return images;
 	}
 
+	public static void printList(List<?> list) {
+		int y = 0;
+		while (y < list.size()) {
+			System.out.println(list.get(y));
+			y++;
+		}
+	}
+
 	public static void removeFromCharts(String path) {
 		charts.remove(path);
+	}
+
+	public static void renameFile(String oldFileName, String newFileName) {
+		File oldFile = new File(oldFileName);
+		File newFile = new File(newFileName);
+		try {
+			Files.move(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static <T> Reversed<T> reversed(List<T> original) {
@@ -335,44 +376,11 @@ public class UtilMethodsFactory {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private static String[] getFileNames(String location) {
 		File folder = new File(getConfigPath() + location);
 		String[] files = folder.list();
 		return files;
-	}
-
-	public static boolean hasPNGFile(List<String> filesList) {
-		Iterator<String> it = filesList.iterator();
-		boolean hasPNG = false;
-		while (it.hasNext()) {
-			String fileName = it.next();
-			if (fileName.contains("png")) {
-				hasPNG = true;
-				break;
-			}
-		}
-		return hasPNG;
-	}
-
-	public static void printList(List<?> list) {
-		int y = 0;
-		while (y < list.size()) {
-			System.out.println(list.get(y));
-			y++;
-		}
-	}
-	
-	public static void generateChart(File node, boolean editable, Dashboard dash) {
-		String absolutePath = node.getAbsoluteFile().getPath();
-		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
-		TableChartPanel chartPanel = new TableChartPanel(imagePath, editable, dash);
-		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(imagePath, chartPanel);
-		theFrame.setName(imagePath);
-		JScrollableDesktopPane pane = dash.getJScrollableDesktopPane();
-		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(imagePath, pane, theFrame);
-		UtilMethodsFactory.tableToImage(chartPanel.getTable(), imagePath.split("\\.")[0]);
-		pane.remove(theFrame);
 	}
 	
 }

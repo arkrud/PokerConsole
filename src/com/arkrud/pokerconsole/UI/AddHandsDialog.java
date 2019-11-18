@@ -94,7 +94,7 @@ public class AddHandsDialog extends JDialog implements ActionListener {
 		handsPanel.add(okButton);
 		handsPanel.add(cancelButton);
 		add(handsPanel, BorderLayout.CENTER);
-		setTitle("Add Hands");
+		setTitle("Add Hero Position");
 		SpringUtilities.makeCompactGrid(handsPanel, handNames.length + 1, 2, 10, 10, 10, 10);
 	}
 

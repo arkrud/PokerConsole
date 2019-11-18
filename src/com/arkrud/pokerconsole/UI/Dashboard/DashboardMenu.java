@@ -8,13 +8,21 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -36,7 +44,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	/**
 	 * Menu item.
 	 */
-	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming;
+	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming, backupConsoleLayoutAndData, restoreConsoleLayoutAndData;
 	/**
 	 * Reference to dashboard object
 	 */
@@ -67,6 +75,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		exit = new JMenuItem("Exit");
 		addTree = new JMenuItem("Add Solution");
 		loadSolution = new JMenuItem("Load Solution");
+		backupConsoleLayoutAndData = new JMenuItem("Backup Console Layout And Data");
+		restoreConsoleLayoutAndData = new JMenuItem("Restore Console Layout And Data");
 		manualSolutionNaming = new JMenuItem("Enable Manual Solution Copy Naming");
 		manualSolutionNaming.setEnabled(false);
 		manageTrees = new JMenuItem("Hide/Show Trees");
@@ -100,6 +110,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		populateChartDB.addActionListener(this);
 		dataSourceSelection.addActionListener(this);
 		manualSolutionNaming.addActionListener(this);
+		backupConsoleLayoutAndData.addActionListener(this);
+		restoreConsoleLayoutAndData.addActionListener(this);
 		if (editable) {
 			add(addDashboardUser);
 			add(clearUser);
@@ -108,6 +120,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			add(manualSolutionNaming);
 			add(manageTrees);
 			add(openReadOnlyDash);
+			add(backupConsoleLayoutAndData);
+			add(restoreConsoleLayoutAndData);
 			// add(dataSourceSelection);
 			// add(populateChartDB);
 		}
@@ -130,6 +144,9 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash, null, null, null, null, null, null);
 		} else if (menuText.contains("Load Solution")) {
 			loadSolution();
+		} else if (menuText.contains("Backup Console")) {
+			backupConsoleData();
+		} else if (menuText.contains("Restore Console")) {
 		} else if (menuText.contains("Enable Manual Solution Copy Naming")) {
 			enableManualNaming();
 		} else if (menuText.contains("Disable Manual Solution Copy Naming")) {
@@ -174,25 +191,25 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			} else if (level == 3) {
 				if (node.isFile()) {
 					if (!node.getName().contains("png")) {
-						File testFile= new File(node.getParent() + "\\" + node.getName().split("\\.")[0] + ".png");
+						File testFile = new File(node.getParent() + "\\" + node.getName().split("\\.")[0] + ".png");
 						if (!testFile.exists()) {
-						generateChart(node, editable);
+							generateChart(node, editable);
 						}
 					}
 				} else {
 				}
 			} else if (level == 4) {
 				if (!node.getName().contains("png")) {
-					File testFile= new File(node.getParent() + "\\" + node.getName().split("\\.")[0] + ".png");
+					File testFile = new File(node.getParent() + "\\" + node.getName().split("\\.")[0] + ".png");
 					if (!testFile.exists()) {
-					generateChart(node, editable);
+						generateChart(node, editable);
 					}
 				}
 			} else if (level == 5) {
 				if (!node.getName().contains("png")) {
 					File testFile = new File(node.getParent() + "\\" + node.getName().split("\\.")[0] + ".png");
 					if (!testFile.exists()) {
-					generateChart(node, editable);
+						generateChart(node, editable);
 					}
 				}
 			} else {
@@ -264,7 +281,6 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 *
 	 */
 	private void loadSolution() {
-		
 		File file = null;
 		fc.setCurrentDirectory(new File(UtilMethodsFactory.getConfigPath() + "Images/"));
 		fc.setDialogTitle("Load Solution Package");
@@ -279,18 +295,16 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			UtilMethodsFactory.createFolder(strategyDir);
 			CustomTree tree = dash.addTreeTabPaneTab(strategyName);
 			String destDirectory = (UtilMethodsFactory.getConfigPath() + "Images/").substring(1);
-			
 			final CustomProgressBar progFrame = new CustomProgressBar(true, false, "Retrieving Instances Info");
 			progFrame.getPb().setIndeterminate(true);
 			SwingWorker<Void, Void> w = new SwingWorker<Void, Void>() {
 				@Override
 				protected Void doInBackground() throws Exception {
-			
-			UtilMethodsFactory.unZipUpdate(solutionPackagePath, destDirectory);
-			tree.refreshTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), strategyName);
-			dash.getTreeTabbedPane().setSelectedIndex(dash.getTreeTabbedPane().indexOfTab(strategyName));
-			tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), tree.getTheTree());
-			return null;
+					UtilMethodsFactory.unZipUpdate(solutionPackagePath, destDirectory);
+					tree.refreshTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), strategyName);
+					dash.getTreeTabbedPane().setSelectedIndex(dash.getTreeTabbedPane().indexOfTab(strategyName));
+					tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), tree.getTheTree());
+					return null;
 				};
 
 				// this is called when the SwingWorker's doInBackground finishes
@@ -303,11 +317,43 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			w.addPropertyChangeListener(this);
 			w.execute();
 			progFrame.setVisible(true);
-			
-			
-			
 		} else {
 		}
+	}
+
+	private void backupConsoleData() {
+		String applicationRoot = UtilMethodsFactory.getConfigPath();
+		String backupDirName = applicationRoot + "Backup/";
+		File backupDefaultDir = new File(backupDirName);
+		UtilMethodsFactory.createFolder(backupDefaultDir);
+		fc.setCurrentDirectory(backupDefaultDir);
+		fc.setDialogTitle("Backup Console Layout And Data");
+		fc.setSelectedFile(new File(composeBackupFolderName()));
+		int returnVal = fc.showSaveDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			String backupName = fc.getSelectedFile().getName();
+			UtilMethodsFactory.createFolder(new File(backupDirName + backupName));
+			File source = new File(applicationRoot + "config.ini");
+			File destination = new File(backupDirName + backupName + "/config.ini");
+			try {
+				UtilMethodsFactory.copyFile(source, destination);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			UtilMethodsFactory.createFolder(new File(backupDirName + backupName + "/Images"));
+			Path sourcePath = new File(applicationRoot + "Images").toPath();
+			Path destinationPath = new File(backupDirName + backupName + "/Images").toPath();
+			try {
+				UtilMethodsFactory.copyDir(sourcePath, destinationPath);
+				JOptionPane.showMessageDialog(dash, "Backup Successful", "Info", JOptionPane.INFORMATION_MESSAGE);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+		}
+	}
+
+	private void restoreConsoleData() {
 	}
 
 	/**
@@ -473,6 +519,26 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		MongoDBFactory.addDocument(INIFilesFactory.getItemValuesFromINI(node), imagePath);
 		File pngfile = new File(UtilMethodsFactory.getConfigPath() + imagePath + ".png");
 		MongoDBFactory.updateDocuments(imagePath, pngfile);
+	}
+	
+	
+	private String  composeBackupFolderName() {
+		Date date = new Date();
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.setTime(date);
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+		List<String> strings = new LinkedList<>();
+		strings.add(Integer.toString(year));
+		strings.add(Integer.toString(month));
+		strings.add(Integer.toString(day));
+		strings.add(Integer.toString(hour));
+		strings.add(Integer.toString(minute));
+		return String.join("-", strings);
+		
 	}
 
 	public void setManualEditingMenu(boolean state) {

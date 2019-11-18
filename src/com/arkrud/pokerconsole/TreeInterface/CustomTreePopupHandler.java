@@ -102,9 +102,9 @@ public class CustomTreePopupHandler implements ActionListener {
 		} else if (obj instanceof PokerAction) {
 			if (ac.equals("ADD SIZING")) {
 				addPokerSizing(node, obj);
-			} else if (ac.equals("ADD HANDS")) {
+			} else if (ac.equals("ADD HERO POSITION")) {
 				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null, null);
-			} else if (ac.equals("ADD OPPONENTS POSITION")) {
+			} else if (ac.equals("ADD OPPONENTS POSITION / HERO RANGE")) {
 				addOpponentPosition(node);
 			} else if (ac.equals("REMOVE")) {
 				removePokerAction(node, obj);
@@ -117,9 +117,9 @@ public class CustomTreePopupHandler implements ActionListener {
 		} else if (obj instanceof PokerHandSizing) {
 			if (ac.equals("DELETE SIZING")) {
 				removePokerSizing(node, obj);
-			} else if (ac.equals("ADD HANDS")) {
+			} else if (ac.equals("ADD HERO POSITION")) {
 				UtilMethodsFactory.showDialogToDesctop("AddHandsDialog", 210, 360, dash, tree, theTree, obj, node, null, null);
-			} else if (ac.equals("ADD OPPONENTS POSITION")) {
+			} else if (ac.equals("ADD OPPONENTS POSITION / HERO RANGE")) {
 				addOpponentPosition(node);
 			} else if (ac.equals("CHANGE CHARTS ORDER")) {
 				Enumeration<?> en = node.children();
@@ -130,7 +130,7 @@ public class CustomTreePopupHandler implements ActionListener {
 		} else if (obj instanceof PokerPosition) {
 			if (ac.equals("REMOVE")) {
 				removePokerPositon(node, obj);
-			} else if (ac.equals("ADD OPPONENTS POSITION")) {
+			} else if (ac.equals("ADD OPPONENTS POSITION / HERO RANGE")) {
 				addOpponentPosition(node);
 			} else if (ac.equals("CHANGE CHARTS ORDER")) {
 				Enumeration<?> en = node.children();
