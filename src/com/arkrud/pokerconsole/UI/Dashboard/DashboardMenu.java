@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package com.arkrud.pokerconsole.UI.Dashboard;
 
@@ -9,8 +9,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,7 +42,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	/**
 	 * Menu item.
 	 */
-	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection, manualSolutionNaming, backupConsoleLayoutAndData, restoreConsoleLayoutAndData;
+	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, openReadOnlyDash, populateChartDB, dataSourceSelection,
+			manualSolutionNaming, backupConsoleLayoutAndData, restoreConsoleLayoutAndData;
 	/**
 	 * Reference to dashboard object
 	 */
@@ -64,8 +63,10 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 * Sole constructor of Dashboard object. <br>
 	 * Adding Window Listener and initializing graphics controls
 	 *
-	 * @param dash dashboard object reference
-	 * @param editable flag to define the editable state of the Poker hand charts
+	 * @param dash
+	 *            dashboard object reference
+	 * @param editable
+	 *            flag to define the editable state of the Poker hand charts
 	 */
 	public DashboardMenu(Dashboard dash, boolean editable) {
 		super();
@@ -131,7 +132,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	/**
 	 * Initiates methods to perform menu actions on menu items selection. <br>
 	 *
-	 * 
+	 *
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -147,12 +148,14 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		} else if (menuText.contains("Backup Console")) {
 			backupConsoleData();
 		} else if (menuText.contains("Restore Console")) {
+			restoreConsoleData();
 		} else if (menuText.contains("Enable Manual Solution Copy Naming")) {
 			enableManualNaming();
 		} else if (menuText.contains("Disable Manual Solution Copy Naming")) {
 			disableManualNaming();
 		} else if (menuText.contains("Hide/Show Trees")) {
-			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null, null, null);
+			UtilMethodsFactory.showDialogToDesctop("ManageTreesDialog", 250, 150 + 25 * INIFilesFactory.getTreesData().size(), dash, null, null, null, null,
+					null, null);
 		} else if (menuText.contains("Update User")) {
 			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser);
 		} else if (menuText.contains("Open Read Only Dashboard")) {
@@ -169,14 +172,17 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	}
 
 	/**
-	 * Allows to have previously selected tree node to be selected and Poker hand charts placed into scrollable desktop on clicking on the header of tab pane tabs. <br>
+	 * Allows to have previously selected tree node to be selected and Poker hand charts placed into scrollable desktop on clicking on the header of tab pane
+	 * tabs. <br>
 	 * <ul>
 	 * <li>Calculates the level on the node in the tree independent from application deployment location in file system.
 	 * <li>Generates charts at specific levels if filesystem object is file.
 	 * </ul>
 	 *
-	 * @param node INI file object to be loaded into Poker hands chart
-	 * @param editable flag to define the editable state of the Poker hand charts
+	 * @param node
+	 *            INI file object to be loaded into Poker hands chart
+	 * @param editable
+	 *            flag to define the editable state of the Poker hand charts
 	 */
 	private void generateChartImages(File node, boolean editable) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
@@ -230,8 +236,10 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 * <li>Remove the frame from the JScrollableDesktopPane.
 	 * </ul>
 	 *
-	 * @param node INI file object to be loaded into Poker hands chart
-	 * @param editable flag to define the editable state of the Poker hand charts
+	 * @param node
+	 *            INI file object to be loaded into Poker hands chart
+	 * @param editable
+	 *            flag to define the editable state of the Poker hand charts
 	 */
 	private void generateChart(File node, boolean editable) {
 		String absolutePath = node.getAbsoluteFile().getPath();
@@ -252,8 +260,9 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 * <li>Make dashboard visible.
 	 * <li>Dispose current dashboard.
 	 * </ul>
-	 * 
-	 * @param editable flag to define the editable state of the Poker hand charts
+	 *
+	 * @param editable
+	 *            flag to define the editable state of the Poker hand charts
 	 */
 	private void showDashboard(boolean editable) {
 		Dashboard readOnlyDash = null;
@@ -353,7 +362,62 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		}
 	}
 
+	/**
+	 * Restore console data and layout from backup.<br>
+	 * <ul>
+	 * <li>Define name of application root folder.
+	 * <li>Define name of backup folder.
+	 * <li>Set file chooser (FC) current directory to backup folder.
+	 * <li>Set FC title.
+	 * <li>Set FC mode to select directories.
+	 * <li>Show FC.
+	 * <li>After selecting the desired backup folder on save button click bring confirmation dialog (CD).
+	 * <li>On CD OK option define backup name variable as selected directory.
+	 * <li>Define source file as config.ini file the backup directory.
+	 * <li>Define destination file as console config.ini file in the root of teh application.
+	 * <li>Restore INI file.
+	 * <li>Define source directory as backup Images directory.
+	 * <li>Define destination directory Images sub-directory of the application.
+	 * <li>Delete application Images directory.
+	 * <li>Restore Images directory.
+	 * <li>Reopen application with restores configuretion.
+	 * </ul>
+	 *
+	 */
 	private void restoreConsoleData() {
+		String applicationRoot = UtilMethodsFactory.getConfigPath();
+		String backupDirName = applicationRoot + "Backup/";
+		File backupDefaultDir = new File(backupDirName);
+		fc.setCurrentDirectory(backupDefaultDir);
+		fc.setDialogTitle("Restore Console Layout And Data");
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int returnVal = fc.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			int response = JOptionPane.showConfirmDialog(null, "Do you really want to owerwrite the console data?", "Restore Console Data Warning",
+					JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if (response == JOptionPane.NO_OPTION) {
+			} else if (response == JOptionPane.YES_OPTION) {
+				String backupName = fc.getSelectedFile().getName();
+				File source = new File(backupDirName + backupName + "/config.ini");
+				File destination = new File(applicationRoot + "config.ini");
+				try {
+					UtilMethodsFactory.copyFile(source, destination);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Path sourcePath = new File(backupDirName + backupName + "/Images").toPath();
+				Path destinationPath = new File(applicationRoot + "Images").toPath();
+				try {
+					UtilMethodsFactory.deleteDirectory(new File(applicationRoot + "Images"));
+					UtilMethodsFactory.copyDir(sourcePath, destinationPath);
+					showDashboard(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (response == JOptionPane.CLOSED_OPTION) {
+			}
+		} else {
+		}
 	}
 
 	/**
@@ -451,7 +515,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 * </ul>
 	 */
 	private void clearSecurity() {
-		int response = JOptionPane.showConfirmDialog(null, "Do you want to disable security?", "Disable security", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		int response = JOptionPane.showConfirmDialog(null, "Do you want to disable security?", "Disable security", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE);
 		if (response == JOptionPane.NO_OPTION) {
 		} else if (response == JOptionPane.YES_OPTION) {
 			INIFilesFactory.removeINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security");
@@ -466,8 +531,9 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 * <li>If file object is directory run this function recursively.
 	 * <li>If file object is file add image object document to Mongo.
 	 * </ul>
-	 * 
-	 * @param node the node
+	 *
+	 * @param node
+	 *            the node
 	 */
 	private void addDocuments(File node) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
@@ -511,7 +577,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 * <li>Update created Mongo document with PNG file.
 	 * </ul>
 	 *
-	 * @param node the node
+	 * @param node
+	 *            the node
 	 */
 	private void updateMongoDocument(File node) {
 		String absolutePath = node.getAbsoluteFile().getPath();
@@ -520,9 +587,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		File pngfile = new File(UtilMethodsFactory.getConfigPath() + imagePath + ".png");
 		MongoDBFactory.updateDocuments(imagePath, pngfile);
 	}
-	
-	
-	private String  composeBackupFolderName() {
+
+	private String composeBackupFolderName() {
 		Date date = new Date();
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.setTime(date);
@@ -538,7 +604,6 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		strings.add(Integer.toString(hour));
 		strings.add(Integer.toString(minute));
 		return String.join("-", strings);
-		
 	}
 
 	public void setManualEditingMenu(boolean state) {
