@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -180,7 +179,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 * Allows to have Navigation tree to have previously selected node to be selected and Poker hand charts placed into scrollable desktop on clicking on the header of tab pane tabs. <br>
 	 * <ul>
 	 * <li>Get selected tab index.
-	 * <li>If last solution is deleted and index is -1 do nothing. 
+	 * <li>If last solution is deleted and index is -1 do nothing.
 	 * <li>Check if this solution tree has something previously selected.
 	 * <li>Retrieve the selection path string from the INI file <FRI-BB>.
 	 * <li>Check if selected tree node is leaf object or branch.
@@ -294,7 +293,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	}
 
 	/**
-	 * Pivate method to check if tab with given header name already exist.<br>
+	 * Private method to check if tab with given header name already exist.<br>
 	 *
 	 * @param tabName String to define the tab name
 	 */
@@ -319,7 +318,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		JPanel frameContentPanel = initializeFrameContentPanel();
 		JSplitPane jSplitPane = initializeSplitPane();
 		treeTabbedPane = initializeTabbedPane();
-		ArrayList<String> trees = getTreesFromINI();
+		ArrayList<String> trees = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig());
 		addTreesToTabs(treeTabbedPane, trees);
 		jSplitPane.setLeftComponent(treeTabbedPane);
 		frameContentPanel.add(jSplitPane, BorderLayout.CENTER);
@@ -374,22 +373,6 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			}
 		});
 		return treeTabbedPane;
-	}
-
-	/**
-	 * Private method to retrieve available trees info from INI file. <br>
-	 *
-	 */
-	private ArrayList<String> getTreesFromINI() {
-		ArrayList<String> trees = new ArrayList<String>();
-		Iterator<ArrayList<Object>> it = INIFilesFactory.getAppTreesConfigInfo(UtilMethodsFactory.getConsoleConfig()).iterator();
-		while (it.hasNext()) {
-			ArrayList<Object> appData = it.next();
-			if (((Boolean) appData.get(1))) {
-				trees.add((String) appData.get(0));
-			}
-		}
-		return trees;
 	}
 
 	/**

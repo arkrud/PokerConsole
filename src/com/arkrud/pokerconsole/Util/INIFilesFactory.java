@@ -44,8 +44,8 @@ public class INIFilesFactory {
 	}
 
 	// Retrieve Applications Tree info from INI configuration file
-	public static ArrayList<ArrayList<Object>> getAppTreesConfigInfo(File iniFile) {
-		ArrayList<ArrayList<Object>> appsInfo = new ArrayList<ArrayList<Object>>();
+	public static ArrayList<String> getAppTreesConfigInfo(File iniFile) {
+		ArrayList<String> appsInfo = new ArrayList<String>();
 		IniFile ini = readINI(iniFile);
 		Iterator<IniSection> sections = ini.getSections().iterator();
 		while (sections.hasNext()) {
@@ -53,11 +53,11 @@ public class INIFilesFactory {
 			if (theSection.getName().equals("Solutions")) {
 				Iterator<IniItem> params = theSection.getItems().iterator();
 				while (params.hasNext()) {
-					ArrayList<Object> appInfo = new ArrayList<Object>();
+					//ArrayList<Object> appInfo = new ArrayList<Object>();
 					IniItem item = params.next();
-					appInfo.add(item.getName());
-					appInfo.add(Boolean.valueOf(item.getValue()));
-					appsInfo.add(appInfo);
+					//appInfo.add(item.getName());
+					//appInfo.add(Boolean.valueOf(item.getValue()));
+					appsInfo.add(item.getName());
 				}
 			}
 		}
@@ -83,11 +83,11 @@ public class INIFilesFactory {
 		IniFile ini = readINI(iniFile);
 		Iterator<IniSection> its = ini.getSections().iterator();
 		while (its.hasNext()) {
-			IniSection section = (IniSection) its.next();
+			IniSection section = its.next();
 			Iterator<IniItem> iti = section.getItems().iterator();
 			HashMap<String, String> itemsMap = new HashMap<String, String>();
 			while (iti.hasNext()) {
-				IniItem iniItem = (IniItem) iti.next();
+				IniItem iniItem = iti.next();
 				itemsMap.put(iniItem.getName(), iniItem.getValue());
 			}
 			data.put(section.getName(), itemsMap);
@@ -124,7 +124,7 @@ public class INIFilesFactory {
 		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
 		Iterator<IniItem> it = INIFilesFactory.getAllItemsFromSection(UtilMethodsFactory.getConsoleConfig(), "Solutions").iterator();
 		while (it.hasNext()) {
-			IniItem iniItem = (IniItem) it.next();
+			IniItem iniItem = it.next();
 			if (iniItem.getValue().equals("true") || iniItem.getValue().equals("false")) {
 				map.put(iniItem.getName(), Boolean.parseBoolean(iniItem.getValue()));
 			}
@@ -246,14 +246,14 @@ public class INIFilesFactory {
 		}
 		writeINI(iniFile, ini);
 	}
-	
+
 	// Update INI file items in section
 		public static void updateAllINIFileItemsInSection(File iniFile, String section, String newItemsValue) {
 			IniFile ini = readINI(iniFile);
 			IniSection iniSection = ini.getSection(section);
 			Iterator<IniItem> it = iniSection.getItems().iterator();
 			while (it.hasNext()) {
-				IniItem iniItem = (IniItem) it.next();
+				IniItem iniItem = it.next();
 				iniItem.setValue(newItemsValue);
 			}
 			writeINI(iniFile, ini);

@@ -380,7 +380,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 * <li>Define destination directory Images sub-directory of the application.
 	 * <li>Delete application Images directory.
 	 * <li>Restore Images directory.
-	 * <li>Reopen application with restores configuretion.
+	 * <li>Reopen application with restored configuration.
 	 * </ul>
 	 *
 	 */
