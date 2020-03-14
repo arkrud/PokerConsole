@@ -30,9 +30,9 @@ import com.license4j.License;
 import com.license4j.LicenseValidator;
 
 /**
- * Main Class For Java based Fat client for AWS Cloud.<br>
+ * Main Class For Poker Console.<br>
  * Opens login screen if password protected user is added. <br>
- * Opens the dashboard with top tree element collapsed.
+ * Opens the dashboard with layout from previous session.
  */
 @SuppressWarnings("serial")
 public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (unused code)
@@ -41,9 +41,9 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	private JLabel userNameLabel, passwordLabel, iconLabel;
 	private JTextField userNameTextField, passwordTextField;
 	// ProductLicense class
-    private static ProductLicense productLicense;
-    // License object
-    private static License license;
+	private static ProductLicense productLicense;
+	// License object
+	private static License license;
 
 	/**
 	 * Sole constructor of <code>LoginFrame</code> object.
@@ -144,96 +144,92 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	public static void main(String[] args) throws Exception {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			// Show login prompt if security enabled or open Dashboard directly
-			 // load settings and/or license from config file.
-	        /*productLicense = new ProductLicense();
-	        if (productLicense.loadLicense()) {
-	            license = productLicense.validateLicense(false);
-	        }
-
-	        if (license == null) {
-	            // license object is null, either there is no config file, or config
-	            // file does not include a license, so display licensing window.
-	        	 new LicenseJDialog(null, true).setVisible(true);
-	        } else {
-	            // license found
-	            switch (license.getValidationStatus()) {
-	                case LICENSE_VALID:
-	                    // license is valid, so continue running your software
-
-	                    if (license.isActivationRequired()) {
-	                        // if it requires activation, but not activated yet, display activation days remaining.
-	                        JOptionPane.showMessageDialog(null, "Activation required, days left: " + license.getLicenseActivationDaysRemaining(null), "Activation Requires", JOptionPane.ERROR_MESSAGE);
-	                    }
-
-	                    if (license.getLicenseText() != null && license.getLicenseText().getLicenseExpireDaysRemaining(null) > 0 && license.getLicenseText().getLicenseExpireDaysRemaining(null) < 30) {
-	                        // expiration date is set, and less than 30 days remaining, SO if you like display a message?
-	                        JOptionPane.showMessageDialog(null, "License will expire soon, days left: " + license.getLicenseText().getLicenseExpireDaysRemaining(null), "License Expiration", JOptionPane.ERROR_MESSAGE);
-	                    }
-
-	                    // Here check for license availability (blacklist). Method checks for license on server, 
-	                    // also it checks for activated licenses. If it returns -1 you can be sure that given
-	                    // license is deleted from server, so notify customer and close software because of illegal
-	                    // license usage.
-	                    // This check runs in a thread so it will not block software.
-	                    SwingWorker worker = new SwingWorker() {
-	                        int blacklistCheck;
-
-	                        @Override
-	                        protected void done() {
-	                            if (blacklistCheck == -1) {
-	                                System.err.println(blacklistCheck);
-	                                JOptionPane.showMessageDialog(null, "This is a blacklisted license. You are using an illegal license.\n\nSoftware will be closed.", "License Error", JOptionPane.ERROR_MESSAGE);
-	                                System.exit(-1);
-	                            }
-	                        }
-
-	                        @Override
-	                        protected License doInBackground() {
-	                            blacklistCheck = LicenseValidator.checkOnlineAvailability(productLicense.publicKey, license, 3000);
-
-	                            return null;
-	                        }
-	                    };
-	                    worker.execute();
-
-	                    break;
-	                default:
-	                    // ValidationStatus is not LICENSE_VALID, display a message dialog and display licensing window.
-
-	                    // YOU CAN CHECK FOR OTHER VALIDATION STATUS HERE LIKE EXPIRED, USAGE LIMIT REACHED ETC,
-	                    // THEN MAKE ANY OTHER THINGS.
-	                    JOptionPane.showMessageDialog(null, "License error: " + license.getValidationStatus(), "License Error", JOptionPane.ERROR_MESSAGE);
-
-	                    new LicenseJDialog(null, true).setVisible(true);
-	            }
-	        }
-	        
-	        
-	        java.awt.EventQueue.invokeLater(new Runnable() {
-	            @Override
-	            public void run() {*/
-	            	if (INIFilesFactory.hasINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security")) { // Check in INI file if secure login is enabled 
-	    				LoginFrame frame = new LoginFrame();
-	    				frame.setSize(400, 150);
-	    				frame.setResizable(false);
-	    				// Set login prompt window in the center of the desktop
-	    				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-	    				int w = frame.getSize().width;
-	    				int h = frame.getSize().height;
-	    				int x = (dim.width - w) / 2;
-	    				int y = (dim.height - h) / 2;
-	    				frame.setLocation(x, y);
-	    				frame.setVisible(true);
-	    			} else {
-	    				showDashboard();
-	    			}
-	            //}
-	        //});
-	        
-			
+			checkActivation();
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					// Show login prompt if security enabled or open Dashboard directly
+					if (INIFilesFactory.hasINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security")) { // Check in INI file if secure login is enabled
+						showLoginFrame();
+					} else {
+						showDashboard();
+					}
+				}
+			});
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Something Went Wrong!!!");
 		}
+	}
+
+	private static void checkActivation() {
+		// load settings and/or license from config file.
+		productLicense = new ProductLicense();
+		if (productLicense.loadLicense()) {
+			license = productLicense.validateLicense(false);
+		}
+		if (license == null) {
+			// license object is null, either there is no config file, or config
+			// file does not include a license, so display licensing window.
+			new LicenseJDialog(null, true).setVisible(true);
+		} else {
+			// license found
+			switch (license.getValidationStatus()) {
+			case LICENSE_VALID:
+				// license is valid, so continue running your software
+				if (license.isActivationRequired()) {
+					// if it requires activation, but not activated yet, display activation days remaining.
+					JOptionPane.showMessageDialog(null, "Activation required, days left: " + license.getLicenseActivationDaysRemaining(null), "Activation Requires", JOptionPane.ERROR_MESSAGE);
+				}
+				if (license.getLicenseText() != null && license.getLicenseText().getLicenseExpireDaysRemaining(null) > 0 && license.getLicenseText().getLicenseExpireDaysRemaining(null) < 30) {
+					// expiration date is set, and less than 30 days remaining, SO if you like display a message?
+					JOptionPane.showMessageDialog(null, "License will expire soon, days left: " + license.getLicenseText().getLicenseExpireDaysRemaining(null), "License Expiration", JOptionPane.ERROR_MESSAGE);
+				}
+				// Here check for license availability (blacklist). Method checks for license on server,
+				// also it checks for activated licenses. If it returns -1 you can be sure that given
+				// license is deleted from server, so notify customer and close software because of illegal
+				// license usage.
+				// This check runs in a thread so it will not block software.
+				SwingWorker<License, License> worker = new SwingWorker<License, License>() {
+					int blacklistCheck;
+
+					@Override
+					protected void done() {
+						if (blacklistCheck == -1) {
+							System.err.println(blacklistCheck);
+							JOptionPane.showMessageDialog(null, "This is a blacklisted license. You are using an illegal license.\n\nSoftware will be closed.", "License Error", JOptionPane.ERROR_MESSAGE);
+							System.exit(-1);
+						}
+					}
+
+					@Override
+					protected License doInBackground() {
+						blacklistCheck = LicenseValidator.checkOnlineAvailability(ProductLicense.publicKey, license, 3000);
+						return null;
+					}
+				};
+				worker.execute();
+				break;
+			default:
+				// ValidationStatus is not LICENSE_VALID, display a message dialog and display licensing window.
+				// YOU CAN CHECK FOR OTHER VALIDATION STATUS HERE LIKE EXPIRED, USAGE LIMIT REACHED ETC,
+				// THEN MAKE ANY OTHER THINGS.
+				JOptionPane.showMessageDialog(null, "License error: " + license.getValidationStatus(), "License Error", JOptionPane.ERROR_MESSAGE);
+				new LicenseJDialog(null, true).setVisible(true);
+			}
+		}
+	}
+
+	private static void showLoginFrame() {
+		LoginFrame frame = new LoginFrame();
+		frame.setSize(400, 150);
+		frame.setResizable(false);
+		// Set login prompt window in the center of the desktop
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		int w = frame.getSize().width;
+		int h = frame.getSize().height;
+		int x = (dim.width - w) / 2;
+		int y = (dim.height - h) / 2;
+		frame.setLocation(x, y);
+		frame.setVisible(true);
 	}
 }

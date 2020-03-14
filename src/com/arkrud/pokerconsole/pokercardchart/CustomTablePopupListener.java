@@ -23,7 +23,7 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 	private String iniPath;
 	private CustomTable table;
 	private Dashboard dash;
-	private String[] menus = { "Clear all", "Red(always bet/raise)", "Orange(Mostly bet/raise and otherwise call)", "Green(Always call)", "Yellow(Sometimes bet/raise and sometimes call)", "Purple(Mostly fold otherwise raise)",
+	private String[] menus = { "Clear all", "Red(always bet/raise)", "Orange(Mostly bet/raise and otherwise call)", "Green(Always call)", "Pink(25% Raise, 75% Fold)", "Yellow(Sometimes bet/raise and sometimes call)", "Purple(Mostly fold otherwise raise)",
 			"Blue(Fold/call/raise equally)", "White(Sometimes call sometimes fold)", "Dark gray(Always fold)", "Light gray(Not in range)", "Save Chart" };
 
 	public CustomTablePopupListener(JPopupMenu popupMenu, String iniPath, Dashboard dash) {
@@ -41,6 +41,8 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 			table.setCurrentSelectionColor(new Color(255, 134, 0));
 		} else if (menuText.contains("Green(Always call)")) {
 			table.setCurrentSelectionColor(new Color(0, 255, 0));
+		} else if (menuText.contains("Pink(25% Raise, 75% Fold)")) {
+			table.setCurrentSelectionColor(new Color(255,192,203));
 		} else if (menuText.contains("Yellow(Sometimes bet/raise and sometimes call)")) {
 			table.setCurrentSelectionColor(new Color(255, 255, 1));
 		} else if (menuText.contains("Purple(Mostly fold otherwise raise)")) {
