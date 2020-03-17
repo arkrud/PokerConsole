@@ -23,8 +23,8 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 	private String iniPath;
 	private CustomTable table;
 	private Dashboard dash;
-	private String[] menus = { "Clear all", "Red(always bet/raise)", "Orange(Mostly bet/raise and otherwise call)", "Green(Always call)", "Pink(25% Raise, 75% Fold)", "Yellow(Sometimes bet/raise and sometimes call)", "Purple(Mostly fold otherwise raise)",
-			"Blue(Fold/call/raise equally)", "White(Sometimes call sometimes fold)", "Dark gray(Always fold)", "Light gray(Not in range)", "Save Chart" };
+	private String[] menus = { "Clear all", "Red", "Orange", "Blueviolet", "Green",  "Dark blue", "Yellow", "Pink",
+			"Blue", "White", "Dark gray", "Light gray", "Save Chart" };
 
 	public CustomTablePopupListener(JPopupMenu popupMenu, String iniPath, Dashboard dash) {
 		this.popupMenu = popupMenu;
@@ -35,25 +35,27 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String menuText = ((JMenuItem) e.getSource()).getText();
-		if (menuText.contains("Red(always bet/raise)")) {
+		if (menuText.contains("Red")) {
 			table.setCurrentSelectionColor(new Color(254, 0, 2));
-		} else if (menuText.contains("Orange(Mostly bet/raise and otherwise call)")) {
+		} else if (menuText.contains("Orange")) {
 			table.setCurrentSelectionColor(new Color(255, 134, 0));
-		} else if (menuText.contains("Green(Always call)")) {
+		} else if (menuText.contains("Green")) {
 			table.setCurrentSelectionColor(new Color(0, 255, 0));
-		} else if (menuText.contains("Pink(25% Raise, 75% Fold)")) {
-			table.setCurrentSelectionColor(new Color(255,192,203));
-		} else if (menuText.contains("Yellow(Sometimes bet/raise and sometimes call)")) {
+		} else if (menuText.contains("Dark blue")) {
+			table.setCurrentSelectionColor(new Color(0,0,255));
+		} else if (menuText.contains("Yellow")) {
 			table.setCurrentSelectionColor(new Color(255, 255, 1));
-		} else if (menuText.contains("Purple(Mostly fold otherwise raise)")) {
+		} else if (menuText.contains("Pink")) {
 			table.setCurrentSelectionColor(new Color(255, 138, 255));
-		} else if (menuText.contains("Blue(Fold/call/raise equally)")) {
+		} else if (menuText.contains("Blueviolet")) {
+			table.setCurrentSelectionColor(new Color(138,43,226));
+		} else if (menuText.contains("Blue")) {
 			table.setCurrentSelectionColor(new Color(3, 255, 255));
-		} else if (menuText.contains("White(Sometimes call sometimes fold)")) {
+		} else if (menuText.contains("White")) {
 			table.setCurrentSelectionColor(new Color(255, 255, 255));
-		} else if (menuText.contains("Dark gray(Always fold)")) {
+		} else if (menuText.contains("Dark gray")) {
 			table.setCurrentSelectionColor(new Color(209, 205, 204));
-		} else if (menuText.contains("Light gray(Not in range)")) {
+		} else if (menuText.contains("Light gray")) {
 			table.setCurrentSelectionColor(new Color(245, 245, 245));
 		} else if (menuText.contains("Save Chart")) {
 			UtilMethodsFactory.removeFromCharts(iniPath.substring(0, iniPath.length() - 3) + "jpg"); // Remove Chart object from static collection to have chart to be build from updated INI file

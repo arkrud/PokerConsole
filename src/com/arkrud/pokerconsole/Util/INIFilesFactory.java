@@ -75,6 +75,8 @@ public class INIFilesFactory {
 	public static String getItemValueFromINI(File iniFile, String iniSectionName, String itemName) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(iniSectionName);
+		System.out.println(iniSectionName);
+		System.out.println(itemName);
 		return iniSection.getItem(itemName).getValue();
 	}
 
