@@ -87,13 +87,11 @@ public class CustomTableModel extends AbstractTableModel {
 
 	public void generateTableData(String imagePath) {
 		BufferedImage image = null;
-		//System.out.println(imagePath);
 		try {
 			image = ImageIO.read(new File(UtilMethodsFactory.getConfigPath() + imagePath));
 			 
 		} catch (IOException ex) {
 			try {
-				System.out.println(UtilMethodsFactory.getConfigPath() + imagePath.split("\\.")[0] + "jpg");
 				image = ImageIO.read(new File(UtilMethodsFactory.getConfigPath() + imagePath.split("\\.")[0] + ".jpg"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -135,8 +133,6 @@ public class CustomTableModel extends AbstractTableModel {
 					UtilMethodsFactory.addToCharts(imagePath.substring(0, imagePath.length() - 3) + "jpg", chart);
 				} else {
 					HashMap<String, String> iniCellDta = new HashMap<String, String>();
-					System.out.println(ystart);
-					System.out.println(xstart);
 					int clr = image.getRGB(ystart, xstart);
 					int alpha = (clr >> 24) & 255;
 					int red = (clr & 0x00ff0000) >> 16;

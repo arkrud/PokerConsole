@@ -83,7 +83,7 @@ public class AddTreeFrame extends JDialog implements ActionListener {
 			dash.getTreeTabbedPane().setSelectedIndex(dash.getTreeTabbedPane().indexOfTab(solution));
 			JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
-			tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(),tree.getTheTree());
+			tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(),tree.getTheTree(), true);
 			this.dispose();
 		} else {
 			this.dispose();

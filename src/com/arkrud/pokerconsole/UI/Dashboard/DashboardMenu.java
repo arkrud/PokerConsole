@@ -312,7 +312,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 					UtilMethodsFactory.unZipUpdate(solutionPackagePath, destDirectory);
 					tree.refreshTreeNode((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), strategyName);
 					dash.getTreeTabbedPane().setSelectedIndex(dash.getTreeTabbedPane().indexOfTab(strategyName));
-					tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), tree.getTheTree());
+					tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(), tree.getTheTree(), true);
 					return null;
 				};
 

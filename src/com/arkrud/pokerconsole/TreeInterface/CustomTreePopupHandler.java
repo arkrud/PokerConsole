@@ -249,7 +249,7 @@ public class CustomTreePopupHandler implements ActionListener {
 					DefaultMutableTreeNode actionNode = new DefaultMutableTreeNode(pokerAction);
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
 					((DefaultTreeModel) tree.getModel()).insertNodeInto(actionNode, top, top.getChildCount());
-					theTree.setSelection(actionNode, theTree.getTheTree());
+					theTree.setSelection(actionNode, theTree.getTheTree(), true);
 					JTabbedPane pane = dash.getTreeTabbedPane();
 					pane.setTitleAt(pane.getSelectedIndex(), constructNewTabName(pane));
 					updateConfigFile(oldTreeName, oldAppStatus, oldAutoNamingStatus, constructNewTabName(pane), s);
@@ -291,7 +291,7 @@ public class CustomTreePopupHandler implements ActionListener {
 					UtilMethodsFactory.createFolder(sizingDir);
 					DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
 					((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, node, sizingNode.getChildCount());
-					theTree.setSelection(sizingNode, theTree.getTheTree());
+					theTree.setSelection(sizingNode, theTree.getTheTree(), true);
 					dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), constructNewTabName(dash.getTreeTabbedPane()));
 					updateConfigFile(oldTreeName, oldAppStatus, oldAutoNamingStatus, constructNewTabName(dash.getTreeTabbedPane()), s);
 				}
