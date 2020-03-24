@@ -19,6 +19,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import com.arkrud.pokerconsole.Poker.Fork;
 import com.arkrud.pokerconsole.Poker.PokerAction;
 import com.arkrud.pokerconsole.Poker.PokerHandSizing;
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
@@ -132,6 +133,8 @@ public class CustomTreePopupHandler implements ActionListener {
 				removePokerPositon(node, obj);
 			} else if (ac.equals("ADD OPPONENTS POSITION / HERO RANGE")) {
 				addOpponentPosition(node);
+			} else if (ac.equals("ADD FORK")) {
+				addFork(node, obj);
 			} else if (ac.equals("CHANGE CHARTS ORDER")) {
 				Enumeration<?> en = node.children();
 				@SuppressWarnings("unchecked")
@@ -290,6 +293,47 @@ public class CustomTreePopupHandler implements ActionListener {
 					File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + ((PokerAction) obj).getNodeText() + "/" + s);
 					UtilMethodsFactory.createFolder(sizingDir);
 					DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(sizing);
+					((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, node, sizingNode.getChildCount());
+					theTree.setSelection(sizingNode, theTree.getTheTree(), true);
+					dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), constructNewTabName(dash.getTreeTabbedPane()));
+					updateConfigFile(oldTreeName, oldAppStatus, oldAutoNamingStatus, constructNewTabName(dash.getTreeTabbedPane()), s);
+				}
+			}
+		} else {
+		}
+	}
+	
+	/**
+	 * Adds the PokerSizing (PS) node to the solution tree node.
+	 * <ul>
+	 * <li>Opens input dialog for user to provide the name of the PS.
+	 * <li>Initialize PS object with the name provided by user.
+	 * <li>Create File object using absolute path to directory representing PS object.
+	 * <li>Create this folder on file system.
+	 * <li>Create DefaultMutableTreeNode with user object of PS object.
+	 * <li>Create DefaultMutableTreeNode of the top of the solution.
+	 * <li>Add PS node as a last child of root node.
+	 * <li>Expand all nodes in the branch to show all PA nodes including new one.
+	 * </ul>
+	 *
+	 * @param node The parent PA node
+	 * @param obj The parent node user object
+	 */
+	private void addFork(DefaultMutableTreeNode node, Object obj) {
+		String s = (String) JOptionPane.showInputDialog(dash, "New Fork", "Add Fork", JOptionPane.PLAIN_MESSAGE, null, null, null);
+		if (s != null) {
+			if (checkForNewObjectName(node, s)) {
+				JOptionPane.showConfirmDialog(null, "The fork is Already there", "Duplicated Fork Warning", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				if ((s != null) && (s.length() > 0)) {
+					String oldTreeName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
+					String oldAppStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Solutions", oldTreeName);
+					String oldAutoNamingStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
+					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
+					Fork fork = new Fork(s);
+					File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + ((PokerAction) obj).getNodeText() + "/" + s);
+					UtilMethodsFactory.createFolder(sizingDir);
+					DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(fork);
 					((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, node, sizingNode.getChildCount());
 					theTree.setSelection(sizingNode, theTree.getTheTree(), true);
 					dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), constructNewTabName(dash.getTreeTabbedPane()));
@@ -713,6 +757,14 @@ public class CustomTreePopupHandler implements ActionListener {
 			INIFilesFactory.removeINIFileItemsWithPattern(UtilMethodsFactory.getConsoleConfig(), "Solutions", treeName);
 			INIFilesFactory.removeINIFileItemsWithPattern(UtilMethodsFactory.getConsoleConfig(), "Selections", treeName);
 			INIFilesFactory.removeINIFileItemsWithPattern(UtilMethodsFactory.getConsoleConfig(), "Autonaming", treeName);
+			String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
+			INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", String.valueOf(Integer.parseInt(solutiosCountString) - 1), "solutionsinuse");
+			String newSolutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
+			if (Integer.parseInt(newSolutiosCountString) < 2) {
+				dash.getDashboardMenu().getMultiSolutionMode().setEnabled(true);
+				dash.getDashboardMenu().getMultiSolutionMode().setText("Disable Multi-Solution Naming");
+			}
+			
 		} else if (response == JOptionPane.CLOSED_OPTION) {
 		}
 	}

@@ -50,6 +50,15 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 	 * Scrollable Frames to be added to scrollable desktop.
 	 */
 	private JScrollableDesktopPane jScrollableDesktopPane = null;
+	
+	public DashboardMenu getDashboardMenu() {
+		return dashboardMenu;
+	}
+
+	public void setDashboardMenu(DashboardMenu dashboardMenu) {
+		this.dashboardMenu = dashboardMenu;
+	}
+
 	/**
 	 * Tabbed Pane to hold multiple custom trees.
 	 */

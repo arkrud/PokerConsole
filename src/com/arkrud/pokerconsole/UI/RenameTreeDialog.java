@@ -32,7 +32,13 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Rename Solution Tab");
 		String tabText = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
-		solutionName = new JLabel(tabText.split("-")[0] + "-");
+		
+		String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "multisolution");
+		if(Boolean.parseBoolean(solutiosCountString)) {
+			solutionName = new JLabel(tabText.split("-")[0] + "-");
+		} else {
+			solutionName = new JLabel("");
+		}
 		solutionCopyName = new JTextField(15);
 		solutionCopyName.setText(tabText.substring(tabText.indexOf("-") + 1, tabText.length()));
 
