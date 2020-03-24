@@ -81,7 +81,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		manualSolutionNaming = new JMenuItem("Enable Manual Solution Copy Naming");
 		manualSolutionNaming.setEnabled(false);
 		manageTrees = new JMenuItem("Hide/Show Trees");
-		multiSolutionMode = new JMenuItem("Enable Multi-Solution Naming");
+		multiSolutionMode = new JMenuItem("Enable Multi-Solution");
 		String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
 		if (Integer.parseInt(solutiosCountString) > 1) {
 			multiSolutionMode.setEnabled(false);
@@ -150,8 +150,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser);
 		} else if (menuText.contains("Add Solution")) {
 			String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
-			String multiSolutioModeString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
-			if (Integer.parseInt(solutiosCountString) > 0 && Boolean.parseBoolean(multiSolutioModeString)) {
+			String multiSolutioModeString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "multisolution");
+			if (Integer.parseInt(solutiosCountString) > 0 && !Boolean.parseBoolean(multiSolutioModeString)) {
 				JOptionPane.showMessageDialog(null, "You are in Single Solution-Mode", "Single Solution-Mode Warning", JOptionPane.ERROR_MESSAGE);
 			} else {
 			UtilMethodsFactory.showDialogToDesctop("AddTreesFrame", 250, 140, dash, null, null, null, null, null, null);
@@ -164,9 +164,9 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			restoreConsoleData();
 		} else if (menuText.contains("Enable Manual Solution Copy Naming")) {
 			enableManualNaming();
-		} else if (menuText.contains("Enable Multi-Solution Naming")) {
+		} else if (menuText.contains("Enable Multi-Solution")) {
 			enableMultisolutionMode();
-		} else if (menuText.contains("Disable Multi-Solution Naming")) {
+		} else if (menuText.contains("Disable Multi-Solution")) {
 			disableMultisolutionMode();
 		} else if (menuText.contains("Disable Manual Solution Copy Naming")) {
 			disableManualNaming();
@@ -492,7 +492,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 */
 	private void enableMultisolutionMode() {
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "multisolution");
-		multiSolutionMode.setText("Disable Multi-Solution Naming");
+		multiSolutionMode.setText("Disable Multi-Solution");
 	}
 
 	/**
@@ -504,7 +504,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 */
 	public void disableMultisolutionMode() {
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "multisolution");
-		multiSolutionMode.setText("Enable Multi-Solution Naming");
+		multiSolutionMode.setText("Enable Multi-Solution");
 	}
 
 	/**

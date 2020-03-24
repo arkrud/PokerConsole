@@ -75,7 +75,7 @@ public class AddTreeFrame extends JDialog implements ActionListener {
 			String solution = appTreeTextField.getText();
 			Boolean visibility = treeStateCheckBox.isSelected();
 			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Solutions", solution, visibility);
-			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", solution, "true");
+			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Autonaming", solution, "false");
 			INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", solution, solution);
 			File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + solution);
 			UtilMethodsFactory.createFolder(sizingDir);
