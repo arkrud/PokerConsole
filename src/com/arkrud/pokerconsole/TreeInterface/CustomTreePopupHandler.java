@@ -759,11 +759,7 @@ public class CustomTreePopupHandler implements ActionListener {
 			INIFilesFactory.removeINIFileItemsWithPattern(UtilMethodsFactory.getConsoleConfig(), "Autonaming", treeName);
 			String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
 			INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", String.valueOf(Integer.parseInt(solutiosCountString) - 1), "solutionsinuse");
-			String newSolutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
-			if (Integer.parseInt(newSolutiosCountString) < 2) {
-				dash.getDashboardMenu().getMultiSolutionMode().setEnabled(true);
-				dash.getDashboardMenu().getMultiSolutionMode().setText("Disable Multi-Solution");
-			}
+			
 			
 		} else if (response == JOptionPane.CLOSED_OPTION) {
 		}

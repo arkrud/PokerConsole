@@ -2,6 +2,7 @@ package com.arkrud.pokerconsole.Poker;
 
 public class PokerStrategy implements TreeNodeState {
 	private String nodeText;
+	//private String strategyName;
 	private boolean selected;
 
 	public PokerStrategy(String nodeText) {
@@ -55,4 +56,14 @@ public class PokerStrategy implements TreeNodeState {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public String getStrategyName() {
+		return nodeText;
+	}
+
+	/*public void setStrategyName(String strategyName) {
+		this.strategyName = nodeText;
+	}*/
+	
+	
 }

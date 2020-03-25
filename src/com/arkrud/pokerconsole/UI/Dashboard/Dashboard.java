@@ -98,7 +98,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tree);
 		if (!hasTab(tabName)) {
-			treeTabbedPane.insertTab(tabName, null, jScrollPane, null, 0);
+			treeTabbedPane.insertTab(tabName, null, jScrollPane, tabName, 0);
 		}
 		return tree;
 	}
@@ -402,7 +402,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 			}
 			CustomTree customTree = new CustomTree(this, treeName, editable);
 			treeScroll.setViewportView(customTree);
-			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, null, 0);
+			treeTabbedPane.insertTab(trees.get(x), null, treeScroll, trees.get(x), 0);
 			treeTabbedPane.setSelectedIndex(0);
 			x++;
 		}

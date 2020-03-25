@@ -32,21 +32,13 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Rename Solution Tab");
 		String tabText = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
-		
-		String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "multisolution");
-		if(Boolean.parseBoolean(solutiosCountString)) {
-			solutionName = new JLabel(tabText.split("-")[0] + "-");
-		} else {
-			solutionName = new JLabel("");
-		}
+		solutionName = new JLabel(tabText.split("-")[0] + "-");
 		solutionCopyName = new JTextField(15);
 		solutionCopyName.setText(tabText.substring(tabText.indexOf("-") + 1, tabText.length()));
-
 		renameButton = new JButton("Rename");
 		cancelButton = new JButton("Cancel");
 		renameButton.addActionListener(this);
 		cancelButton.addActionListener(this);
-
 		solutionCopyName.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -57,24 +49,21 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 		tabNamePanel.add(solutionName);
 		tabNamePanel.add(solutionCopyName);
 		SpringUtilities.makeCompactGrid(tabNamePanel, 1, 2, 10, 10, 10, 10);
-
 		buttonsPanel = new JPanel(new SpringLayout());
 		buttonsPanel.add(renameButton);
 		buttonsPanel.add(cancelButton);
 		SpringUtilities.makeCompactGrid(buttonsPanel, 1, 2, 10, 10, 10, 10);
-
 		renameTabPanel = new JPanel();
 		renameTabPanel.add(tabNamePanel);
 		renameTabPanel.add(buttonsPanel);
 		add(renameTabPanel, BorderLayout.CENTER);
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();
 		if (theButton.getText().equals("Rename")) {
-			String tabName = solutionName.getText()  + solutionCopyName.getText();
+			String tabName = solutionName.getText() + solutionCopyName.getText();
 			String oldTreeName = dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex());
 			String newSolutionCopyName = solutionName.getText() + solutionCopyName.getText();
 			String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", oldTreeName);
@@ -82,10 +71,8 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 			INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Solutions", newSolutionCopyName, oldTreeName);
 			INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Autonaming", newSolutionCopyName, oldTreeName);
 			INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Selections", oldItemValue, newSolutionCopyName);
-			//INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", newSolutionCopyName);
+			// INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", newSolutionCopyName);
 			tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), tabName);
-			
-			
 			this.dispose();
 		} else {
 			this.dispose();

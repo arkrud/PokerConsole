@@ -84,8 +84,6 @@ public class AddTreeFrame extends JDialog implements ActionListener {
 			JScrollPane scroll = (JScrollPane) (dash.getTreeTabbedPane().getSelectedComponent());
 			CustomTree tree = (CustomTree) scroll.getViewport().getView();
 			tree.setSelection((DefaultMutableTreeNode) tree.getTreeModel().getRoot(),tree.getTheTree(), true);
-			String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
-			INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", String.valueOf(Integer.parseInt(solutiosCountString) + 1), "solutionsinuse");
 			this.dispose();
 		} else {
 			this.dispose();

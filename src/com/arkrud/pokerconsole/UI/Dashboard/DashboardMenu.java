@@ -42,7 +42,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	/**
 	 * Menu item.
 	 */
-	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees, multiSolutionMode, openReadOnlyDash, populateChartDB, dataSourceSelection,
+	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees,  openReadOnlyDash, populateChartDB, dataSourceSelection,
 			manualSolutionNaming, backupConsoleLayoutAndData, restoreConsoleLayoutAndData;
 	/**
 	 * Reference to dashboard object
@@ -81,11 +81,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		manualSolutionNaming = new JMenuItem("Enable Manual Solution Copy Naming");
 		manualSolutionNaming.setEnabled(false);
 		manageTrees = new JMenuItem("Hide/Show Trees");
-		multiSolutionMode = new JMenuItem("Enable Multi-Solution");
-		String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
-		if (Integer.parseInt(solutiosCountString) > 1) {
-			multiSolutionMode.setEnabled(false);
-		}
+		
 		openReadOnlyDash = new JMenuItem("Open Read Only Dashboard");
 		populateChartDB = new JMenuItem("Load Charts in MongoDB");
 		dataSourceSelection = new JMenuItem();
@@ -111,7 +107,6 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		loadSolution.addActionListener(this);
 		addDashboardUser.addActionListener(this);
 		clearUser.addActionListener(this);
-		multiSolutionMode.addActionListener(this);
 		manageTrees.addActionListener(this);
 		openReadOnlyDash.addActionListener(this);
 		populateChartDB.addActionListener(this);
@@ -126,7 +121,6 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			add(loadSolution);
 			add(manualSolutionNaming);
 			add(manageTrees);
-			add(multiSolutionMode);
 			add(openReadOnlyDash);
 			add(backupConsoleLayoutAndData);
 			add(restoreConsoleLayoutAndData);
@@ -164,10 +158,6 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			restoreConsoleData();
 		} else if (menuText.contains("Enable Manual Solution Copy Naming")) {
 			enableManualNaming();
-		} else if (menuText.contains("Enable Multi-Solution")) {
-			enableMultisolutionMode();
-		} else if (menuText.contains("Disable Multi-Solution")) {
-			disableMultisolutionMode();
 		} else if (menuText.contains("Disable Manual Solution Copy Naming")) {
 			disableManualNaming();
 		} else if (menuText.contains("Hide/Show Trees")) {
@@ -482,31 +472,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		manualSolutionNaming.setText("Enable Manual Solution Copy Naming");
 	}
 	
-	/**
-	 * Enable manual naming.
-	 * <ul>
-	 * <li>Retrieve the currently selected tab.
-	 * <li>Update INI configuration file to set manual naming of the tree tab headers flag to true (editable).
-	 * <li>Set appropriate menu item text.
-	 * </ul>
-	 */
-	private void enableMultisolutionMode() {
-		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "multisolution");
-		multiSolutionMode.setText("Disable Multi-Solution");
-	}
-
-	/**
-	 * Disable manual naming.
-	 * <ul>
-	 * <li>Update INI configuration file to set manual naming of the tree tab headers flag to false (auto naming).
-	 * <li>Set appropriate menu item text.
-	 * </ul>
-	 */
-	public void disableMultisolutionMode() {
-		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "multisolution");
-		multiSolutionMode.setText("Enable Multi-Solution");
-	}
-
+	
 	/**
 	 * Load Charts To Mongo DB.
 	 * <ul>
@@ -662,13 +628,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		// TODO Auto-generated method stub
 	}
 
-	public JMenuItem getMultiSolutionMode() {
-		return multiSolutionMode;
-	}
-
-	public void setMultiSolutionMode(JMenuItem multiSolutionMode) {
-		this.multiSolutionMode = multiSolutionMode;
-	}
+	
 	
 	
 }
