@@ -3,6 +3,7 @@ package com.arkrud.pokerconsole.Poker;
 public class Fork implements TreeNodeState {
 	private String nodeText;
 	private boolean selected;
+	private String chartPaneTitle;
 	public Fork(String nodeText) {
 		super();
 		this.nodeText = nodeText;
@@ -30,14 +31,13 @@ public class Fork implements TreeNodeState {
 	}
 
 	@Override
-	public void setChartPaneTitle(String title) {
-		// TODO Auto-generated method stub
+	public void setChartPaneTitle(String chartPaneTitle) {
+		this.chartPaneTitle = chartPaneTitle;
 	}
 
 	@Override
 	public String getChartPaneTitle() {
-		// TODO Auto-generated method stub
-		return null;
+		return chartPaneTitle;
 	}
 
 	@Override

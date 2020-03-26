@@ -55,7 +55,7 @@ import com.arkrud.pokerconsole.pokercardchart.CustomTable;
  *
  */
 public class UtilMethodsFactory {
-	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Apply Template",
+	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Add Fork", "Apply Template",
 			"Add Action", "Add Hero Position", "Add Opponents Position / Hero Range", "Duplicate", "Change Charts Order" };
 	private static HashMap<String, TableChartPanel> charts = new HashMap<String, TableChartPanel>();
 

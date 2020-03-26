@@ -141,6 +141,12 @@ public class CustomTreePopupHandler implements ActionListener {
 				List<DefaultMutableTreeNode> list = (List<DefaultMutableTreeNode>) Collections.list(en);
 				UtilMethodsFactory.showDialogToDesctop("ChnageChartsOrderDialog", 150 + list.size() * 50, 120, dash, tree, theTree, obj, node, null, null);
 			}
+		} else if (obj instanceof Fork) {
+			if (ac.equals("REMOVE")) {
+				removePokerPositon(node, obj);
+			} else if (ac.equals("ADD OPPONENTS POSITION / HERO RANGE")) {
+				addOpponentPosition(node);
+			}
 		} else if (obj instanceof PokerOpponentPosition) {
 			if (ac.equals("APPLY TEMPLATE")) {
 				applyTemplate(obj);
@@ -209,7 +215,17 @@ public class CustomTreePopupHandler implements ActionListener {
 							relativePath = "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini";
 							newTitle = pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + s;
 						}
-					}
+					} else if (node.getUserObject() instanceof Fork) {
+						Fork fork = (Fork) (node.getUserObject());
+						DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
+						Object treeObject = parent.getUserObject();
+						PokerPosition pokerPosition = (PokerPosition) treeObject;
+						Object grandParentObject = ((DefaultMutableTreeNode) parent.getParent()).getUserObject();
+						PokerHandSizing pokerHandSizing = (PokerHandSizing) grandParentObject;
+						relativePath = "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + fork.getNodeText() + "/" 
+								+ Integer.toString(node.getChildCount() + 1) + s + ".ini";
+						newTitle = pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + fork.getNodeText() + "-" + s;
+					} 
 					copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 					pokerOpponentPosition.setChartImagePath(relativePath);
 					pokerOpponentPosition.setChartPaneTitle(newTitle);
@@ -331,11 +347,23 @@ public class CustomTreePopupHandler implements ActionListener {
 					String oldAutoNamingStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
 					Fork fork = new Fork(s);
-					File sizingDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + ((PokerAction) obj).getNodeText() + "/" + s);
-					UtilMethodsFactory.createFolder(sizingDir);
-					DefaultMutableTreeNode sizingNode = new DefaultMutableTreeNode(fork);
-					((DefaultTreeModel) tree.getModel()).insertNodeInto(sizingNode, node, sizingNode.getChildCount());
-					theTree.setSelection(sizingNode, theTree.getTheTree(), true);
+					
+					
+					File forkDir = null;
+					PokerPosition pokerPosition = (PokerPosition) (node.getUserObject());
+					Object treeObject = ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+					if (treeObject instanceof PokerHandSizing) {
+						PokerHandSizing pokerHandSizing = (PokerHandSizing) treeObject;
+						forkDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + s);
+					} else if (treeObject instanceof PokerAction) {
+						PokerAction pokerAction = (PokerAction) treeObject;
+						forkDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + s);
+						
+					}
+					UtilMethodsFactory.createFolder(forkDir);
+					DefaultMutableTreeNode forkNode = new DefaultMutableTreeNode(fork);
+					((DefaultTreeModel) tree.getModel()).insertNodeInto(forkNode, node, forkNode.getChildCount());
+					theTree.setSelection(forkNode, theTree.getTheTree(), true);
 					dash.getTreeTabbedPane().setTitleAt(dash.getTreeTabbedPane().getSelectedIndex(), constructNewTabName(dash.getTreeTabbedPane()));
 					updateConfigFile(oldTreeName, oldAppStatus, oldAutoNamingStatus, constructNewTabName(dash.getTreeTabbedPane()), s);
 				}

@@ -21,6 +21,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.arkrud.Shareware.SpringUtilities;
+import com.arkrud.pokerconsole.Poker.Fork;
 import com.arkrud.pokerconsole.Poker.PokerAction;
 import com.arkrud.pokerconsole.Poker.PokerHandSizing;
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
@@ -47,9 +48,11 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	private DefaultMutableTreeNode pokerHandSizingTreeNode = null;
 	private DefaultMutableTreeNode pokerPositionTreeNode = null;
 	private DefaultMutableTreeNode pokerOpponentPositionTreeNode = null;
+	private DefaultMutableTreeNode forkTreeNode = null;
 	private PokerAction pokerAction = null;
 	private PokerHandSizing pokerHandSizing = null;
 	private PokerPosition pokerPosition = null;
+	private Fork fork = null;
 
 	/**
 	 *
@@ -225,7 +228,11 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 											if (((PokerPosition) (childNode2.getUserObject())).getNodeText().equals(pathNodes[2])) {
 												for (int z = 0; z < childCount3; z++) {
 													DefaultMutableTreeNode childNode3 = (DefaultMutableTreeNode) childNode2.getChildAt(z);
-													if (((PokerOpponentPosition) (childNode3.getUserObject())).getNodeText().equals(Integer.toString(z + 1) + pathNodes[3])) {
+													if (childNode3.getUserObject() instanceof PokerOpponentPosition) {
+														if (((PokerOpponentPosition) (childNode3.getUserObject())).getNodeText().equals(Integer.toString(z + 1) + pathNodes[3])) {
+															path = setSelection(childNode3, jTree, false);
+														}
+													} else if (childNode3.getUserObject() instanceof Fork) {
 														path = setSelection(childNode3, jTree, false);
 													}
 												}
@@ -288,6 +295,45 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 						}
 					}
 				} else {
+				}
+			}
+		} else if (pathNodes.length == 5) {
+			for (int i = 0; i < childCount; i++) {
+				DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) node.getChildAt(i);
+				if (childNode.getUserObject() instanceof PokerAction) {
+					if (((PokerAction) (childNode.getUserObject())).getNodeText().equals(pathNodes[0])) {
+						int childCount1 = childNode.getChildCount();
+						for (int x = 0; x < childCount1; x++) {
+							DefaultMutableTreeNode childNode1 = (DefaultMutableTreeNode) childNode.getChildAt(x);
+							int childCount2 = childNode1.getChildCount();
+							if (childNode1.getUserObject() instanceof PokerHandSizing) {
+								if (((PokerHandSizing) (childNode1.getUserObject())).getNodeText().equals(pathNodes[1])) {
+									for (int y = 0; y < childCount2; y++) {
+										DefaultMutableTreeNode childNode2 = (DefaultMutableTreeNode) childNode1.getChildAt(y);
+										int childCount3 = childNode2.getChildCount();
+										if (childNode2.getUserObject() instanceof PokerPosition) {
+											if (((PokerPosition) (childNode2.getUserObject())).getNodeText().equals(pathNodes[2])) {
+												for (int z = 0; z < childCount3; z++) {
+													DefaultMutableTreeNode childNode3 = (DefaultMutableTreeNode) childNode2.getChildAt(z);
+													int childCount4 = childNode3.getChildCount();
+													if (childNode3.getUserObject() instanceof Fork) {
+														if (((Fork) (childNode3.getUserObject())).getNodeText().equals(pathNodes[3])) {
+															for (int n = 0; n < childCount4; n++) {
+																DefaultMutableTreeNode childNode4 = (DefaultMutableTreeNode) childNode3.getChildAt(n);
+																if (((PokerOpponentPosition) (childNode4.getUserObject())).getNodeText().equals(Integer.toString(n + 1) + pathNodes[4])) {
+																	path = setSelection(childNode4, jTree, false);
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -358,18 +404,15 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				if (!node.getName().contains("png")) {
 					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 					if (pokerPosition == null) {
-						pokerOpponentPosition.setChartPaneTitle(
-								pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 						pokerOpponentPosition.setChartImagePath(
-								"Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText()
-										+ "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+								"Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
 						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 						pokerHandSizingTreeNode.add(pokerOpponentPositionTreeNode);
 					} else {
-						pokerOpponentPosition.setChartPaneTitle(
-								pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-						pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/"
-								+ pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+						pokerOpponentPosition
+								.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
 						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
 						pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
 					}
@@ -381,17 +424,38 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				pokerHandSizingTreeNode.add(pokerPositionTreeNode);
 			}
 		} else if (level == 5) {
+			if (node.isFile()) {
+				PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
+				if (!node.getName().contains("png")) {
+					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+					pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
+					pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
+					pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+					pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
+							+ pokerOpponentPosition.getNodeText() + ".ini");
+					pokerOpponentPosition.getNodeText();
+					pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+					pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
+				}
+			} else if (node.isDirectory()) {
+				fork = new Fork(node.getName());
+				forkTreeNode = new DefaultMutableTreeNode(fork);
+				fork.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + fork.getNodeText());
+				pokerPositionTreeNode.add(forkTreeNode);
+			}
+		} else if (level == 6) {
+			System.out.println("Here");
 			PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 			if (!node.getName().contains("png")) {
 				pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
 				pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
 				pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
-				pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+				pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + fork.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
 				pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
-						+ pokerOpponentPosition.getNodeText() + ".ini");
+						+ fork.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
 				pokerOpponentPosition.getNodeText();
 				pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
-				pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
+				forkTreeNode.add(pokerOpponentPositionTreeNode);
 			}
 		} else {
 		}
@@ -481,6 +545,16 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	}
 
 	/**
+	 * Checks if branch node is one of the Fork nodes not sizing or strategy node.
+	 *
+	 * @param nodeText the node text
+	 * @return true, if is poker position
+	 */
+	/*
+	 * private boolean isFork(String nodeText) { String[] handScreenNames = { "3BetOrFold", "WithFlats" }; boolean isFork = false; int x = 0; while (x < handScreenNames.length) { if
+	 * (handScreenNames[x].equals(nodeText)) { isFork = true; break; } x++; } return isFork; }
+	 */
+	/**
 	 * Sets selected node, scrolls to it, and expand children.
 	 *
 	 * @param node the node
@@ -492,7 +566,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		tree.setSelectionPath(treePath);
 		tree.scrollPathToVisible(treePath);
 		if (expandNodesBelow) {
-		expandNodesBelow(node, tree);
+			expandNodesBelow(node, tree);
 		}
 		return treePath;
 	}

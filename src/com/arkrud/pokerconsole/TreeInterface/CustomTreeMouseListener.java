@@ -19,6 +19,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import com.arkrud.pokerconsole.Poker.Fork;
 import com.arkrud.pokerconsole.Poker.PokerAction;
 import com.arkrud.pokerconsole.Poker.PokerHandSizing;
 import com.arkrud.pokerconsole.Poker.PokerOpponentPosition;
@@ -144,6 +145,7 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				} else if (treeObject instanceof PokerPosition) {
 					dropDownMenus.put("Remove", true);
 					dropDownMenus.put("Add Opponents Position / Hero Range", true);
+					dropDownMenus.put("Add Fork", true);
 					dropDownMenus.put("Change Charts Order", true);
 				} else if (treeObject instanceof PokerAction) {
 					dropDownMenus.put("Add Sizing", true);
@@ -156,6 +158,9 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 					dropDownMenus.put("Add Hero Position", true);
 					dropDownMenus.put("Add Opponents Position / Hero Range", true);
 					dropDownMenus.put("Change Charts Order", true);
+				} else if (treeObject instanceof Fork) {
+					dropDownMenus.put("Add Opponents Position / Hero Range", true);
+					dropDownMenus.put("Remove", true);
 				} else {
 				}
 				setMenuAttributes();
@@ -199,6 +204,8 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 				newName = newName + "-" + ((PokerHandSizing) userObject).getNodeText();
 			} else if (userObject instanceof PokerPosition) {
 				newName = newName + "-" + ((PokerPosition) userObject).getNodeText();
+			} else if (userObject instanceof Fork) {
+				newName = newName + "-" + ((Fork) userObject).getNodeText();
 			} else if (userObject instanceof PokerOpponentPosition) {
 				String nameWithPrefix = ((PokerOpponentPosition) userObject).getNodeText();
 				String firstLetter = UtilMethodsFactory.firstLetterOccurence(nameWithPrefix);
