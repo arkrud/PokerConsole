@@ -143,7 +143,7 @@ public class CustomTreePopupHandler implements ActionListener {
 			}
 		} else if (obj instanceof Fork) {
 			if (ac.equals("REMOVE")) {
-				removePokerPositon(node, obj);
+				removeFork(node, obj);
 			} else if (ac.equals("ADD OPPONENTS POSITION / HERO RANGE")) {
 				addOpponentPosition(node);
 			}
@@ -222,10 +222,10 @@ public class CustomTreePopupHandler implements ActionListener {
 						PokerPosition pokerPosition = (PokerPosition) treeObject;
 						Object grandParentObject = ((DefaultMutableTreeNode) parent.getParent()).getUserObject();
 						PokerHandSizing pokerHandSizing = (PokerHandSizing) grandParentObject;
-						relativePath = "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + fork.getNodeText() + "/" 
-								+ Integer.toString(node.getChildCount() + 1) + s + ".ini";
+						relativePath = "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
+								+ fork.getNodeText() + "/" + Integer.toString(node.getChildCount() + 1) + s + ".ini";
 						newTitle = pokerHandSizing.getPokerAction().getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + fork.getNodeText() + "-" + s;
-					} 
+					}
 					copyBlankChartINIFile(UtilMethodsFactory.getConfigPath() + relativePath);
 					pokerOpponentPosition.setChartImagePath(relativePath);
 					pokerOpponentPosition.setChartPaneTitle(newTitle);
@@ -318,7 +318,7 @@ public class CustomTreePopupHandler implements ActionListener {
 		} else {
 		}
 	}
-	
+
 	/**
 	 * Adds the PokerSizing (PS) node to the solution tree node.
 	 * <ul>
@@ -347,18 +347,16 @@ public class CustomTreePopupHandler implements ActionListener {
 					String oldAutoNamingStatus = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", oldTreeName);
 					DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
 					Fork fork = new Fork(s);
-					
-					
 					File forkDir = null;
 					PokerPosition pokerPosition = (PokerPosition) (node.getUserObject());
 					Object treeObject = ((DefaultMutableTreeNode) node.getParent()).getUserObject();
 					if (treeObject instanceof PokerHandSizing) {
 						PokerHandSizing pokerHandSizing = (PokerHandSizing) treeObject;
-						forkDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + s);
+						forkDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
+								+ pokerPosition.getNodeText() + "/" + s);
 					} else if (treeObject instanceof PokerAction) {
 						PokerAction pokerAction = (PokerAction) treeObject;
 						forkDir = new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + s);
-						
 					}
 					UtilMethodsFactory.createFolder(forkDir);
 					DefaultMutableTreeNode forkNode = new DefaultMutableTreeNode(fork);
@@ -662,6 +660,14 @@ public class CustomTreePopupHandler implements ActionListener {
 				PokerHandSizing pokerHandSizing = (PokerHandSizing) parentNode.getUserObject();
 				fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
 						+ opToDelete.getNodeText();
+			} else if (((DefaultMutableTreeNode) node.getParent()).getUserObject() instanceof Fork) {
+				Fork fork = (Fork) parentNode.getUserObject();
+				DefaultMutableTreeNode grandParentNode = (DefaultMutableTreeNode) ((DefaultMutableTreeNode) node.getParent()).getParent();
+				PokerPosition pokerPosition = (PokerPosition) grandParentNode.getUserObject();
+				DefaultMutableTreeNode grandGrandParentNode = (DefaultMutableTreeNode) ((DefaultMutableTreeNode) grandParentNode.getParent());
+				PokerHandSizing pokerHandSizing = (PokerHandSizing) grandGrandParentNode.getUserObject();
+				fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
+						+ pokerPosition.getNodeText() + "/" + fork.getNodeText() + "/" + opToDelete.getNodeText();
 			}
 			dash.closeAllFrames();
 			UtilMethodsFactory.deleteFile(fileSystemPath + ".ini");
@@ -735,6 +741,32 @@ public class CustomTreePopupHandler implements ActionListener {
 		}
 		dash.closeAllFrames();
 	}
+	
+	/**
+	 * Removes the fork.
+	 *
+	 * @param node the node
+	 * @param obj the obj
+	 */
+	private void removeFork(DefaultMutableTreeNode node, Object obj) {
+		int response = JOptionPane.showConfirmDialog(null, "Do you want to remove the Fork", "Fork Removal", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (response == JOptionPane.NO_OPTION) {
+		} else if (response == JOptionPane.YES_OPTION) {
+			Fork fork = (Fork) obj;
+			DefaultMutableTreeNode top = (DefaultMutableTreeNode) tree.getModel().getRoot();
+			if (((DefaultMutableTreeNode) node.getParent()).getUserObject() instanceof PokerPosition) {
+				PokerPosition pokerPosition = (PokerPosition) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+				DefaultMutableTreeNode grandParentNode = (DefaultMutableTreeNode) ((DefaultMutableTreeNode) node.getParent()).getParent();
+				PokerHandSizing pokerHandSizing = (PokerHandSizing) grandParentNode.getUserObject();
+				String fileSystemPath = UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText() + "/" + pokerHandSizing.getPokerAction().getNodeText() + "/" + pokerHandSizing.getNodeText() + "/"
+						+ pokerPosition.getNodeText() + "/" + fork.getNodeText();
+				UtilMethodsFactory.deleteDirectory(new File(fileSystemPath));
+				((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
+			} 
+		} else if (response == JOptionPane.CLOSED_OPTION) {
+		}
+		dash.closeAllFrames();
+	}
 
 	/**
 	 * Removes the poker sizing.
@@ -787,8 +819,6 @@ public class CustomTreePopupHandler implements ActionListener {
 			INIFilesFactory.removeINIFileItemsWithPattern(UtilMethodsFactory.getConsoleConfig(), "Autonaming", treeName);
 			String solutiosCountString = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Config", "solutionsinuse");
 			INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", String.valueOf(Integer.parseInt(solutiosCountString) - 1), "solutionsinuse");
-			
-			
 		} else if (response == JOptionPane.CLOSED_OPTION) {
 		}
 	}

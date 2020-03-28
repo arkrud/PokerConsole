@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.DropMode;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -101,6 +102,9 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		jTree.setBackground(Color.WHITE);
 		ToolTipManager.sharedInstance().registerComponent(jTree);
 		jTree.setCellRenderer(new CustomTreeCellRenderer());
+		/*jTree.setDragEnabled(true);
+		jTree.setDropMode(DropMode.ON_OR_INSERT);
+		jTree.setTransferHandler(new TreeTransferHandler());*/
 		try {
 			getTreePopUpMenu(jTree, editable);
 		} catch (Exception e) {
@@ -444,7 +448,6 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 				pokerPositionTreeNode.add(forkTreeNode);
 			}
 		} else if (level == 6) {
-			System.out.println("Here");
 			PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
 			if (!node.getName().contains("png")) {
 				pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
