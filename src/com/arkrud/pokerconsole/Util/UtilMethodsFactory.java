@@ -48,6 +48,7 @@ import com.arkrud.pokerconsole.UI.Dashboard.CustomTableViewInternalFrame;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.BaseInternalFrame;
 import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
+import com.arkrud.pokerconsole.licensing.LicenseKeyGUI;
 import com.arkrud.pokerconsole.pokercardchart.CustomTable;
 
 /**
@@ -297,6 +298,9 @@ public class UtilMethodsFactory {
 			DefaultMutableTreeNode node, JTabbedPane tabbedPane, JMenuItem addUser) {
 		JDialog dialog = null;
 		switch (frameType) {
+		case "LicenseInfo":
+			dialog = new LicenseKeyGUI(dash, true);
+			break;
 		case "AddTreesFrame":
 			dialog = new AddTreeFrame(dash);
 			break;

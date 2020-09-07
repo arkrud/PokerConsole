@@ -3,8 +3,6 @@ package com.arkrud.pokerconsole.UI.scrollabledesktop;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -192,8 +190,6 @@ public class FramePositioning implements DesktopConstants {
 						i++;
 					}
 					frames[i].setBounds(curCol * 430, curRow * 440, 430, 440);
-					// System.out.println(frameWidth);
-					// System.out.println(frameHeight);
 					i++;
 				}
 			}

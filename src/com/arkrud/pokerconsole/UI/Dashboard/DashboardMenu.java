@@ -33,6 +33,7 @@ import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.MongoDBFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
+import com.arkrud.pokerconsole.licensing.LicenseKeyGUI;
 
 /**
  * Class to build dashboard drop-down menu.<br>
@@ -42,7 +43,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	/**
 	 * Menu item.
 	 */
-	private JMenuItem exit, addDashboardUser, clearUser, addTree, loadSolution, manageTrees,  openReadOnlyDash, populateChartDB, dataSourceSelection,
+	private JMenuItem exit, license, addDashboardUser, clearUser, addTree, loadSolution, manageTrees,  openReadOnlyDash, populateChartDB, dataSourceSelection,
 			manualSolutionNaming, backupConsoleLayoutAndData, restoreConsoleLayoutAndData;
 	/**
 	 * Reference to dashboard object
@@ -58,6 +59,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 */
 	String solutionPackagePath = "";
 	final JFileChooser fc = new JFileChooser();
+	
+	
 
 	/**
 	 * Sole constructor of Dashboard object. <br>
@@ -74,6 +77,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		this.editable = editable;
 		setText("Edit");
 		exit = new JMenuItem("Exit");
+		license = new JMenuItem("License Info");
 		addTree = new JMenuItem("Add Solution");
 		loadSolution = new JMenuItem("Load Solution");
 		backupConsoleLayoutAndData = new JMenuItem("Backup Console Layout And Data");
@@ -103,6 +107,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			dataSourceSelection.setText("Use INI Files");
 		}
 		exit.addActionListener(this);
+		license.addActionListener(this);
 		addTree.addActionListener(this);
 		loadSolution.addActionListener(this);
 		addDashboardUser.addActionListener(this);
@@ -116,7 +121,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		restoreConsoleLayoutAndData.addActionListener(this);
 		if (editable) {
 			add(addDashboardUser);
-			add(clearUser);
+			//add(clearUser);
 			add(addTree);
 			add(loadSolution);
 			add(manualSolutionNaming);
@@ -127,7 +132,9 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 			// add(dataSourceSelection);
 			// add(populateChartDB);
 		}
+		add(license);
 		add(exit);
+		
 	}
 
 	/**
@@ -140,6 +147,12 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		String menuText = ((JMenuItem) e.getSource()).getText();
 		if (menuText.contains("Exit")) {
 			UtilMethodsFactory.exitApp();
+		} else if (menuText.contains("License Info")) {
+			//UtilMethodsFactory.showDialogToDesctop("LicenseInfo", 300, 350, dash, null, null, null, null, null, null);
+			LicenseKeyGUI licenseKeyGUI = new LicenseKeyGUI(dash, true);
+			licenseKeyGUI.checkLicense();
+			licenseKeyGUI.updateGUIFieldsWithLicenseObject();
+			licenseKeyGUI.setVisible(true);
 		} else if (menuText.contains("Add User")) {
 			UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, addDashboardUser);
 		} else if (menuText.contains("Add Solution")) {

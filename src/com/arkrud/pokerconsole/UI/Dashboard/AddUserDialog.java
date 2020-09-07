@@ -83,7 +83,12 @@ public class AddUserDialog extends JDialog implements ActionListener {
 			credentials.put("user", user);
 			credentials.put("password", PropertyValueEncryptionUtils.encrypt(password, UtilMethodsFactory.getEncryptor()));
 			INIFilesFactory.addINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security", credentials);
+			if (addUser != null) {
 			addUser.setText("Update User");
+			} else {
+				INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Security", user, "user");
+				INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Security", PropertyValueEncryptionUtils.encrypt(password, UtilMethodsFactory.getEncryptor()), "password");
+			}
 			this.dispose();
 		} else if (theButton.getText().equals("Edit")) {
 			INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Security", user, "user");

@@ -15,19 +15,16 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import org.jasypt.properties.PropertyValueEncryptionUtils;
 
 import com.arkrud.Shareware.SpringUtilities;
-import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
-import com.arkrud.pokerconsole.licensing.LicenseJDialog;
-import com.arkrud.pokerconsole.licensing.ProductLicense;
+import com.arkrud.pokerconsole.licensing.LicenseKeyGUI;
 import com.license4j.License;
-import com.license4j.LicenseValidator;
+import com.license4j.ValidationStatus;
 
 /**
  * Main Class For Poker Console.<br>
@@ -40,10 +37,7 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	private JPanel loginDialogPanel, imagePanel, overPanel;
 	private JLabel userNameLabel, passwordLabel, iconLabel;
 	private JTextField userNameTextField, passwordTextField;
-	// ProductLicense class
-	private static ProductLicense productLicense;
-	// License object
-	private static License license;
+	private static LicenseKeyGUI licenseKeyGUI;
 
 	/**
 	 * Sole constructor of <code>LoginFrame</code> object.
@@ -98,6 +92,16 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 		// Add Login Window panel to Login Window
 		setTitle("Login To AWS Console");
 		add(overPanel, BorderLayout.CENTER);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowOpened(java.awt.event.WindowEvent evt) {
+				formWindowOpened(evt);
+			}
+		});
+		licenseKeyGUI = new LicenseKeyGUI(this, true);
+	}
+
+	public LicenseKeyGUI getLicenseKeyGUI() {
+		return licenseKeyGUI;
 	}
 
 	@Override
@@ -115,8 +119,9 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 					JOptionPane.showMessageDialog(this, "Incorrect login or password", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				showDashboard();
-				this.dispose();
+				// showDashboard();
+				UtilMethodsFactory.showDialogToDesctop("AddUser", 350, 140, null, null, null, null, null, null, null);
+				// this.dispose();
 			}
 		} else {
 			this.dispose();
@@ -144,78 +149,19 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	public static void main(String[] args) throws Exception {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			checkActivation();
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					// Show login prompt if security enabled or open Dashboard directly
-					if (INIFilesFactory.hasINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security")) { // Check in INI file if secure login is enabled
-						showLoginFrame();
-					} else {
-						showDashboard();
-					}
+					// if (INIFilesFactory.hasINIFileSection(UtilMethodsFactory.getConsoleConfig(), "Security")) { // Check in INI file if secure login is enabled
+					showLoginFrame();
+					// } else {
+					// showDashboard();
+					// }
 				}
 			});
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Something Went Wrong!!!");
-		}
-	}
-
-	private static void checkActivation() {
-		// load settings and/or license from config file.
-		productLicense = new ProductLicense();
-		if (productLicense.loadLicense()) {
-			license = productLicense.validateLicense(false);
-		}
-		if (license == null) {
-			// license object is null, either there is no config file, or config
-			// file does not include a license, so display licensing window.
-			new LicenseJDialog(null, true).setVisible(true);
-		} else {
-			// license found
-			switch (license.getValidationStatus()) {
-			case LICENSE_VALID:
-				// license is valid, so continue running your software
-				if (license.isActivationRequired()) {
-					// if it requires activation, but not activated yet, display activation days remaining.
-					JOptionPane.showMessageDialog(null, "Activation required, days left: " + license.getLicenseActivationDaysRemaining(null), "Activation Requires", JOptionPane.ERROR_MESSAGE);
-				}
-				if (license.getLicenseText() != null && license.getLicenseText().getLicenseExpireDaysRemaining(null) > 0 && license.getLicenseText().getLicenseExpireDaysRemaining(null) < 30) {
-					// expiration date is set, and less than 30 days remaining, SO if you like display a message?
-					JOptionPane.showMessageDialog(null, "License will expire soon, days left: " + license.getLicenseText().getLicenseExpireDaysRemaining(null), "License Expiration", JOptionPane.ERROR_MESSAGE);
-				}
-				// Here check for license availability (blacklist). Method checks for license on server,
-				// also it checks for activated licenses. If it returns -1 you can be sure that given
-				// license is deleted from server, so notify customer and close software because of illegal
-				// license usage.
-				// This check runs in a thread so it will not block software.
-				SwingWorker<License, License> worker = new SwingWorker<License, License>() {
-					int blacklistCheck;
-
-					@Override
-					protected void done() {
-						if (blacklistCheck == -1) {
-							System.err.println(blacklistCheck);
-							JOptionPane.showMessageDialog(null, "This is a blacklisted license. You are using an illegal license.\n\nSoftware will be closed.", "License Error", JOptionPane.ERROR_MESSAGE);
-							System.exit(-1);
-						}
-					}
-
-					@Override
-					protected License doInBackground() {
-						blacklistCheck = LicenseValidator.checkOnlineAvailability(ProductLicense.publicKey, license, 3000);
-						return null;
-					}
-				};
-				worker.execute();
-				break;
-			default:
-				// ValidationStatus is not LICENSE_VALID, display a message dialog and display licensing window.
-				// YOU CAN CHECK FOR OTHER VALIDATION STATUS HERE LIKE EXPIRED, USAGE LIMIT REACHED ETC,
-				// THEN MAKE ANY OTHER THINGS.
-				JOptionPane.showMessageDialog(null, "License error: " + license.getValidationStatus(), "License Error", JOptionPane.ERROR_MESSAGE);
-				new LicenseJDialog(null, true).setVisible(true);
-			}
 		}
 	}
 
@@ -232,4 +178,49 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 		frame.setLocation(x, y);
 		frame.setVisible(true);
 	}
+
+	private void formWindowOpened(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowOpened
+		/**
+		 * COPY THIS METHOD.
+		 *
+		 *
+		 * We will check license here in "formWindowOpened" so that license window will be displayed after user will see main product window.
+		 *
+		 * Depending license status, we will display license window.
+		 *
+		 * If license on disk is not valid, display license window. ALSO it is good to disable some features or menu items like below; so that user will not be able to use product without a valid license. OR
+		 * software may be directly closed with an error.
+		 */
+		License license = licenseKeyGUI.checkLicense();
+		if (license != null) {
+			if (license.getValidationStatus() == ValidationStatus.LICENSE_VALID) {
+				/**
+				 * License is valid, so run your software product.
+				 */
+				/**
+				 * But If license require activation, check if license is activated. If license is not activated check the activation period. If allowed activation period is expired but user still did not complete
+				 * activation, display license GUI for user to complete activation.
+				 */
+				if (license.isActivationRequired() && license.getLicenseActivationDaysRemaining(null) == 0) {
+					JOptionPane.showMessageDialog(null, "Your license activation period is over, activate on the next window.", "License Activation", WIDTH);
+					// This is an example, and we just disable main file menu.
+					// filejMenu.setEnabled(false);
+					licenseKeyGUI.setVisible(true);
+				}
+			} else {
+				/**
+				 * If license status is not valid, display message to display license status; and disable some software features etc.
+				 */
+				JOptionPane.showMessageDialog(null, "Your license is not valid (" + license.getValidationStatus() + ")", "License Error", WIDTH);
+				// This is an example, and we just disable main file menu.
+				// filejMenu.setEnabled(false);
+				licenseKeyGUI.setVisible(true);
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "You should have a valid license to run this software.", "License Error", JOptionPane.ERROR_MESSAGE);
+			// This is an example, and we just disable main file menu.
+			// filejMenu.setEnabled(false);
+			licenseKeyGUI.setVisible(true);
+		}
+	}// GEN-LAST:event_formWindowOpened
 }
