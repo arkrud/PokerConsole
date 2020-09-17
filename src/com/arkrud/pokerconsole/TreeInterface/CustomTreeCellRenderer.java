@@ -17,18 +17,12 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
 public class CustomTreeCellRenderer extends DefaultTreeCellRenderer {
 	private static final long serialVersionUID = 1L;
-		
 
 	// Change tree node icons and text
 	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-		
-		
-		
-		
 		DefaultMutableTreeNode n = (DefaultMutableTreeNode) value;
-		
 		Object obj = n.getUserObject();
 		if (obj instanceof PokerStrategy) {
 			setText(((PokerStrategy) obj).getNodeText());
@@ -40,7 +34,12 @@ public class CustomTreeCellRenderer extends DefaultTreeCellRenderer {
 			setText(((PokerHandSizing) obj).getNodeText());
 			setIcon(UtilMethodsFactory.populateInterfaceImages("interfaceimages").get("sizing"));
 		} else if (obj instanceof PokerOpponentPosition) {
-			setText(((PokerOpponentPosition) obj).getNodeText().substring(1));
+			if (Character.isDigit(((PokerOpponentPosition) obj).getNodeText().charAt(0)) & Character.isDigit(((PokerOpponentPosition) obj).getNodeText().charAt(1))) {
+				setText(((PokerOpponentPosition) obj).getNodeText().substring(2));
+			} else {
+				setText(((PokerOpponentPosition) obj).getNodeText().substring(1));
+			}
+			// setText(((PokerOpponentPosition) obj).getNodeText().substring(1));
 			setIcon(UtilMethodsFactory.populateInterfaceImages("interfaceimages").get("donk"));
 		} else if (obj instanceof PokerPosition) {
 			setText(((PokerPosition) obj).getNodeText());

@@ -113,7 +113,46 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 			if (INIFilesFactory.readINI(UtilMethodsFactory.getConsoleConfig()).hasSection("Security")) {
 				String decryptedPassword = PropertyValueEncryptionUtils.decrypt(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Security", "password"), UtilMethodsFactory.getEncryptor());
 				if (value1.contains(INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Security", "user")) && value2.contains(decryptedPassword)) {
-					showDashboard();
+					
+					
+					License license = licenseKeyGUI.checkLicense();
+					if (license != null) {
+						if (license.getValidationStatus() == ValidationStatus.LICENSE_VALID) {
+							/**
+							 * License is valid, so run your software product.
+							 */
+							/**
+							 * But If license require activation, check if license is activated. If license is not activated check the activation period. If allowed activation period is expired but user still did not complete
+							 * activation, display license GUI for user to complete activation.
+							 */
+							if (license.isActivationRequired() && license.getLicenseActivationDaysRemaining(null) == 0) {
+								JOptionPane.showMessageDialog(null, "Your license activation period is over, activate on the next window.", "License Activation", WIDTH);
+								// This is an example, and we just disable main file menu.
+								// filejMenu.setEnabled(false);
+								licenseKeyGUI.setVisible(true);
+							} else {
+								showDashboard();
+							}
+						} else {
+							/**
+							 * If license status is not valid, display message to display license status; and disable some software features etc.
+							 */
+							JOptionPane.showMessageDialog(null, "Your license is not valid (" + license.getValidationStatus() + ")", "License Error", WIDTH);
+							// This is an example, and we just disable main file menu.
+							// filejMenu.setEnabled(false);
+							licenseKeyGUI.setVisible(true);
+							
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "You should have a valid license to run this software.", "License Error", JOptionPane.ERROR_MESSAGE);
+						// This is an example, and we just disable main file menu.
+						// filejMenu.setEnabled(false);
+						licenseKeyGUI.setVisible(true);
+					}
+					
+					
+					
+					
 					this.dispose();
 				} else {
 					JOptionPane.showMessageDialog(this, "Incorrect login or password", "Error", JOptionPane.ERROR_MESSAGE);

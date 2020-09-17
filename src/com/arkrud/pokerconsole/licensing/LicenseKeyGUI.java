@@ -38,7 +38,7 @@ public class LicenseKeyGUI extends javax.swing.JDialog {
 			+ "02818100b5ae2e8ef8f19c7ac59ac2f4df95f938ae693f161354e20f6c8d" + "f7f9d442b3c89d8785d23083973c0274d6b83b21672671fc13b88f2fca1c" + "1c8a562b65beb7fdb591cf374d59afd93a6b28131ab36ddae80bdb360ff9"
 			+ "84d0bc83c3d63f38b02c03RSA4102413SHA512withRSAf9b4c5f73a3155b" + "fd26ea6396264b1822d53ce6cf4767717553a4e1b530828ef0203010001";
 	/* REQUIRED. It is used in license key validation. */
-	private final String internalString = "arkrud-string";
+	private final String internalString = "30-2-365";
 	/**
 	 * OPTIONAL. If you are using name and company in license validation, you should also add name and company input fields for user to input; then set these two variables.
 	 */
