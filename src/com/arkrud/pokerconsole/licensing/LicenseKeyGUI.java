@@ -46,7 +46,7 @@ public class LicenseKeyGUI extends javax.swing.JDialog {
 	private final String nameforValidation = null;
 	private final String companyforValidation = null;
 	
-	/**
+		/**
 	 * OPTIONAL. If you generated a node-locked license key. Details on integer value is explained in user guide. 0 means no hardware ID validation.
 	 */
 	private final int hardwareIDMethod = 0;
