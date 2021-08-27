@@ -23,7 +23,7 @@ import org.apache.commons.io.FileUtils;
  * LicenseKeyGUI.
  *
  */
-public class LicenseKeyGUI extends javax.swing.JDialog {
+public class LicenseKeyGUI extends javax.swing.JDialog {  
 	/**
 	 * 
 	 */
