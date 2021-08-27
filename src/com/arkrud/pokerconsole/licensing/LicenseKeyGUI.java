@@ -34,7 +34,7 @@ public class LicenseKeyGUI extends javax.swing.JDialog {
 	 *
 	 * You should modify following variables according to your product and license details. Required variables must be defined, all others optional and depends on your licensing implementation.
 	 */
-	/* REQUIRED. There is a unique public key for each product. */
+	/* REQUIRED. There is a unique public key for each product.    */
 	private final String publicKey = "30819f300d06092a864886f70d010101050003818d003081893032301006" + "072a8648ce3d02002EC311215SHA512withECDSA106052b81040006031e0" + "0040c42f7bca35c1430554093b21a48aed2f1c7ddb36a924efa93409536G"
 			+ "02818100b5ae2e8ef8f19c7ac59ac2f4df95f938ae693f161354e20f6c8d" + "f7f9d442b3c89d8785d23083973c0274d6b83b21672671fc13b88f2fca1c" + "1c8a562b65beb7fdb591cf374d59afd93a6b28131ab36ddae80bdb360ff9"
 			+ "84d0bc83c3d63f38b02c03RSA4102413SHA512withRSAf9b4c5f73a3155b" + "fd26ea6396264b1822d53ce6cf4767717553a4e1b530828ef0203010001";
@@ -45,6 +45,7 @@ public class LicenseKeyGUI extends javax.swing.JDialog {
 	 */
 	private final String nameforValidation = null;
 	private final String companyforValidation = null;
+	
 	/**
 	 * OPTIONAL. If you generated a node-locked license key. Details on integer value is explained in user guide. 0 means no hardware ID validation.
 	 */
