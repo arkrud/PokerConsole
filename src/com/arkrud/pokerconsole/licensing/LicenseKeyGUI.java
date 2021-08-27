@@ -29,6 +29,7 @@ public class LicenseKeyGUI extends javax.swing.JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * MODIFY BELOW THIS LINE ACCORDING TO YOUR PRODUCT AND LICENSE DETAILS. **********************************************************************
 	 *
