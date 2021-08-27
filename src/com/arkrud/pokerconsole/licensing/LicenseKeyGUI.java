@@ -3,7 +3,7 @@
  */
 package com.arkrud.pokerconsole.licensing;
 
-import com.license4j.ActivationStatus;
+import com.license4j.ActivationStatus; 
 import com.license4j.License;
 import com.license4j.LicenseValidator;
 import com.license4j.ValidationStatus;
