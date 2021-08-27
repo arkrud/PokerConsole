@@ -58,6 +58,7 @@ public class LicenseKeyGUI extends javax.swing.JDialog {
 	 * OPTIONAL. If you are using edition and version validation, you should define this product's edition and version here.
 	 */
 	private final String productEdition = null;
+	
 	private final String productVersion = null;
 	/**
 	 * OPTINAL. If it is null, new Date() is called and used. If you want to use another custom date/time source, you can define date here.
