@@ -122,8 +122,11 @@ public class CustomTableModel extends AbstractTableModel {
 				String cellText = pokerHands[y][x];
 				ystart = ystart + steps[x];
 				java.awt.Color color = null;
+				
 				if (useINI) {
+					
 					HashMap<String, String> itemMap = colorsMap.get(pokerHands[y][x]);
+					
 					int alpha = Integer.parseInt(itemMap.get("AlphaRGB"));
 					int red = Integer.parseInt(itemMap.get("RedRGB"));
 					int green = Integer.parseInt(itemMap.get("GreenRGB"));

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -76,12 +77,20 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 						if (obj instanceof PokerOpponentPosition) {
 							PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) obj;
 							dash.closeAllFrames();
-							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, dash);
-							INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()),
-									((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
+							if (editable) {
+								JOptionPane.showMessageDialog(null, "Not Editable images will not be displayed", "Not Editable Error", JOptionPane.ERROR_MESSAGE);
+							} else {
+								UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, dash);
+								INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()),
+										((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
+							}
 						}
 					} else {
-						showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
+						if (editable) {
+							JOptionPane.showMessageDialog(null, "Not Editable images will not be displayed", "Not Editable Error", JOptionPane.ERROR_MESSAGE);
+						} else {
+							showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
+						}
 					}
 					if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", dynamicTreeName).equals("true")) {
 						String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", oldTreeName);

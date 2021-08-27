@@ -250,6 +250,7 @@ public class Dashboard extends JFrame implements InternalFrameListener, WindowLi
 						for (DefaultMutableTreeNode s : list) {
 							if (s.getUserObject() instanceof PokerOpponentPosition) {
 								PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) s.getUserObject();
+								System.out.println("editable:" + editable);
 								if (editable) {
 									UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, this);
 								} else {

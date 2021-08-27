@@ -21,6 +21,7 @@ public class TableChartPanel extends JPanel {
 	public TableChartPanel(String imagePath, boolean editable, Dashboard dash) {
 		super();
 		CustomTable table = new CustomTable(imagePath, this, editable, dash);
+		
 		this.table = table;
 		add(table);
 		setBackground(Color.WHITE);

@@ -262,6 +262,8 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 	 *            flag to define the editable state of the Poker hand charts
 	 */
 	private void generateChart(File node, boolean editable) {
+		System.out.println(editable);
+		
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
 		TableChartPanel chartPanel = new TableChartPanel(imagePath, editable, dash);
@@ -453,7 +455,7 @@ public class DashboardMenu extends JMenu implements ActionListener, PropertyChan
 		CustomTree customTree = (CustomTree) jScrollPane.getViewport().getView();
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) customTree.getTreeModel().getRoot();
 		PokerStrategy pokerStrategy = (PokerStrategy) node.getUserObject();
-		generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()), editable);
+		generateChartImages(new File(UtilMethodsFactory.getConfigPath() + "Images/" + pokerStrategy.getNodeText()), false);
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "false", "editable");
 		showDashboard(false);
 	}

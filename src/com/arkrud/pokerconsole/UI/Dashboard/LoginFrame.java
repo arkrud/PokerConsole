@@ -240,6 +240,7 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 				 * But If license require activation, check if license is activated. If license is not activated check the activation period. If allowed activation period is expired but user still did not complete
 				 * activation, display license GUI for user to complete activation.
 				 */
+				
 				if (license.isActivationRequired() && license.getLicenseActivationDaysRemaining(null) == 0) {
 					JOptionPane.showMessageDialog(null, "Your license activation period is over, activate on the next window.", "License Activation", WIDTH);
 					// This is an example, and we just disable main file menu.

@@ -40,6 +40,7 @@ import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.UI.AddHandsDialog;
 import com.arkrud.pokerconsole.UI.AddTreeFrame;
 import com.arkrud.pokerconsole.UI.ChnageChartsOrderDialog;
+import com.arkrud.pokerconsole.UI.ImageChartPanel;
 import com.arkrud.pokerconsole.UI.ManageTreesDialog;
 import com.arkrud.pokerconsole.UI.RenameTreeDialog;
 import com.arkrud.pokerconsole.UI.TableChartPanel;
@@ -62,10 +63,22 @@ public class UtilMethodsFactory {
 
 	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, Dashboard dash) {
 		JScrollableDesktopPane jScrollableDesktopPane = dash.getJScrollableDesktopPane();
-		TableChartPanel chartPanel = new TableChartPanel(chartImagePath, editable, dash);
-		BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
-		theFrame.setName(chartImagePath);
-		UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
+		System.out.println("second: " + editable);
+		if (editable) {
+			TableChartPanel chartPanel = new TableChartPanel(chartImagePath, editable, dash);
+			BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
+			theFrame.setName(chartImagePath);
+			UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
+		} else {
+			System.out.println("chartImagePath: " + chartImagePath);
+			ImageChartPanel chartPanel = new ImageChartPanel(chartImagePath);
+			BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
+			theFrame.setName(chartImagePath);
+			UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
+		}
+		
+		
+		
 	}
 
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
