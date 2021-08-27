@@ -51,8 +51,7 @@ public class LicenseKeyGUI extends javax.swing.JDialog {
 		/**
 	 * OPTIONAL. If you generated a node-locked license key. Details on integer value is explained in user guide. 0 means no hardware ID validation.
 	 */
-	private final int hardwareIDMethod = 0;
-	
+	private final int hardwareIDMethod = 0;	
 	/* REQUIRED. The product ID is used to validate activated license text. */
 	private final String productID = "poker-console";
 	/**
