@@ -144,7 +144,7 @@ public class FramePositioning implements DesktopConstants {
 	 *           if ((numCols-curCol) <= remainder) { <BR>
 	 *                 numRows++; // add an extra row for this column <BR>
 	 *           } <BR>
-	 *     }    </code><BR>
+	 *     }  </code><BR>
 	 */
 	public void tileInternalFrames() {
 		// Rectangle viewP = desktopScrollpane.getViewport().getViewRect();
