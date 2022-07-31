@@ -8,6 +8,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JRadioButtonMenuItem;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class constructs the "Window" menu items for use by
  * {@link com.tomtessier.scrollabledesktop.DesktopMenu DesktopMenu}.
@@ -19,6 +20,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 public class ConstructWindowMenu implements ActionListener {
 
+      /** The desktop mediator. */
       private DesktopMediator desktopMediator;
 
 
@@ -76,10 +78,10 @@ public class ConstructWindowMenu implements ActionListener {
 
 
       /**
-        * propogates actionPerformed menu event to the DesktopMediator reference
-        *
-        * @param e the ActionEvent to propogate
-        */
+       * propogates actionPerformed menu event to the DesktopMediator reference.
+       *
+       * @param e the ActionEvent to propogate
+       */
       @Override
 	public void actionPerformed(ActionEvent e) {
             desktopMediator.actionPerformed(e);

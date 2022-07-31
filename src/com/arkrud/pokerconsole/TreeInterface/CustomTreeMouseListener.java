@@ -1,6 +1,6 @@
 package com.arkrud.pokerconsole.TreeInterface;
 
-import java.awt.Point;  
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
@@ -34,23 +34,60 @@ import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The listener interface for receiving customTreeMouse events.
+ * The class that is interested in processing a customTreeMouse
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addCustomTreeMouseListener<code> method. When
+ * the customTreeMouse event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see CustomTreeMouseEvent
+ */
 public class CustomTreeMouseListener implements MouseListener, PropertyChangeListener {
+	
+	/** The popup. */
 	private JPopupMenu popup;
+	
+	/** The dash. */
 	private Dashboard dash;
+	
+	/** The loc. */
 	private Point loc;
+	
+	/** The drop down menus. */
 	private HashMap<String, Boolean> dropDownMenus = new HashMap<String, Boolean>();
+	
+	/** The editable. */
 	private boolean editable;
 
+	/**
+	 * Instantiates a new custom tree mouse listener.
+	 *
+	 * @param popup the popup
+	 * @param dash the dash
+	 * @param editable the editable
+	 */
 	public CustomTreeMouseListener(JPopupMenu popup, Dashboard dash, boolean editable) {
 		this.editable = editable;
 		this.popup = popup;
 		this.dash = dash;
 	}
 
+	/**
+	 * Gets the loc.
+	 *
+	 * @return the loc
+	 */
 	public Point getLoc() {
 		return loc;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2) {
@@ -77,20 +114,12 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 						if (obj instanceof PokerOpponentPosition) {
 							PokerOpponentPosition pokerOpponentPosition = (PokerOpponentPosition) obj;
 							dash.closeAllFrames();
-							if (editable) {
-								JOptionPane.showMessageDialog(null, "Not Editable images will not be displayed", "Not Editable Error", JOptionPane.ERROR_MESSAGE);
-							} else {
-								UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, dash);
-								INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()),
-										((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
-							}
+							UtilMethodsFactory.addChartFrameToScrolableDesctop(pokerOpponentPosition.getChartImagePath(), pokerOpponentPosition.getChartPaneTitle(), editable, dash);
+							INIFilesFactory.addINIFileItemToSection(UtilMethodsFactory.getConsoleConfig(), "Selections", dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()),
+									((PokerOpponentPosition) (((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject())).getChartPaneTitle());
 						}
 					} else {
-						if (editable) {
-							JOptionPane.showMessageDialog(null, "Not Editable images will not be displayed", "Not Editable Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
-						}
+						showDiagrams(path, pane, dash.getTreeTabbedPane().getTitleAt(dash.getTreeTabbedPane().getSelectedIndex()));
 					}
 					if (INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Autonaming", dynamicTreeName).equals("true")) {
 						String oldItemValue = INIFilesFactory.getItemValueFromINI(UtilMethodsFactory.getConsoleConfig(), "Selections", oldTreeName);
@@ -108,31 +137,56 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseExited(MouseEvent e) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		checkForPopup(e);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 	}
 
+	/**
+	 * Sets the loc.
+	 *
+	 * @param loc the new loc
+	 */
 	public void setLoc(Point loc) {
 		this.loc = loc;
 	}
 
+	/**
+	 * Check for popup.
+	 *
+	 * @param e the e
+	 */
 	private void checkForPopup(MouseEvent e) {
 		// Set all tree nodes drop-down menus not visible for all nodes
 		hideAllMenuItems();
@@ -179,12 +233,18 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		}
 	}
 
+	/**
+	 * Hide all menu items.
+	 */
 	private void hideAllMenuItems() {
 		for (int i = 0; i < UtilMethodsFactory.dropDownsNames.length; i++) {
 			dropDownMenus.put(UtilMethodsFactory.dropDownsNames[i], false);
 		}
 	}
 
+	/**
+	 * Sets the menu attributes.
+	 */
 	private void setMenuAttributes() {
 		int i = 0;
 		while (i < popup.getComponentCount()) {
@@ -199,6 +259,12 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		}
 	}
 
+	/**
+	 * Construct new tab name.
+	 *
+	 * @param jTabbedPane the j tabbed pane
+	 * @return the string
+	 */
 	private String constructNewTabName(JTabbedPane jTabbedPane) {
 		String newName = "";
 		CustomTree customTree = (CustomTree) ((JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex())).getViewport().getView();
@@ -225,6 +291,13 @@ public class CustomTreeMouseListener implements MouseListener, PropertyChangeLis
 		return newName;
 	}
 
+	/**
+	 * Show diagrams.
+	 *
+	 * @param path the path
+	 * @param pane the pane
+	 * @param treeTabName the tree tab name
+	 */
 	private void showDiagrams(TreePath path, JScrollableDesktopPane pane, String treeTabName) {
 		dash.closeAllFrames();
 		ImageChartPanel imageChartPanel;

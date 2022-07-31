@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class creates a base radio button menu item. ActionListener, mnemonic,
  * keyboard shortcut, and title are set via the constructor.
@@ -20,10 +21,10 @@ import javax.swing.KeyStroke;
 public class BaseRadioButtonMenuItem extends JRadioButtonMenuItem
             implements FrameAccessorInterface {
 
-      /**
-	 *
-	 */
+      /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The associated frame. */
 	private BaseInternalFrame associatedFrame;
 
 
@@ -88,21 +89,21 @@ public class BaseRadioButtonMenuItem extends JRadioButtonMenuItem
 
 
      /**
-       *  sets the associated frame
-       *
-       * @param associatedFrame the BaseInternalFrame object to associate with
-       * the menu item
-       */
+      *  sets the associated frame.
+      *
+      * @param associatedFrame the BaseInternalFrame object to associate with
+      * the menu item
+      */
       @Override
 	public void setAssociatedFrame(BaseInternalFrame associatedFrame) {
             this.associatedFrame = associatedFrame;
       }
 
      /**
-       *  returns the associated frame
-       *
-       * @return the BaseInternalFrame object associated with this menu item
-       */
+      *  returns the associated frame.
+      *
+      * @return the BaseInternalFrame object associated with this menu item
+      */
       @Override
 	public BaseInternalFrame getAssociatedFrame() {
             return associatedFrame;

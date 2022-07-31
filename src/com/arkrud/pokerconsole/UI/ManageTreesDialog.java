@@ -22,24 +22,39 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author arkrud
+ * The Class ManageTreesDialog.
  *
+ * @author arkrud
  */
 public class ManageTreesDialog extends JDialog implements ActionListener {
+	
+	/** The dash. */
 	private Dashboard dash;
+	
+	/** The cancel button. */
 	private JButton applyButton, cancelButton;
+	
+	/** The manage trees panel. */
 	private JPanel manageTreesPanel;
+	
+	/** The tree name label. */
 	private JLabel treeLabel, treeStateLabel, treeNameLabel;
+	
+	/** The tree state check box. */
 	private JCheckBox treeStateCheckBox;
+	
+	/** The felds map. */
 	private HashMap<JLabel, JCheckBox> feldsMap = new HashMap<JLabel, JCheckBox>();
-	/**
-	 *
-	 */
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Instantiates a new manage trees dialog.
 	 *
+	 * @param dash the dash
 	 */
 	public ManageTreesDialog(Dashboard dash) {
 		this.dash = dash;

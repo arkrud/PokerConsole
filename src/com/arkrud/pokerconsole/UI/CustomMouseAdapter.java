@@ -16,16 +16,33 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CustomMouseAdapter.
+ */
 public class CustomMouseAdapter extends MouseAdapter {
+	
+	/** The tabbed pane. */
 	private JTabbedPane tabbedPane;
+	
+	/** The dash. */
 	private Dashboard dash;
 
+	/**
+	 * Instantiates a new custom mouse adapter.
+	 *
+	 * @param tabbedPane the tabbed pane
+	 * @param dash the dash
+	 */
 	public CustomMouseAdapter(JTabbedPane tabbedPane, Dashboard dash) {
 		super();
 		this.tabbedPane = tabbedPane;
 		this.dash = dash;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		final int index = tabbedPane.getUI().tabForCoordinate(tabbedPane, e.getX(), e.getY());
@@ -66,11 +83,22 @@ public class CustomMouseAdapter extends MouseAdapter {
 		}
 	}
 
+	/**
+	 * Rename strategy tab.
+	 *
+	 * @param tabbedPane the tabbed pane
+	 */
 	private void renameStrategyTab(JTabbedPane tabbedPane) {
 		UtilMethodsFactory.showDialogToDesctop("RenameSolutioTab", 250, 140, dash, null, null, null, null, tabbedPane, null);
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Autonaming", "false", tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()));
 	}
 
+	/**
+	 * Removes the tree copy.
+	 *
+	 * @param tabbedPane the tabbed pane
+	 * @param dash the dash
+	 */
 	private void removeTreeCopy(JTabbedPane tabbedPane, Dashboard dash) {
 		int response = JOptionPane.showConfirmDialog(null, "Do you want to remove remove this Tree Copy", "Solution Tree Copy removal",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);

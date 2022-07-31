@@ -1,11 +1,13 @@
 package com.arkrud.pokerconsole.UI.scrollabledesktop;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 
 import javax.swing.JDesktopPane;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides a custom desktop pane.
  * The drag mode is set to
@@ -22,21 +24,21 @@ import javax.swing.UIManager;
 
 public class BaseDesktopPane extends JDesktopPane  {
 
-      /**
-	 *
-	 */
+      /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The desktop scrollpane. */
 	private DesktopScrollPane desktopScrollpane;
 
      /**
-       *  creates the BaseDesktopPane
-       *
-       * @param desktopScrollpane a reference to DesktopScrollPane
-       */
+      *  creates the BaseDesktopPane.
+      *
+      * @param desktopScrollpane a reference to DesktopScrollPane
+      */
       public BaseDesktopPane(DesktopScrollPane desktopScrollpane) {
 
         this.desktopScrollpane = desktopScrollpane;
-
+        //desktopScrollpane.setBackground(Color.GREEN);
         // setup the UIManager to replace the look and feel DesktopIconUI
         // with an empty one (EmptyDesktopIconUI) so that the desktop icon
         // for the internal frame is not painted

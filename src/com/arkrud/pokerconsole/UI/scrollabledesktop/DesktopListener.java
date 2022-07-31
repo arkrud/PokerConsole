@@ -3,6 +3,7 @@ package com.arkrud.pokerconsole.UI.scrollabledesktop;
 import java.awt.event.*;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides common Component and Action Listeners for
  * other objects in the system.
@@ -14,6 +15,7 @@ import java.awt.event.*;
 
 public class DesktopListener implements ComponentListener, ActionListener {
 
+      /** The desktop mediator. */
       private DesktopMediator desktopMediator;
 
 
@@ -32,39 +34,39 @@ public class DesktopListener implements ComponentListener, ActionListener {
       ///
 
       /**
-      * updates the preferred size of the desktop when either an internal frame
-      * or the scrollable desktop pane itself is resized
-      *
-      * @param e the ComponentEvent
-      */
+       * updates the preferred size of the desktop when either an internal frame
+       * or the scrollable desktop pane itself is resized.
+       *
+       * @param e the ComponentEvent
+       */
       public void componentResized(ComponentEvent e) {
             desktopMediator.resizeDesktop();
       }
 
       /**
-      * revalidates the desktop to ensure the viewport has the proper
-      * height/width settings when a new component is shown upon the desktop
-      *
-      * @param e the ComponentEvent
-      */
+       * revalidates the desktop to ensure the viewport has the proper
+       * height/width settings when a new component is shown upon the desktop.
+       *
+       * @param e the ComponentEvent
+       */
       public void componentShown(ComponentEvent e) {
             desktopMediator.revalidateViewport();
       }
 
       /**
-      * updates the preferred size of the desktop when a component is moved
-      *
-      * @param e the ComponentEvent
-      */
+       * updates the preferred size of the desktop when a component is moved.
+       *
+       * @param e the ComponentEvent
+       */
       public void componentMoved(ComponentEvent e) {
             desktopMediator.resizeDesktop();
       }
 
       /**
-      * interface placeholder
-      *
-      * @param e the ComponentEvent
-      */
+       * interface placeholder.
+       *
+       * @param e the ComponentEvent
+       */
       public void componentHidden(ComponentEvent e) {}
 
 

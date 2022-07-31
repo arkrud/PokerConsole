@@ -8,14 +8,26 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellRenderer;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CustomTableCellRenderer.
+ */
 public class CustomTableCellRenderer extends JLabel implements TableCellRenderer {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Instantiates a new custom table cell renderer.
+	 */
 	public CustomTableCellRenderer() {
 		// MUST do this for background to show up
 		setOpaque(true);
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+	 */
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object columnObject, boolean isSelected, boolean hasFocus, int row, int column) {
 		Font font = this.getFont();

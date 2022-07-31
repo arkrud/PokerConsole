@@ -11,6 +11,7 @@ import javax.swing.JInternalFrame;
 
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides internal frame positioning methods for use by {@link com.tomtessier.scrollabledesktop.DesktopScrollPane DesktopScrollPane}.
  *
@@ -18,11 +19,15 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
  * @version 1.0 11-Aug-2001
  */
 public class FramePositioning implements DesktopConstants {
+	
+	/** The desktop scrollpane. */
 	private DesktopScrollPane desktopScrollpane;
+	
+	/** The auto tile. */
 	private boolean autoTile; // determines whether to cascade or tile windows
 
 	/**
-	 * creates the FramePositioning object
+	 * creates the FramePositioning object.
 	 *
 	 * @param desktopScrollpane a reference to the DesktopScrollpane object
 	 */
@@ -31,7 +36,7 @@ public class FramePositioning implements DesktopConstants {
 	}
 
 	/**
-	 * turns autoTile on or off
+	 * turns autoTile on or off.
 	 *
 	 * @param autoTile <code>boolean</code> representing autoTile mode. If <code>true</code>, then all new frames are tiled automatically. If <code>false</code>, then all new frames are cascaded
 	 *            automatically.
@@ -46,7 +51,7 @@ public class FramePositioning implements DesktopConstants {
 	}
 
 	/**
-	 * returns the autoTile mode
+	 * returns the autoTile mode.
 	 *
 	 * @return <code>boolean</code> representing current autoTile mode
 	 */
@@ -55,7 +60,7 @@ public class FramePositioning implements DesktopConstants {
 	}
 
 	/**
-	 * cycles through and cascades all internal frames
+	 * cycles through and cascades all internal frames.
 	 */
 	public void cascadeInternalFrames() {
 		JInternalFrame[] frames = desktopScrollpane.getAllFrames();
@@ -72,10 +77,9 @@ public class FramePositioning implements DesktopConstants {
 	}
 
 	/**
-	 * cascades the given internal frame based upon the current number of internal frames
+	 * cascades the given internal frame based upon the current number of internal frames.
 	 *
 	 * @param f the internal frame to cascade
-	 *
 	 * @return a Point object representing the location assigned to the internal frame upon the virtual desktop
 	 */
 	public Point cascadeInternalFrame(JInternalFrame f) {
@@ -83,12 +87,12 @@ public class FramePositioning implements DesktopConstants {
 	}
 
 	/**
-	 * cascades the given internal frame based upon supplied count
+	 * cascades the given internal frame based upon supplied count.
 	 *
 	 * @param f the internal frame to cascade
-	 * @count the count to use in cascading the internal frame
-	 *
+	 * @param count the count
 	 * @return a Point object representing the location assigned to the internal frame upon the virtual desktop
+	 * @count the count to use in cascading the internal frame
 	 */
 	private Point cascadeInternalFrame(JInternalFrame f, int count) {
 		int windowWidth = f.getWidth();
@@ -140,7 +144,7 @@ public class FramePositioning implements DesktopConstants {
 	 *           if ((numCols-curCol) <= remainder) { <BR>
 	 *                 numRows++; // add an extra row for this column <BR>
 	 *           } <BR>
-	 *     } </code><BR>
+	 *     }    </code><BR>
 	 */
 	public void tileInternalFrames() {
 		// Rectangle viewP = desktopScrollpane.getViewport().getViewRect();

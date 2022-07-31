@@ -31,6 +31,7 @@ import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * CustomTree class to build Poker charts management Tree.<br>
  * It will organize chart by Poker Strategy, Poker Action, Sizing, Poker table position, and Poker table opponent position.<br>
@@ -40,23 +41,36 @@ import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
  *
  */
 public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSelectionListener {
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	/** The top. */
 	private DefaultMutableTreeNode top;
+	/** The tree model. */
 	private DefaultTreeModel treeModel;
+	/** The j tree. */
 	private JTree jTree;
+	/** The dash. */
 	private Dashboard dash;
+	/** The poker action tree node. */
 	private DefaultMutableTreeNode pokerActionTreeNode = null;
+	/** The poker hand sizing tree node. */
 	private DefaultMutableTreeNode pokerHandSizingTreeNode = null;
+	/** The poker position tree node. */
 	private DefaultMutableTreeNode pokerPositionTreeNode = null;
+	/** The poker opponent position tree node. */
 	private DefaultMutableTreeNode pokerOpponentPositionTreeNode = null;
+	/** The fork tree node. */
 	private DefaultMutableTreeNode forkTreeNode = null;
+	/** The poker action. */
 	private PokerAction pokerAction = null;
+	/** The poker hand sizing. */
 	private PokerHandSizing pokerHandSizing = null;
+	/** The poker position. */
 	private PokerPosition pokerPosition = null;
+	/** The fork. */
 	private Fork fork = null;
 
 	/**
-	 *
 	 * Sole constructor of CustomTree object. <br>
 	 * Defines the behavior of the tree interface and adds it to the JPanel<br>
 	 * <ul>
@@ -82,6 +96,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 *
 	 * @param dash reference to the Dashboard object
 	 * @param treeName tree usage identifier (OT or OCT)
+	 * @param editable the editable
 	 */
 	public CustomTree(Dashboard dash, String treeName, boolean editable) {
 		this.dash = dash;
@@ -92,7 +107,7 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		jTree.addTreeWillExpandListener(this);
 		jTree.setRowHeight(0);
 		try {
-			createNodes(top);
+			createNodes(top, editable);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -155,11 +170,11 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * @param node the node
 	 * @param strategyName the strategy name
 	 */
-	public void refreshTreeNode(DefaultMutableTreeNode node, String strategyName) {
+	public void refreshTreeNode(DefaultMutableTreeNode node, String strategyName, boolean editable) {
 		node.removeAllChildren();
 		treeModel.nodeStructureChanged(node);
 		try {
-			createNodes(node);
+			createNodes(node, editable);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -296,12 +311,12 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 											}
 										} else if (childNode2.getUserObject() instanceof PokerOpponentPosition) {
 											if (childCount2 < 10) {
-												if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(Integer.toString(y+1) + pathNodes[2])) {
+												if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(Integer.toString(y + 1) + pathNodes[2])) {
 													path = setSelection(childNode2, jTree, false);
 												}
 											} else {
 												if (Character.isDigit(((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().charAt(1))) {
-													if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(Integer.toString(y+10) + pathNodes[2])) {
+													if (((PokerOpponentPosition) (childNode2.getUserObject())).getNodeText().equals(Integer.toString(y + 10) + pathNodes[2])) {
 														path = setSelection(childNode2, jTree, false);
 													}
 												} else {
@@ -382,11 +397,18 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 
 	/**
 	 * Override interface method to specify what to do when tree will collapse. <br>
+	 *
+	 * @param event the event
+	 * @throws ExpandVetoException the expand veto exception
 	 */
 	@Override
 	public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.event.TreeWillExpandListener#treeWillExpand(javax.swing.event.TreeExpansionEvent)
+	 */
 	@Override
 	public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
 	}
@@ -410,8 +432,9 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * @param node the node
 	 * @param treeNode the tree node
 	 */
-	private void buildTreeNodes(File node, DefaultMutableTreeNode treeNode) {
+	private void buildTreeNodes(File node, DefaultMutableTreeNode treeNode, boolean editable) {
 		int level = node.getAbsoluteFile().getPath().split("\\\\").length - UtilMethodsFactory.getConfigPath().split("/").length;
+		;
 		if (level == 0) {
 		} else if (level == 2) {
 			pokerAction = new PokerAction(node.getName());
@@ -419,13 +442,24 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			treeNode.add(pokerActionTreeNode);
 		} else if (level == 3) {
 			if (node.isFile()) {
-				if (!node.getName().contains("png")) {
-					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
-					pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-					pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
-					DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
-					pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
+				if (editable) {
+					if (!node.getName().contains("png")) {
+						PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
+						pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+						pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+						pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
+					}
+				} else {
+					if (!node.getName().contains("ini")) {
+						PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
+						pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+						pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+						pokerActionTreeNode.add(pokerOpponentPositionTreeNode);
+					}
 				}
 			} else if (node.isDirectory()) {
 				if (isPokerPosition(node.getName())) {
@@ -441,20 +475,39 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			}
 		} else if (level == 4) {
 			if (node.isFile()) {
-				if (!node.getName().contains("png")) {
-					PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-					if (isParentAPokerPosition(node.getParent())) {
-						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText().substring(1));
-						pokerOpponentPosition
-								.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
-						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
-						pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
-					} else {
-						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-						pokerOpponentPosition
-								.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
-						DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
-						pokerHandSizingTreeNode.add(pokerOpponentPositionTreeNode);
+				if (editable) {
+					if (!node.getName().contains("png")) {
+						PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
+						if (isParentAPokerPosition(node.getParent())) {
+							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText().substring(1));
+							pokerOpponentPosition
+									.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+							DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+							pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
+						} else {
+							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+							pokerOpponentPosition
+									.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+							DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+							pokerHandSizingTreeNode.add(pokerOpponentPositionTreeNode);
+						}
+					}
+				} else {
+					if (!node.getName().contains("ini")) {
+						PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
+						if (isParentAPokerPosition(node.getParent())) {
+							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText().substring(1));
+							pokerOpponentPosition
+									.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerPosition.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+							DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+							pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
+						} else {
+							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+							pokerOpponentPosition
+									.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+							DefaultMutableTreeNode pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+							pokerHandSizingTreeNode.add(pokerOpponentPositionTreeNode);
+						}
 					}
 				}
 			} else if (node.isDirectory()) {
@@ -466,20 +519,38 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		} else if (level == 5) {
 			if (node.isFile()) {
 				PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-				if (!node.getName().contains("png")) {
-					if (Character.isDigit(pokerOpponentPosition.getNodeText().charAt(0)) & Character.isDigit(pokerOpponentPosition.getNodeText().charAt(1))) {
-						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(2));
-					} else {
-						pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+				if (editable) {
+					if (!node.getName().contains("png")) {
+						if (Character.isDigit(pokerOpponentPosition.getNodeText().charAt(0)) & Character.isDigit(pokerOpponentPosition.getNodeText().charAt(1))) {
+							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(2));
+						} else {
+							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+						}
+						pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+						pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
+						pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
+						pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
+								+ pokerOpponentPosition.getNodeText() + ".ini");
+						pokerOpponentPosition.getNodeText();
+						pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+						pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
 					}
-					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
-					pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
-					pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
-					pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
-							+ pokerOpponentPosition.getNodeText() + ".ini");
-					pokerOpponentPosition.getNodeText();
-					pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
-					pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
+				} else {
+					if (!node.getName().contains("ini")) {
+						if (Character.isDigit(pokerOpponentPosition.getNodeText().charAt(0)) & Character.isDigit(pokerOpponentPosition.getNodeText().charAt(1))) {
+							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(2));
+						} else {
+							pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+						}
+						pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+						pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
+						pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
+						pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
+								+ pokerOpponentPosition.getNodeText() + ".ini");
+						pokerOpponentPosition.getNodeText();
+						pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+						pokerPositionTreeNode.add(pokerOpponentPositionTreeNode);
+					}
 				}
 			} else if (node.isDirectory()) {
 				fork = new Fork(node.getName());
@@ -489,23 +560,37 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 			}
 		} else if (level == 6) {
 			PokerOpponentPosition pokerOpponentPosition = new PokerOpponentPosition(node.getName().split("\\.")[0]);
-			if (!node.getName().contains("png")) {
-				pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
-				pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
-				pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
-				pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + fork.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
-				pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
-						+ fork.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
-				pokerOpponentPosition.getNodeText();
-				pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
-				forkTreeNode.add(pokerOpponentPositionTreeNode);
+			if (editable) {
+				if (!node.getName().contains("png")) {
+					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+					pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
+					pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
+					pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + fork.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+					pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
+							+ fork.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+					pokerOpponentPosition.getNodeText();
+					pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+					forkTreeNode.add(pokerOpponentPositionTreeNode);
+				}
+			} else {
+				if (!node.getName().contains("ini")) {
+					pokerOpponentPosition.setPokerAction(pokerAction.getNodeText());
+					pokerOpponentPosition.setPokerHandSizing(pokerHandSizing.getNodeText());
+					pokerOpponentPosition.setPokerPosition(pokerPosition.getNodeText());
+					pokerOpponentPosition.setChartPaneTitle(pokerAction.getNodeText() + "-" + pokerHandSizing.getNodeText() + "-" + pokerPosition.getNodeText() + "-" + fork.getNodeText() + "-" + pokerOpponentPosition.getNodeText().substring(1));
+					pokerOpponentPosition.setChartImagePath("Images/" + ((PokerStrategy) treeNode.getUserObject()).getNodeText() + "/" + pokerAction.getNodeText() + "/" + pokerHandSizing.getNodeText() + "/" + pokerPosition.getNodeText() + "/"
+							+ fork.getNodeText() + "/" + pokerOpponentPosition.getNodeText() + ".ini");
+					pokerOpponentPosition.getNodeText();
+					pokerOpponentPositionTreeNode = new DefaultMutableTreeNode(pokerOpponentPosition);
+					forkTreeNode.add(pokerOpponentPositionTreeNode);
+				}
 			}
 		} else {
 		}
 		if (node.isDirectory()) {
 			String[] subNote = node.list();
 			for (String filename : subNote) {
-				buildTreeNodes(new File(node, filename), treeNode);
+				buildTreeNodes(new File(node, filename), treeNode, editable);
 			}
 		}
 	}
@@ -515,10 +600,10 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	 * Defines the behavior of the tree interface and adds it to the JPanel<br>
 	 *
 	 * @param top root node
-	 *
+	 * @throws Exception the exception
 	 */
-	private void createNodes(DefaultMutableTreeNode top) throws Exception {
-		buildTreeNodes(new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText()), top);
+	private void createNodes(DefaultMutableTreeNode top, boolean editable) throws Exception {
+		buildTreeNodes(new File(UtilMethodsFactory.getConfigPath() + "Images/" + ((PokerStrategy) top.getUserObject()).getNodeText()), top, editable);
 	}
 
 	/**
@@ -587,6 +672,12 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 		return isPokerPosition;
 	}
 
+	/**
+	 * Checks if is parent A poker position.
+	 *
+	 * @param nodeText the node text
+	 * @return true, if is parent A poker position
+	 */
 	private boolean isParentAPokerPosition(String nodeText) {
 		String[] handScreenNames = { "BB", "SB", "BU", "CO", "HJ", "LJ", "UTG", "UTG1", "UTG2" };
 		boolean isPokerPosition = false;
@@ -604,7 +695,9 @@ public class CustomTree extends JPanel implements TreeWillExpandListener, TreeSe
 	/**
 	 * Checks if branch node is one of the Fork nodes not sizing or strategy node.
 	 *
-	 * @param nodeText the node text
+	 * @param node the node
+	 * @param tree the tree
+	 * @param expandNodesBelow the expand nodes below
 	 * @return true, if is poker position
 	 */
 	/*

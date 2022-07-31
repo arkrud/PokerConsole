@@ -21,15 +21,40 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AddTreeFrame.
+ */
 public class AddTreeFrame extends JDialog implements ActionListener {
+	
+	/** The Constant serialVersionUID. */
 	static final long serialVersionUID = 1L;
+	
+	/** The cancel button. */
 	private JButton addButton, cancelButton;
+	
+	/** The add APP tree panel. */
 	private JPanel addAPPTreePanel;
+	
+	/** The tree state label. */
 	private JLabel appLabel, treeStateLabel;
+	
+	/** The app tree text field. */
 	private final JTextField appTreeTextField;
+	
+	/** The tree state check box. */
 	private JCheckBox treeStateCheckBox;
+	
+	/** The dash. */
 	private Dashboard dash;
 
+	
+	
+	/**
+	 * Instantiates a new adds the tree frame.
+	 *
+	 * @param dash the dash
+	 */
 	public AddTreeFrame(Dashboard dash) {
 		this.dash = dash;
 		setModal(true);
@@ -68,6 +93,9 @@ public class AddTreeFrame extends JDialog implements ActionListener {
 		SpringUtilities.makeCompactGrid(addAPPTreePanel, 3, 2, 10, 10, 10, 10);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();

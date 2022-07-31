@@ -20,14 +20,35 @@ import com.arkrud.Shareware.SpringUtilities;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AddUserDialog.
+ */
 public class AddUserDialog extends JDialog implements ActionListener {
+	
+	/** The Constant serialVersionUID. */
 	static final long serialVersionUID = 1L;
+	
+	/** The cancel button. */
 	private JButton accountManageButton, cancelButton;
+	
+	/** The console login account panel. */
 	private JPanel consoleLoginAccountPanel;
+	
+	/** The password label. */
 	private JLabel userLabel, passwordLabel;
+	
+	/** The password text field. */
 	private final JTextField userTextField, passwordTextField;
+	
+	/** The add user. */
 	private JMenuItem addUser;
 
+	/**
+	 * Instantiates a new adds the user dialog.
+	 *
+	 * @param addUser the add user
+	 */
 	public AddUserDialog(JMenuItem addUser) {
 		this.addUser = addUser;
 		setModal(true);
@@ -73,6 +94,9 @@ public class AddUserDialog extends JDialog implements ActionListener {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();

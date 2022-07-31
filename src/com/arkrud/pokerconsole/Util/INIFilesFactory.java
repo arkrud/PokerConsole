@@ -16,11 +16,21 @@ import org.dtools.ini.IniFileWriter;
 import org.dtools.ini.IniItem;
 import org.dtools.ini.IniSection;
 
+// TODO: Auto-generated Javadoc
 /**
  * Static methods used to work with .ini configuration files.<br>
  *
  */
 public class INIFilesFactory {
+	
+	/**
+	 * Adds the INI file item to section.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param itemName the item name
+	 * @param itemValue the item value
+	 */
 	// Add boolean INI item to section
 	public static void addINIFileItemToSection(File iniFile, String section, String itemName, Object itemValue) {
 		IniFile ini = readINI(iniFile);
@@ -30,6 +40,13 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Adds the INI file section.
+	 *
+	 * @param iniFile the ini file
+	 * @param sectionName the section name
+	 * @param sectionKeys the section keys
+	 */
 	// Add new section to INI configuration file
 	public static void addINIFileSection(File iniFile, String sectionName, HashMap<String, String> sectionKeys) {
 		IniFile ini = readINI(iniFile);
@@ -43,6 +60,12 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Gets the app trees config info.
+	 *
+	 * @param iniFile the ini file
+	 * @return the app trees config info
+	 */
 	// Retrieve Applications Tree info from INI configuration file
 	public static ArrayList<String> getAppTreesConfigInfo(File iniFile) {
 		ArrayList<String> appsInfo = new ArrayList<String>();
@@ -78,6 +101,12 @@ public class INIFilesFactory {
 		return iniSection.getItem(itemName).getValue();
 	}
 
+	/**
+	 * Gets the item values from INI.
+	 *
+	 * @param iniFile the ini file
+	 * @return the item values from INI
+	 */
 	public static HashMap<String, HashMap<String, String>> getItemValuesFromINI(File iniFile) {
 		HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
 		IniFile ini = readINI(iniFile);
@@ -95,6 +124,13 @@ public class INIFilesFactory {
 		return data;
 	}
 
+	/**
+	 * Gets the ini item names from section.
+	 *
+	 * @param iniFile the ini file
+	 * @param secionName the secion name
+	 * @return the ini item names from section
+	 */
 	public static String[] getIniItemNamesFromSection(File iniFile, String secionName) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(secionName);
@@ -103,6 +139,13 @@ public class INIFilesFactory {
 		return itemNames;
 	}
 
+	/**
+	 * Gets the solution copy selection item name.
+	 *
+	 * @param iniFile the ini file
+	 * @param solutionName the solution name
+	 * @return the solution copy selection item name
+	 */
 	public static String getSolutionCopySelectionItemName(File iniFile, String solutionName) {
 		String solutionCopySelectionItemName = "";
 		IniFile ini = readINI(iniFile);
@@ -120,6 +163,11 @@ public class INIFilesFactory {
 		return solutionCopySelectionItemName;
 	}
 
+	/**
+	 * Gets the trees data.
+	 *
+	 * @return the trees data
+	 */
 	public static HashMap<String, Boolean> getTreesData() {
 		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
 		Iterator<IniItem> it = INIFilesFactory.getAllItemsFromSection(UtilMethodsFactory.getConsoleConfig(), "Solutions").iterator();
@@ -148,6 +196,14 @@ public class INIFilesFactory {
 		return true;
 	}
 
+	/**
+	 * Checks for item in section.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param itemName the item name
+	 * @return true, if successful
+	 */
 	// Check if item is present in INI file section
 	public static boolean hasItemInSection(File iniFile, String section, String itemName) {
 		boolean itemExist = false;
@@ -178,6 +234,13 @@ public class INIFilesFactory {
 		return ini;
 	}
 
+	/**
+	 * Removes the INI file item.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param itemName the item name
+	 */
 	public static void removeINIFileItem(File iniFile, String section, String itemName) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
@@ -185,6 +248,13 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Removes the INI file items.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param itemNames the item names
+	 */
 	public static void removeINIFileItems(File iniFile, String section, String[] itemNames) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
@@ -196,6 +266,13 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Removes the INI file items with pattern.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param pattern the pattern
+	 */
 	public static void removeINIFileItemsWithPattern(File iniFile, String section, String pattern) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(section);
@@ -209,6 +286,12 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Removes the INI file section.
+	 *
+	 * @param iniFile the ini file
+	 * @param sectionName the section name
+	 */
 	// Remove section from INI file
 	public static void removeINIFileSection(File iniFile, String sectionName) {
 		IniFile ini = readINI(iniFile);
@@ -216,6 +299,14 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Update INI file item name.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param newItemName the new item name
+	 * @param itemName the item name
+	 */
 	// Update INI file items in section
 	public static void updateINIFileItemName(File iniFile, String section, String newItemName, String itemName) {
 		IniFile ini = readINI(iniFile);
@@ -227,6 +318,14 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Update INI file item.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param newItemValue the new item value
+	 * @param itemName the item name
+	 */
 	// Update INI file items in section
 	public static void updateINIFileItem(File iniFile, String section, String newItemValue, String itemName) {
 		IniFile ini = readINI(iniFile);
@@ -235,6 +334,14 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Update INI file items.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param newItemValue the new item value
+	 * @param itemNames the item names
+	 */
 	// Update INI file items in section
 	public static void updateINIFileItems(File iniFile, String section, String newItemValue, String[] itemNames) {
 		IniFile ini = readINI(iniFile);
@@ -247,6 +354,13 @@ public class INIFilesFactory {
 		writeINI(iniFile, ini);
 	}
 
+	/**
+	 * Update all INI file items in section.
+	 *
+	 * @param iniFile the ini file
+	 * @param section the section
+	 * @param newItemsValue the new items value
+	 */
 	// Update INI file items in section
 		public static void updateAllINIFileItemsInSection(File iniFile, String section, String newItemsValue) {
 			IniFile ini = readINI(iniFile);
@@ -259,12 +373,25 @@ public class INIFilesFactory {
 			writeINI(iniFile, ini);
 		}
 
+	/**
+	 * Gets the all items from section.
+	 *
+	 * @param iniFile the ini file
+	 * @param iniSectionName the ini section name
+	 * @return the all items from section
+	 */
 	private static Collection<IniItem> getAllItemsFromSection(File iniFile, String iniSectionName) {
 		IniFile ini = readINI(iniFile);
 		IniSection iniSection = ini.getSection(iniSectionName);
 		return iniSection.getItems();
 	}
 
+	/**
+	 * Write INI.
+	 *
+	 * @param iniFile the ini file
+	 * @param ini the ini
+	 */
 	// Write to INI
 	private static void writeINI(File iniFile, IniFile ini) {
 		IniFileWriter writer = new IniFileWriter(ini, iniFile);

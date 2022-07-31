@@ -17,15 +17,39 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RenameTreeDialog.
+ */
 public class RenameTreeDialog extends JDialog implements ActionListener {
+	
+	/** The Constant serialVersionUID. */
 	static final long serialVersionUID = 1L;
+	
+	/** The cancel button. */
 	private JButton renameButton, cancelButton;
+	
+	/** The buttons panel. */
 	private JPanel renameTabPanel, tabNamePanel, buttonsPanel;
+	
+	/** The solution name. */
 	private JLabel solutionName;
+	
+	/** The solution copy name. */
 	private final JTextField solutionCopyName;
+	
+	/** The tabbed pane. */
 	private JTabbedPane tabbedPane;
+	
+	/** The dash. */
 	private Dashboard dash;
 
+	/**
+	 * Instantiates a new rename tree dialog.
+	 *
+	 * @param dash the dash
+	 * @param tabbedPane the tabbed pane
+	 */
 	public RenameTreeDialog(Dashboard dash, JTabbedPane tabbedPane) {
 		this.tabbedPane = tabbedPane;
 		this.dash = dash;
@@ -59,6 +83,9 @@ public class RenameTreeDialog extends JDialog implements ActionListener {
 		add(renameTabPanel, BorderLayout.CENTER);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		JButton theButton = (JButton) ae.getSource();

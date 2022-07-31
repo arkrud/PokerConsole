@@ -38,6 +38,8 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	private JLabel userNameLabel, passwordLabel, iconLabel;
 	private JTextField userNameTextField, passwordTextField;
 	private static LicenseKeyGUI licenseKeyGUI;
+	private static String LOGIN_WINDOW_TITLE = "Login To Poker Console";
+	private static String LOGIN_WINDOW_LOGO = "interfaceimages/logo.jpg";
 
 	/**
 	 * Sole constructor of <code>LoginFrame</code> object.
@@ -45,7 +47,7 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 	 */
 	public LoginFrame() {
 		// AWS image panel
-		ImageIcon icon = UtilMethodsFactory.createImageIcon("images/aws-big.jpg");
+		ImageIcon icon = UtilMethodsFactory.createImageIcon(LOGIN_WINDOW_LOGO);
 		iconLabel = new JLabel();
 		iconLabel.setIcon(icon);
 		imagePanel = new JPanel();
@@ -90,7 +92,7 @@ public class LoginFrame extends JFrame implements ActionListener { // NO_UCD (un
 		overPanel.add(imagePanel);
 		SpringUtilities.makeCompactGrid(overPanel, 1, 2, 10, 10, 10, 10);
 		// Add Login Window panel to Login Window
-		setTitle("Login To AWS Console");
+		setTitle(LOGIN_WINDOW_TITLE);
 		add(overPanel, BorderLayout.CENTER);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowOpened(java.awt.event.WindowEvent evt) {

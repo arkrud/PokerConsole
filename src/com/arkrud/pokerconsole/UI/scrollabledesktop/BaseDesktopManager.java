@@ -6,6 +6,7 @@ import java.beans.PropertyVetoException;
 import javax.swing.DefaultDesktopManager;
 import javax.swing.JInternalFrame;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides a custom desktop manager for
  * {@link com.tomtessier.scrollabledesktop.BaseDesktopPane BaseDesktopPane}.
@@ -16,27 +17,27 @@ import javax.swing.JInternalFrame;
 
 public class BaseDesktopManager extends DefaultDesktopManager {
 
-      /**
-	 *
-	 */
+      /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The desktop pane. */
 	private BaseDesktopPane desktopPane;
 
      /**
-       *  creates the BaseDesktopManager
-       *
-       * @param desktopPane a reference to BaseDesktopPane
-       */
+      *  creates the BaseDesktopManager.
+      *
+      * @param desktopPane a reference to BaseDesktopPane
+      */
       public BaseDesktopManager(BaseDesktopPane desktopPane) {
             this.desktopPane = desktopPane;
       }
 
      /**
-       * maximizes the internal frame to the viewport bounds rather
-       * than the desktop bounds
-       *
-       * @param f the internal frame being maximized
-       */
+      * maximizes the internal frame to the viewport bounds rather
+      * than the desktop bounds.
+      *
+      * @param f the internal frame being maximized
+      */
       @Override
 	public void maximizeFrame(JInternalFrame f) {
 
@@ -54,11 +55,11 @@ public class BaseDesktopManager extends DefaultDesktopManager {
      }
 
       /**
-        * insures that the associated toolbar and menu buttons of
-        * the internal frame are activated as well
-        *
-        * @param f the internal frame being activated
-        */
+       * insures that the associated toolbar and menu buttons of
+       * the internal frame are activated as well.
+       *
+       * @param f the internal frame being activated
+       */
       @Override
 	public void activateFrame(JInternalFrame f) {
 
@@ -69,11 +70,11 @@ public class BaseDesktopManager extends DefaultDesktopManager {
 
 
       /**
-        * closes the internal frame and removes any associated button
-        * and menu components
-        *
-        * @param f the internal frame being closed
-        */
+       * closes the internal frame and removes any associated button
+       * and menu components.
+       *
+       * @param f the internal frame being closed
+       */
       @Override
 	public void closeFrame(JInternalFrame f) {
 

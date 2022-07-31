@@ -1,12 +1,14 @@
 package com.arkrud.pokerconsole.UI.scrollabledesktop;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
+// TODO: Auto-generated Javadoc
 /**
  * The main scrollable desktop class.
  * <BR><BR>
@@ -78,20 +80,26 @@ import javax.swing.JPanel;
 public class JScrollableDesktopPane extends JPanel
             implements DesktopConstants {
 
-      /**
-	 *
-	 */
+      /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The count. */
 	private static int count; // count used solely to name untitled frames
 
+      /** The default frame icon. */
       private ImageIcon defaultFrameIcon;
 
+      /** The desktop mediator. */
       private DesktopMediator desktopMediator;
       
       
 
 
+    /**
+     * Gets the desktop mediator.
+     *
+     * @return the desktop mediator
+     */
     public DesktopMediator getDesktopMediator() {
 		return desktopMediator;
 	}
@@ -116,7 +124,7 @@ public class JScrollableDesktopPane extends JPanel
      * @param mb the menubar with which to register the scrollable desktop
      */
       public JScrollableDesktopPane(JMenuBar mb) {
-            this();           
+            this();          
             registerMenuBar(mb);
       }
       
@@ -136,40 +144,37 @@ public class JScrollableDesktopPane extends JPanel
 
 
      /**
-       * adds an internal frame to the scrollable desktop
-       *
-       * @param frameContents the contents of the internal frame
-       *
-       * @return the JInternalFrame that was created
-       */
+      * adds an internal frame to the scrollable desktop.
+      *
+      * @param frameContents the contents of the internal frame
+      * @return the JInternalFrame that was created
+      */
       public JInternalFrame add(JPanel frameContents) {
             return add("Untitled " + count++,
                   defaultFrameIcon, frameContents, true, -1, -1);
       }
 
      /**
-       * adds an internal frame to the scrollable desktop
-       *
-       * @param title the title displayed in the title bar of the internal frame
-       * @param frameContents the contents of the internal frame
-       *
-       * @return the JInternalFrame that was created
-       */
+      * adds an internal frame to the scrollable desktop.
+      *
+      * @param title the title displayed in the title bar of the internal frame
+      * @param frameContents the contents of the internal frame
+      * @return the JInternalFrame that was created
+      */
       public JInternalFrame add(String title, JPanel frameContents) {
             return add(title,
                   defaultFrameIcon, frameContents, true, -1, -1);
       }
 
      /**
-       * adds an internal frame to the scrollable desktop
-       *
-       * @param title the title displayed in the title bar of the internal frame
-       * @param frameContents the contents of the internal frame
-       * @param isClosable <code>boolean</code> indicating whether internal frame
-       *          is closable
-       *
-       * @return the JInternalFrame that was created
-       */
+      * adds an internal frame to the scrollable desktop.
+      *
+      * @param title the title displayed in the title bar of the internal frame
+      * @param frameContents the contents of the internal frame
+      * @param isClosable <code>boolean</code> indicating whether internal frame
+      *          is closable
+      * @return the JInternalFrame that was created
+      */
       public JInternalFrame add(String title, JPanel frameContents,
                         boolean isClosable) {
             return add(title,
@@ -177,16 +182,15 @@ public class JScrollableDesktopPane extends JPanel
       }
 
      /**
-       * adds an internal frame to the scrollable desktop
-       *
-       * @param title the title displayed in the title bar of the internal frame
-       * @param icon the icon displayed in the title bar of the internal frame
-       * @param frameContents the contents of the internal frame
-       * @param isClosable <code>boolean</code> indicating whether internal frame
-       *          is closable
-       *
-       * @return the JInternalFrame that was created
-       */
+      * adds an internal frame to the scrollable desktop.
+      *
+      * @param title the title displayed in the title bar of the internal frame
+      * @param icon the icon displayed in the title bar of the internal frame
+      * @param frameContents the contents of the internal frame
+      * @param isClosable <code>boolean</code> indicating whether internal frame
+      *          is closable
+      * @return the JInternalFrame that was created
+      */
       public JInternalFrame add(String title, ImageIcon icon,
                         JPanel frameContents, boolean isClosable) {
             return add(title, icon, frameContents, isClosable, -1, -1);
@@ -240,10 +244,10 @@ public class JScrollableDesktopPane extends JPanel
 
 
      /**
-       * removes the specified internal frame from the scrollable desktop
-       *
-       * @param f the internal frame to remove
-       */
+      * removes the specified internal frame from the scrollable desktop.
+      *
+      * @param f the internal frame to remove
+      */
       public void remove(JInternalFrame f) {
             f.dispose();
       }
@@ -261,11 +265,11 @@ public class JScrollableDesktopPane extends JPanel
       }
 
      /**
-       * registers a default icon for display in the title bars of
-       *    internal frames
-       *
-       * @param defaultFrameIcon the default icon
-       */
+      * registers a default icon for display in the title bars of
+      *    internal frames.
+      *
+      * @param defaultFrameIcon the default icon
+      */
       public void registerDefaultFrameIcon(ImageIcon defaultFrameIcon) {
             this.defaultFrameIcon = defaultFrameIcon;
       }

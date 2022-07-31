@@ -6,12 +6,16 @@ import java.awt.Container;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
+// TODO: Auto-generated Javadoc
 /**
  * A 1.4 file that provides utility methods for creating form- or grid-style layouts with SpringLayout. These utilities are used by several programs, such as SpringBox and SpringCompactGrid.
  */
 public class SpringUtilities {
+	
 	/**
 	 * A   debugging utility that prints to stdout the component's minimum, preferred, and maximum sizes.
+	 *
+	 * @param c the c
 	 */
 	public static void printSizes(Component c) { // NO_UCD (unused code)
 		System.out.println("minimumSize = " + c.getMinimumSize());
@@ -23,6 +27,7 @@ public class SpringUtilities {
 	 * Aligns the first <code>rows</code> * <code>cols</code> components of <code>parent</code> in a grid. Each component is as big as the maximum preferred width and height of the components. The parent
 	 * is made just big enough to fit them all.
 	 *
+	 * @param parent the parent
 	 * @param rows number of rows
 	 * @param cols number of columns
 	 * @param initialX x location to start the grid at
@@ -84,6 +89,15 @@ public class SpringUtilities {
 		pCons.setConstraint(SpringLayout.EAST, Spring.sum(Spring.constant(xPad), lastCons.getConstraint(SpringLayout.EAST)));
 	}
 
+	/**
+	 * Gets the constraints for cell.
+	 *
+	 * @param row the row
+	 * @param col the col
+	 * @param parent the parent
+	 * @param cols the cols
+	 * @return the constraints for cell
+	 */
 	/* Used by makeCompactGrid. */
 	private static SpringLayout.Constraints getConstraintsForCell(int row, int col, Container parent, int cols) {
 		SpringLayout layout = (SpringLayout) parent.getLayout();
@@ -95,6 +109,7 @@ public class SpringUtilities {
 	 * Aligns the first <code>rows</code> * <code>cols</code> components of <code>parent</code> in a grid. Each component in a column is as wide as the maximum preferred width of the components in that
 	 * column; height is similarly determined for each row. The parent is made just big enough to fit them all.
 	 *
+	 * @param parent the parent
 	 * @param rows number of rows
 	 * @param cols number of columns
 	 * @param initialX x location to start the grid at

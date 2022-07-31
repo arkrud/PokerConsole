@@ -35,27 +35,51 @@ import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.TreeInterface.CustomTree;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author arkrud
+ * The Class AddHandsDialog.
  *
+ * @author arkrud
  */
 public class AddHandsDialog extends JDialog implements ActionListener {
+	
+	/** The tree. */
 	private JTree tree;
+	
+	/** The tree. */
 	private CustomTree theTree;
+	
+	/** The obj. */
 	private Object obj;
+	
+	/** The node. */
 	private DefaultMutableTreeNode node;
+	
+	/** The cancel button. */
 	private JButton okButton, cancelButton;
+	
+	/** The hands panel. */
 	private JPanel handsPanel;
+	
+	/** The hand names. */
 	private String[] handNames = { "Big Blind", "Small Blind", "Button", "Cutoff", "HiJack", "LoJack", "Undeer The Gun", "Undeer The Gun + 1", "Undeer The Gun + 2" };
+	
+	/** The hand screen names. */
 	private String[] handScreenNames = { "BB", "SB", "BU", "CO", "HJ", "LJ", "UTG", "UTG1", "UTG2" };
+	
+	/** The felds map. */
 	Map<String, JCheckBox> feldsMap = new TreeMap<String, JCheckBox>(Collections.reverseOrder());
-	/**
-	 *
-	 */
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Instantiates a new adds the hands dialog.
 	 *
+	 * @param tree the tree
+	 * @param theTree the the tree
+	 * @param obj the obj
+	 * @param node the node
 	 */
 	public AddHandsDialog(JTree tree, CustomTree theTree, Object obj, DefaultMutableTreeNode node) {
 		this.tree = tree;

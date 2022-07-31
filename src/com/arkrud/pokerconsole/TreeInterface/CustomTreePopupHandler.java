@@ -29,6 +29,7 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class CustomTreePopupHandler.<br>
  * Creates drop-down menu on right click on tree nodes.<br>
@@ -82,6 +83,9 @@ public class CustomTreePopupHandler implements ActionListener {
 	 * Performed actions on the drop-down menu items click.<br> <ul> <li>Get action command string. <li>Get current TreePath from the JTree object. <li>Get current node from the TreePath. <li>Get user
 	 * object from node. <li>Perform actions based on user object type and menu string. <ul>
 	 */
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	// Perform actions on drop-down menu selections
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -92,7 +96,7 @@ public class CustomTreePopupHandler implements ActionListener {
 		Object obj = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 		if (obj instanceof PokerStrategy) {
 			if (ac.equals("REFRESH")) {
-				theTree.refreshTreeNode(node, ((PokerStrategy) obj).getNodeText());
+				theTree.refreshTreeNode(node, ((PokerStrategy) obj).getNodeText(), editable);
 			} else if (ac.equals("ADD ACTION")) {
 				addPokerAction(node, obj);
 			} else if (ac.equals("REMOVE")) {
@@ -463,6 +467,12 @@ public class CustomTreePopupHandler implements ActionListener {
 		return hit;
 	}
 
+	/**
+	 * Construct new tab name.
+	 *
+	 * @param jTabbedPane the j tabbed pane
+	 * @return the string
+	 */
 	private String constructNewTabName(JTabbedPane jTabbedPane) {
 		String newName = "";
 		CustomTree customTree = (CustomTree) ((JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex())).getViewport().getView();
@@ -593,6 +603,13 @@ public class CustomTreePopupHandler implements ActionListener {
 		return new File(targetChartPathString);
 	}
 
+	/**
+	 * Checks for tab with title.
+	 *
+	 * @param pane the pane
+	 * @param title the title
+	 * @return true, if successful
+	 */
 	private boolean hasTabWithTitle(JTabbedPane pane, String title) {
 		int tabCount = pane.getTabCount();
 		boolean hasTabWithTitle = false;
@@ -677,6 +694,13 @@ public class CustomTreePopupHandler implements ActionListener {
 		}
 	}
 
+	/**
+	 * Prepare delete.
+	 *
+	 * @param node the node
+	 * @param opToDelete the op to delete
+	 * @return the default mutable tree node
+	 */
 	private DefaultMutableTreeNode prepareDelete(DefaultMutableTreeNode node, PokerOpponentPosition opToDelete) {
 		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) node.getParent();
 		Enumeration<?> nodes = parentNode.children();
@@ -823,6 +847,12 @@ public class CustomTreePopupHandler implements ActionListener {
 		}
 	}
 
+	/**
+	 * Removes the tab with title.
+	 *
+	 * @param pane the pane
+	 * @param title the title
+	 */
 	private void removeTabWithTitle(JTabbedPane pane, String title) {
 		int x = 0;
 		while (x < pane.getTabCount()) {
@@ -834,6 +864,15 @@ public class CustomTreePopupHandler implements ActionListener {
 		}
 	}
 
+	/**
+	 * Update config file.
+	 *
+	 * @param oldTreeName the old tree name
+	 * @param oldAppStatus the old app status
+	 * @param oldAutoNamingStatus the old auto naming status
+	 * @param newTabName the new tab name
+	 * @param newSelection the new selection
+	 */
 	private void updateConfigFile(String oldTreeName, String oldAppStatus, String oldAutoNamingStatus, String newTabName, String newSelection) {
 		INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Selections", newTabName, oldTreeName);
 		INIFilesFactory.updateINIFileItemName(UtilMethodsFactory.getConsoleConfig(), "Solutions", newTabName, oldTreeName);

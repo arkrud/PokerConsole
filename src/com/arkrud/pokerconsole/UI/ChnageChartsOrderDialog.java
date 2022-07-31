@@ -40,24 +40,48 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * Class to build chart ordering dialog.<br>
  *
  * @author arkrud
  */
 public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
+	
+	/** The tree. */
 	private JTree tree;
+	
+	/** The dash. */
 	private Dashboard dash;
+	
+	/** The tree. */
 	private CustomTree theTree;
+	
+	/** The cancel button. */
 	private JButton applyButton, cancelButton;
+	
+	/** The buttons panel. */
 	private JPanel chartsPanel, chartDataPanel, buttonsPanel;
+	
+	/** The pop names. */
 	private List<String> popNames = new ArrayList<String>();
+	
+	/** The pop chart order prefixes. */
 	private List<String> popChartOrderPrefixes = new ArrayList<String>();
+	
+	/** The position map. */
 	private TreeMap<String, JComboBox<String>> positionMap = new TreeMap<String, JComboBox<String>>();
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Instantiates a new chnage charts order dialog.
 	 *
+	 * @param tree the tree
+	 * @param node the node
+	 * @param dash the dash
+	 * @param theTree the the tree
 	 */
 	public ChnageChartsOrderDialog(JTree tree, DefaultMutableTreeNode node, Dashboard dash, CustomTree theTree) {
 		this.tree = tree;
@@ -107,6 +131,9 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		setTitle("Chnage Charts Order");
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	/*
 	 * Listens to click on Apply button
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -198,8 +225,14 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		}
 	}
 
+	/**
+	 * Reposition charts.
+	 *
+	 * @param top the top
+	 * @param solutionName the solution name
+	 */
 	private void repositionCharts(DefaultMutableTreeNode top, String solutionName) {
-		theTree.refreshTreeNode(top, solutionName);
+		theTree.refreshTreeNode(top, solutionName, true);
 		JTabbedPane sourceTabbedPane = dash.getTreeTabbedPane();
 		int index = sourceTabbedPane.getSelectedIndex();
 		dash.closeAllFrames();
@@ -228,6 +261,12 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		}
 	}
 
+	/**
+	 * Check for dup sequence index.
+	 *
+	 * @param comboBoxes the combo boxes
+	 * @return true, if successful
+	 */
 	private boolean checkForDupSequenceIndex(TreeMap<String, JComboBox<String>> comboBoxes) {
 		Set<Entry<String, JComboBox<String>>> set = comboBoxes.entrySet();
 		Iterator<Entry<String, JComboBox<String>>> it = set.iterator();
@@ -245,6 +284,13 @@ public class ChnageChartsOrderDialog extends JDialog implements ActionListener {
 		return false;
 	}
 
+	/**
+	 * Checks for PNG file.
+	 *
+	 * @param filesList the files list
+	 * @param commonElement the common element
+	 * @return true, if successful
+	 */
 	private boolean hasPNGFile(List<String> filesList, String commonElement) {
 		int x = 0;
 		List<String> pngFiles = new ArrayList<String>();

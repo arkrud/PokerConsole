@@ -1,6 +1,7 @@
 package com.arkrud.pokerconsole.UI.scrollabledesktop;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 
 import javax.swing.ImageIcon;
@@ -8,6 +9,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class coordinates state changes between other classes in the system.
  * Based upon the "mediator" design pattern.
@@ -19,9 +21,16 @@ import javax.swing.JPanel;
 
 public class DesktopMediator implements DesktopConstants {
 
+      /** The desktop scrollpane. */
       private DesktopScrollPane desktopScrollpane;
+      
+      /** The desktop resizable toolbar. */
       private DesktopResizableToolBar desktopResizableToolbar;
+      
+      /** The d listener. */
       private DesktopListener dListener;
+      
+      /** The d menu. */
       private DesktopMenu dMenu;
 
     /**
@@ -61,20 +70,19 @@ public class DesktopMediator implements DesktopConstants {
 
 
      /**
-       * adds an internal frame to the scrollable desktop pane
-       *
-       * @param title the title displayed in the title bar of the internal frame
-       * @param icon the icon displayed in the title bar of the internal frame
-       * @param frameContents the contents of the internal frame
-       * @param isClosable <code>boolean</code> indicating whether internal frame
-       *          is closable
-       * @param x x coordinates of internal frame within the scrollable desktop
-       *    <code>-1</code> indicates the virtual desktop is to determine the position
-       * @param y y coordinates of internal frame within the scrollable desktop
-       *    <code>-1</code> indicates the virtual desktop is to determine the position
-       *
-       * @return the internal frame that was created
-       */
+      * adds an internal frame to the scrollable desktop pane.
+      *
+      * @param title the title displayed in the title bar of the internal frame
+      * @param icon the icon displayed in the title bar of the internal frame
+      * @param frameContents the contents of the internal frame
+      * @param isClosable <code>boolean</code> indicating whether internal frame
+      *          is closable
+      * @param x x coordinates of internal frame within the scrollable desktop
+      *    <code>-1</code> indicates the virtual desktop is to determine the position
+      * @param y y coordinates of internal frame within the scrollable desktop
+      *    <code>-1</code> indicates the virtual desktop is to determine the position
+      * @return the internal frame that was created
+      */
       public JInternalFrame add(String title, ImageIcon icon,
                         JPanel frameContents,
                         boolean isClosable, int x, int y) {
@@ -95,14 +103,14 @@ public class DesktopMediator implements DesktopConstants {
       }
 
      /**
-       * adds an internal frame to the scrollable desktop pane
-       *
-       * @param f the internal frame of class BaseInternalFrame to add
-       * @param x x coordinates of internal frame within the scrollable desktop
-       *    <code>-1</code> indicates the virtual desktop is to determine the position
-       * @param y y coordinates of internal frame within the scrollable desktop
-       *    <code>-1</code> indicates the virtual desktop is to determine the position
-       */
+      * adds an internal frame to the scrollable desktop pane.
+      *
+      * @param frame the frame
+      * @param x x coordinates of internal frame within the scrollable desktop
+      *    <code>-1</code> indicates the virtual desktop is to determine the position
+      * @param y y coordinates of internal frame within the scrollable desktop
+      *    <code>-1</code> indicates the virtual desktop is to determine the position
+      */
       public void add(JInternalFrame frame, int x, int y) {
 
             if (desktopScrollpane.getNumberOfFrames() < MAX_FRAMES) {
@@ -113,8 +121,10 @@ public class DesktopMediator implements DesktopConstants {
       }
 
       /**
-        * creates the associated frame components (ie: toggle and menu items)
-        */
+       * creates the associated frame components (ie: toggle and menu items).
+       *
+       * @param frame the frame
+       */
       private void createFrameAssociates(BaseInternalFrame frame) {
 
                   BaseToggleButton button = null;
@@ -137,12 +147,12 @@ public class DesktopMediator implements DesktopConstants {
 
 
       /**
-        * removes the secondary components associated with an internal frame,
-        * such as toggle and menu buttons, and selects the next available frame
-        *
-        * @param f the internal frame whose associated components are
-        *   to be removed
-        */
+       * removes the secondary components associated with an internal frame,
+       * such as toggle and menu buttons, and selects the next available frame.
+       *
+       * @param f the internal frame whose associated components are
+       *   to be removed
+       */
       public void removeAssociatedComponents(BaseInternalFrame f) {
 
             desktopResizableToolbar.remove(f.getAssociatedButton());
@@ -156,95 +166,110 @@ public class DesktopMediator implements DesktopConstants {
 
 
       /**
-        * propogates getSelectedFrame to DesktopScrollPane
-        *
-        * @return the currently selected internal frame
-        */
+       * propogates getSelectedFrame to DesktopScrollPane.
+       *
+       * @return the currently selected internal frame
+       */
       public JInternalFrame getSelectedFrame() {
             return desktopScrollpane.getSelectedFrame();
       }
+      
       /**
-        * propogates setSelectedFrame to DesktopScrollPane
-        *
-        * @param f the internal frame to set as selected
-        */
+       * propogates setSelectedFrame to DesktopScrollPane.
+       *
+       * @param f the internal frame to set as selected
+       */
       public void setSelectedFrame(JInternalFrame f) {
             desktopScrollpane.setSelectedFrame(f);
       }
+      
       /**
-        * propogates flagContentsChanged to DesktopScrollPane
-        *
-        * @param f the internal frame to flag as "contents changed"
-        */
+       * propogates flagContentsChanged to DesktopScrollPane.
+       *
+       * @param f the internal frame to flag as "contents changed"
+       */
       public void flagContentsChanged(JInternalFrame f) {
             desktopScrollpane.flagContentsChanged(f);
       }
 
 
       /**
-        * propogates resizeDesktop to DesktopScrollPane
-        */
+       * propogates resizeDesktop to DesktopScrollPane.
+       */
       public void resizeDesktop() {
             desktopScrollpane.resizeDesktop();
       }
+      
       /**
-        * propogates revalidateViewport to DesktopScrollPane
-        */
+       * propogates revalidateViewport to DesktopScrollPane.
+       */
       public void revalidateViewport() {
             desktopScrollpane.revalidate();
       }
+      
       /**
-        * propogates centerView to DesktopScrollPane
-        *
-        * @param f the internal frame to center the view about
-        */
+       * propogates centerView to DesktopScrollPane.
+       *
+       * @param f the internal frame to center the view about
+       */
       public void centerView(BaseInternalFrame f) {
             desktopScrollpane.centerView(f);
       }
+      
       /**
-        * propogates closeSelectedFrame to DesktopScrollPane
-        */
+       * propogates closeSelectedFrame to DesktopScrollPane.
+       */
       public void closeSelectedFrame() {
             desktopScrollpane.closeSelectedFrame();
       }
 
 
+      /**
+       * Close all frames.
+       */
       public void closeAllFrames() {
     	  desktopScrollpane.closeAllFrames();
     }
       
+      /**
+       * Gets the all frames.
+       *
+       * @return the all frames
+       */
       public JInternalFrame[] getAllFrames() {
     	  return desktopScrollpane.getAllFrames();
     }
 
       /**
-        * propogates tileInternalFrames to DesktopScrollPane
-        */
+       * propogates tileInternalFrames to DesktopScrollPane.
+       */
       public void tileInternalFrames() {
             desktopScrollpane.tileInternalFrames();
       }
+      
       /**
-        * propogates cascadeInternalFrames to DesktopScrollPane
-        */
+       * propogates cascadeInternalFrames to DesktopScrollPane.
+       */
       public void cascadeInternalFrames() {
             desktopScrollpane.cascadeInternalFrames();
       }
+      
       /**
-        * propogates setAutoTile to DesktopScrollPane
-        *
-        * @param tileMode <code>true</code> indicates tile internal frames,
-        *         <code>false</code> indicates cascade internal frames
-        */
+       * propogates setAutoTile to DesktopScrollPane.
+       *
+       * @param tileMode <code>true</code> indicates tile internal frames,
+       *         <code>false</code> indicates cascade internal frames
+       */
       public void setAutoTile(boolean tileMode) {
             desktopScrollpane.setAutoTile(tileMode);
       }
 
 
       /**
-        * propogates actionPerformed event to DesktopListener
-        *
-        * @param e the ActionEvent to propogate
-        */
+       * propogates actionPerformed event to DesktopListener.
+       *
+       * @param e the ActionEvent to propogate
+       */
       public void actionPerformed(ActionEvent e) {
             dListener.actionPerformed(e);
       }

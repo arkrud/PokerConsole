@@ -1,5 +1,6 @@
 package com.arkrud.pokerconsole.UI.scrollabledesktop;
 
+// TODO: Auto-generated Javadoc
 /**
  * This interface exposes the accessor and mutator (getter and setter) methods
  * required to get and set the internal frame associated with an implementing class.
@@ -12,17 +13,18 @@ package com.arkrud.pokerconsole.UI.scrollabledesktop;
 public interface FrameAccessorInterface {
 
      /**
-       *  returns the associated frame
-       *
-       * @return the BaseInternalFrame associated with the object
-       */
+      *  returns the associated frame.
+      *
+      * @return the BaseInternalFrame associated with the object
+      */
       BaseInternalFrame getAssociatedFrame();
+     
      /**
-       *  sets the associated frame
-       *
-       * @param associatedFrame the BaseInternalFrame to associate with
-       *    the object
-       */
+      *  sets the associated frame.
+      *
+      * @param associatedFrame the BaseInternalFrame to associate with
+      *    the object
+      */
       void setAssociatedFrame(BaseInternalFrame associatedFrame);
 
 }

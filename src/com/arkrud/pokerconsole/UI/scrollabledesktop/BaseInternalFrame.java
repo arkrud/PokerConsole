@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides a custom internal frame. Each internal frame
  * is assigned an associated toggle button and an optional radio button
@@ -25,25 +26,32 @@ import javax.swing.JToggleButton;
 
 public class BaseInternalFrame extends JInternalFrame {
 
-      /**
-	 *
-	 */
+      /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The associated button. */
 	private JToggleButton associatedButton;
+      
+      /** The associated menu button. */
       private JRadioButtonMenuItem associatedMenuButton;
 
+      /** The is closable. */
       private boolean isClosable;
+      
+      /** The initial width. */
       private int initialWidth;
+      
+      /** The initial height. */
       private int initialHeight;
 
      /**
-       *  creates the BaseInternalFrame
-       *
-       * @param title the string displayed in the title bar of the internal frame
-       * @param icon the ImageIcon displayed in the title bar of the internal frame
-       * @param frameContents the contents of the internal frame
-       * @param isClosable determines whether the frame is closable
-       */
+      *  creates the BaseInternalFrame.
+      *
+      * @param title the string displayed in the title bar of the internal frame
+      * @param icon the ImageIcon displayed in the title bar of the internal frame
+      * @param frameContents the contents of the internal frame
+      * @param isClosable determines whether the frame is closable
+      */
       public BaseInternalFrame(String title,
                               ImageIcon icon, JPanel frameContents,
                               boolean isClosable) {
@@ -72,52 +80,80 @@ public class BaseInternalFrame extends JInternalFrame {
             setVisible(true); // turn the frame on
       }
 
+      /**
+       * Save size.
+       */
       private void saveSize() {
             initialWidth = getWidth();
             initialHeight = getHeight();
       }
 
       /**
-        * constructor provided for compatibility with JInternalFrame
-        */
+       * constructor provided for compatibility with JInternalFrame.
+       */
       public BaseInternalFrame() {
             super();
             saveSize();
       }
+      
       /**
-        * constructor provided for compatibility with JInternalFrame
-        */
+       * constructor provided for compatibility with JInternalFrame.
+       *
+       * @param title the title
+       */
       public BaseInternalFrame(String title) {
             super(title);
             saveSize();
       }
+      
       /**
-        * constructor provided for compatibility with JInternalFrame
-        */
+       * constructor provided for compatibility with JInternalFrame.
+       *
+       * @param title the title
+       * @param resizable the resizable
+       */
       public BaseInternalFrame(String title, boolean resizable) {
             super(title, resizable);
             saveSize();
       }
+      
       /**
-        * constructor provided for compatibility with JInternalFrame
-        */
+       * constructor provided for compatibility with JInternalFrame.
+       *
+       * @param title the title
+       * @param resizable the resizable
+       * @param closable the closable
+       */
       public BaseInternalFrame(String title, boolean resizable, boolean closable) {
             super(title, resizable, closable);
             //this.isClosable = isClosable;
             saveSize();
       }
+      
       /**
-        * constructor provided for compatibility with JInternalFrame
-        */
+       * constructor provided for compatibility with JInternalFrame.
+       *
+       * @param title the title
+       * @param resizable the resizable
+       * @param closable the closable
+       * @param maximizable the maximizable
+       */
       public BaseInternalFrame(String title, boolean resizable, boolean closable,
                               boolean maximizable) {
             super(title, resizable, closable, maximizable);
             //this.isClosable = isClosable;
             saveSize();
       }
+      
       /**
-        * constructor provided for compatibility with JInternalFrame
-        */
+       * constructor provided for compatibility with JInternalFrame.
+       *
+       * @param title the title
+       * @param resizable the resizable
+       * @param closable the closable
+       * @param maximizable the maximizable
+       * @param iconifiable the iconifiable
+       */
       public BaseInternalFrame(String title, boolean resizable, boolean closable,
                               boolean maximizable, boolean iconifiable) {
             super(title, resizable, closable, maximizable, iconifiable);
@@ -127,37 +163,39 @@ public class BaseInternalFrame extends JInternalFrame {
 
 
      /**
-       *  sets the associated menu button
-       *
-       * @param associatedMenuButton the menu button to associate with
-       * the internal frame
-       */
+      *  sets the associated menu button.
+      *
+      * @param associatedMenuButton the menu button to associate with
+      * the internal frame
+      */
       public void setAssociatedMenuButton(JRadioButtonMenuItem associatedMenuButton) {
             this.associatedMenuButton = associatedMenuButton;
       }
+     
      /**
-       *  returns the associated menu button
-       *
-       * @return the JRadioButtonMenuItem object associated with this internal frame
-       */
+      *  returns the associated menu button.
+      *
+      * @return the JRadioButtonMenuItem object associated with this internal frame
+      */
       public JRadioButtonMenuItem getAssociatedMenuButton() {
             return associatedMenuButton;
       }
 
      /**
-       *  sets the associated toggle button
-       *
-       * @param associatedButton the toggle button to associate with
-       * the internal frame
-       */
+      *  sets the associated toggle button.
+      *
+      * @param associatedButton the toggle button to associate with
+      * the internal frame
+      */
       public void setAssociatedButton(JToggleButton associatedButton) {
             this.associatedButton = associatedButton;
       }
+     
      /**
-       *  returns the associated toggle button
-       *
-       * @return the JToggleButton object associated with this internal frame
-       */
+      *  returns the associated toggle button.
+      *
+      * @return the JToggleButton object associated with this internal frame
+      */
       public JToggleButton getAssociatedButton() {
             return associatedButton;
       }
@@ -188,9 +226,9 @@ public class BaseInternalFrame extends JInternalFrame {
 
 
      /**
-       *  selects the current frame, along with any toggle and menu
-       * buttons that may be associated with it
-       */
+      *  selects the current frame, along with any toggle and menu
+      * buttons that may be associated with it.
+      */
       public void selectFrameAndAssociatedButtons() {
 
             // select associated toolbar button

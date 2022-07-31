@@ -18,20 +18,52 @@ import com.arkrud.pokerconsole.UI.Dashboard.Dashboard;
 import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The listener interface for receiving customTablePopup events.
+ * The class that is interested in processing a customTablePopup
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addCustomTablePopupListener<code> method. When
+ * the customTablePopup event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see CustomTablePopupEvent
+ */
 public class CustomTablePopupListener extends MouseAdapter implements ActionListener, PropertyChangeListener {
+	
+	/** The popup menu. */
 	private JPopupMenu popupMenu;
+	
+	/** The ini path. */
 	private String iniPath;
+	
+	/** The table. */
 	private CustomTable table;
+	
+	/** The dash. */
 	private Dashboard dash;
+	
+	/** The menus. */
 	private String[] menus = { "Clear all", "Red", "Orange", "Blueviolet", "Green",  "Dark blue", "Yellow", "Pink",
 			"Blue", "White", "Dark gray", "Light gray", "Save Chart" };
 
+	/**
+	 * Instantiates a new custom table popup listener.
+	 *
+	 * @param popupMenu the popup menu
+	 * @param iniPath the ini path
+	 * @param dash the dash
+	 */
 	public CustomTablePopupListener(JPopupMenu popupMenu, String iniPath, Dashboard dash) {
 		this.popupMenu = popupMenu;
 		this.iniPath = iniPath;
 		this.dash = dash;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String menuText = ((JMenuItem) e.getSource()).getText();
@@ -70,6 +102,9 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 		}
 	}
 
+	/**
+	 * Sets the default color.
+	 */
 	private void setDefaultColor() {
 		table.setBackground(new Color(245, 245, 245));
 		for (int i = 0; i < table.getRowCount(); i++) {
@@ -79,6 +114,12 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 		}
 	}
 
+	/**
+	 * Update chart INI file.
+	 *
+	 * @param table the table
+	 * @param file the file
+	 */
 	private void updateChartINIFile(CustomTable table, File file) {
 		for (int i = 0; i < table.getRowCount(); i++) {
 			for (int j = 0; j < table.getColumnCount(); j++) {
@@ -95,19 +136,33 @@ public class CustomTablePopupListener extends MouseAdapter implements ActionList
 		sectionKeys.put("latest", "true");		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		showPopup(e);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent arg0) {
 	}
 
+	/**
+	 * Show popup.
+	 *
+	 * @param e the e
+	 */
 	private void showPopup(MouseEvent e) {
 		table = (CustomTable) e.getSource();
 		table.clearSelection();

@@ -12,6 +12,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Generic self-contained resizable toolbar class. When a button addition exceeds
  * the width of the toolbar container, all buttons within the container are
@@ -26,20 +27,22 @@ import javax.swing.SwingUtilities;
 public class ResizableToolBar extends JToolBar
             implements ComponentListener {
 
-      /**
-	 *
-	 */
+      /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The button group. */
 	// ButtonGroups for toolbar buttons
       private ButtonGroup buttonGroup;
 
+      /** The min button width. */
       private int minButtonWidth;
+      
+      /** The max button width. */
       private int maxButtonWidth;
 
 
     /**
-     * creates the ResizableToolbar object
+     * creates the ResizableToolbar object.
      *
      * @param minButtonWidth the minimum button width allowed
      * @param maxButtonWidth the maximum button width allowed
@@ -56,7 +59,7 @@ public class ResizableToolBar extends JToolBar
       }
 
     /**
-     * adds a button to the ResizableToolbar
+     * adds a button to the ResizableToolbar.
      *
      * @param button the button to add
      */
@@ -70,7 +73,7 @@ public class ResizableToolBar extends JToolBar
 
 
     /**
-     * removes a button from the ResizableToolbar
+     * removes a button from the ResizableToolbar.
      *
      * @param button the button to remove
      */
@@ -82,7 +85,7 @@ public class ResizableToolBar extends JToolBar
       }
 
     /**
-     * returns the ResizableToolbar elements
+     * returns the ResizableToolbar elements.
      *
      * @return an Enumeration of the ResizableToolbar elements
      */
@@ -91,7 +94,7 @@ public class ResizableToolBar extends JToolBar
       }
 
     /**
-     * returns the number of buttons stored within the ResizableToolbar
+     * returns the number of buttons stored within the ResizableToolbar.
      *
      * @return the number of buttons
      */
@@ -177,7 +180,7 @@ public class ResizableToolBar extends JToolBar
 
 
     /**
-     * assigns a new width to the specified button
+     * assigns a new width to the specified button.
      *
      * @param b the button whose width is to be adjusted
      * @param buttonWidth the new width
@@ -201,7 +204,7 @@ public class ResizableToolBar extends JToolBar
       /////
 
       /**
-       * resize the buttons when the ResizableToolbar itself is resized
+       * resize the buttons when the ResizableToolbar itself is resized.
        *
        * @param e the ComponentEvent
        */
@@ -212,24 +215,26 @@ public class ResizableToolBar extends JToolBar
 
 
       /**
-      * interface placeholder
-      *
-      * @param e the ComponentEvent
-      */
+       * interface placeholder.
+       *
+       * @param e the ComponentEvent
+       */
       @Override
 	public void componentShown(ComponentEvent e) {}
+      
       /**
-      * interface placeholder
-      *
-      * @param e the ComponentEvent
-      */
+       * interface placeholder.
+       *
+       * @param e the ComponentEvent
+       */
       @Override
 	public void componentMoved(ComponentEvent e) {}
+      
       /**
-      * interface placeholder
-      *
-      * @param e the ComponentEvent
-      */
+       * interface placeholder.
+       *
+       * @param e the ComponentEvent
+       */
       @Override
 	public void componentHidden(ComponentEvent e) {}
 

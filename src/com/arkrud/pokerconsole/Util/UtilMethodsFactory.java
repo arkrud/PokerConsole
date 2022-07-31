@@ -52,25 +52,36 @@ import com.arkrud.pokerconsole.UI.scrollabledesktop.JScrollableDesktopPane;
 import com.arkrud.pokerconsole.licensing.LicenseKeyGUI;
 import com.arkrud.pokerconsole.pokercardchart.CustomTable;
 
+// TODO: Auto-generated Javadoc
 /**
  * Static methods and constants accessed across application code.<br>
  *
  */
 public class UtilMethodsFactory {
+	
+	/** The drop downs names. */
 	public static String[] dropDownsNames = { "Add Group", "Refresh", "Delete", "Remove", "Rename", "Add Sizing", "Delete Sizing", "Add Fork", "Apply Template",
 			"Add Action", "Add Hero Position", "Add Opponents Position / Hero Range", "Duplicate", "Change Charts Order" };
+	
+	/** The charts. */
 	private static HashMap<String, TableChartPanel> charts = new HashMap<String, TableChartPanel>();
 
+	/**
+	 * Adds the chart frame to scrolable desctop.
+	 *
+	 * @param chartImagePath the chart image path
+	 * @param chartFrameTitle the chart frame title
+	 * @param editable the editable
+	 * @param dash the dash
+	 */
 	public static void addChartFrameToScrolableDesctop(String chartImagePath, String chartFrameTitle, boolean editable, Dashboard dash) {
 		JScrollableDesktopPane jScrollableDesktopPane = dash.getJScrollableDesktopPane();
-		System.out.println("second: " + editable);
 		if (editable) {
 			TableChartPanel chartPanel = new TableChartPanel(chartImagePath, editable, dash);
 			BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
 			theFrame.setName(chartImagePath);
 			UtilMethodsFactory.addInternalFrameToScrolableDesctopPane(chartFrameTitle, jScrollableDesktopPane, theFrame);
 		} else {
-			System.out.println("chartImagePath: " + chartImagePath);
 			ImageChartPanel chartPanel = new ImageChartPanel(chartImagePath);
 			BaseInternalFrame theFrame = new CustomTableViewInternalFrame(chartFrameTitle, chartPanel);
 			theFrame.setName(chartImagePath);
@@ -81,6 +92,13 @@ public class UtilMethodsFactory {
 		
 	}
 
+	/**
+	 * Adds the internal frame to scrolable desctop pane.
+	 *
+	 * @param frameTitle the frame title
+	 * @param jScrollableDesktopPan the j scrollable desktop pan
+	 * @param theFrame the the frame
+	 */
 	public static void addInternalFrameToScrolableDesctopPane(String frameTitle, JScrollableDesktopPane jScrollableDesktopPan, BaseInternalFrame theFrame) {
 		if (Dashboard.INTERNAL_FRAMES.get(frameTitle) == null) {
 			jScrollableDesktopPan.add(theFrame);
@@ -93,14 +111,33 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	/**
+	 * Adds the to charts.
+	 *
+	 * @param path the path
+	 * @param chartPanel the chart panel
+	 */
 	public static void addToCharts(String path, TableChartPanel chartPanel) {
 		charts.put(path, chartPanel);
 	}
 
+	/**
+	 * Check if group name has letters only.
+	 *
+	 * @param name the name
+	 * @return true, if successful
+	 */
 	public static boolean checkIfGroupNameHasLettersOnly(String name) {
 		return name.matches("[a-zA-Z]+");
 	}
 
+	/**
+	 * Copy dir.
+	 *
+	 * @param src the src
+	 * @param dest the dest
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void copyDir(Path src, Path dest) throws IOException {
 		List<Path> sources = Files.walk(src).collect(Collectors.toList());
 		for (Path source: sources) {
@@ -109,10 +146,22 @@ public class UtilMethodsFactory {
 		}
 	}
 	
+	/**
+	 * Copy file.
+	 *
+	 * @param source the source
+	 * @param dest the dest
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void copyFile(File source, File dest) throws IOException {
 		Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 
+	/**
+	 * Creates a new UtilMethods object.
+	 *
+	 * @param file the file
+	 */
 	public static void createChartINIFile(File file) {
 		// Create the file
 		try {
@@ -126,6 +175,11 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	/**
+	 * Creates a new UtilMethods object.
+	 *
+	 * @param file the file
+	 */
 	public static void createFolder(File file) {
 		if (file.mkdir()) {
 			//System.out.println("Dir is created!");
@@ -137,9 +191,8 @@ public class UtilMethodsFactory {
 	/**
 	 * Create image icon for tree nodes. <br>
 	 *
+	 * @param path            reference to image file name
 	 * @return <code>ImageIcon</code> of tree user objects
-	 * @param path
-	 *            reference to image file name
 	 */
 	public static ImageIcon createImageIcon(String path) {
 		URL imgURL = null;
@@ -156,6 +209,12 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	/**
+	 * Delete directory.
+	 *
+	 * @param directoryToBeDeleted the directory to be deleted
+	 * @return true, if successful
+	 */
 	public static boolean deleteDirectory(File directoryToBeDeleted) {
 		File[] allContents = directoryToBeDeleted.listFiles();
 		if (allContents != null) {
@@ -166,6 +225,11 @@ public class UtilMethodsFactory {
 		return directoryToBeDeleted.delete();
 	}
 
+	/**
+	 * Delete file.
+	 *
+	 * @param fileName the file name
+	 */
 	public static void deleteFile(String fileName) {
 		try {
 			File file = new File(fileName);
@@ -179,11 +243,20 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	/**
+	 * Exit app.
+	 */
 	public static void exitApp() {
 		INIFilesFactory.updateINIFileItem(UtilMethodsFactory.getConsoleConfig(), "Config", "true", "editable");
 		System.exit(0);
 	}
 
+	/**
+	 * First letter occurence.
+	 *
+	 * @param text the text
+	 * @return the string
+	 */
 	public static String firstLetterOccurence(String text) {
 		String matchPosition = "";
 		Matcher m = Pattern.compile("[^a-zA-Z]*([a-zA-Z]+).*").matcher(text);
@@ -193,6 +266,13 @@ public class UtilMethodsFactory {
 		return matchPosition;
 	}
 
+	/**
+	 * Generate chart.
+	 *
+	 * @param node the node
+	 * @param editable the editable
+	 * @param dash the dash
+	 */
 	public static void generateChart(File node, boolean editable, Dashboard dash) {
 		String absolutePath = node.getAbsoluteFile().getPath();
 		String imagePath = absolutePath.substring(absolutePath.indexOf("Images"), absolutePath.length());
@@ -205,6 +285,11 @@ public class UtilMethodsFactory {
 		pane.remove(theFrame);
 	}
 
+	/**
+	 * Gets the config path.
+	 *
+	 * @return the config path
+	 */
 	// Retrieve the path of the root of the solution - src\
 	public static String getConfigPath() {
 		String binPath = UtilMethodsFactory.class.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -223,6 +308,11 @@ public class UtilMethodsFactory {
 		return configINIFile;
 	}
 
+	/**
+	 * Gets the encryptor.
+	 *
+	 * @return the encryptor
+	 */
 	public static StandardPBEStringEncryptor getEncryptor() {
 		SimplePBEConfig config = new SimplePBEConfig();
 		config.setAlgorithm("PBEWithMD5AndTripleDES");
@@ -234,18 +324,36 @@ public class UtilMethodsFactory {
 		return encryptor;
 	}
 
+	/**
+	 * Gets the index of first int in string.
+	 *
+	 * @param str the str
+	 * @return the index of first int in string
+	 */
 	public static int getIndexOfFirstIntInString(String str) {
 		Matcher matcher = Pattern.compile("\\d+").matcher(str);
 		matcher.find();
 		return str.indexOf(matcher.group());
 	}
 
+	/**
+	 * Gets the index of first literal in string.
+	 *
+	 * @param str the str
+	 * @return the index of first literal in string
+	 */
 	public static int getIndexOfFirstLiteralInString(String str) {
 		Matcher matcher = Pattern.compile("\\D+").matcher(str);
 		matcher.find();
 		return str.indexOf(matcher.group());
 	}
 
+	/**
+	 * Checks for PNG file.
+	 *
+	 * @param filesList the files list
+	 * @return true, if successful
+	 */
 	public static boolean hasPNGFile(List<String> filesList) {
 		Iterator<String> it = filesList.iterator();
 		boolean hasPNG = false;
@@ -259,6 +367,12 @@ public class UtilMethodsFactory {
 		return hasPNG;
 	}
 
+	/**
+	 * List files.
+	 *
+	 * @param path the path
+	 * @return the list
+	 */
 	public static List<String> listFiles(String path) {
 		List<String> result = new ArrayList<String>();
 		try (Stream<Path> walk = Files.walk(Paths.get(path))) {
@@ -269,6 +383,12 @@ public class UtilMethodsFactory {
 		return result;
 	}
 
+	/**
+	 * Populate interface images.
+	 *
+	 * @param location the location
+	 * @return the hash map
+	 */
 	// Populate tree nodes with respective icons
 	public static HashMap<String, ImageIcon> populateInterfaceImages(String location) {
 		HashMap<String, ImageIcon> images = new HashMap<String, ImageIcon>();
@@ -280,6 +400,11 @@ public class UtilMethodsFactory {
 		return images;
 	}
 
+	/**
+	 * Prints the list.
+	 *
+	 * @param list the list
+	 */
 	public static void printList(List<?> list) {
 		int y = 0;
 		while (y < list.size()) {
@@ -288,10 +413,21 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	/**
+	 * Removes the from charts.
+	 *
+	 * @param path the path
+	 */
 	public static void removeFromCharts(String path) {
 		charts.remove(path);
 	}
 
+	/**
+	 * Rename file.
+	 *
+	 * @param oldFileName the old file name
+	 * @param newFileName the new file name
+	 */
 	public static void renameFile(String oldFileName, String newFileName) {
 		File oldFile = new File(oldFileName);
 		File newFile = new File(newFileName);
@@ -303,10 +439,31 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	/**
+	 * Reversed.
+	 *
+	 * @param <T> the generic type
+	 * @param original the original
+	 * @return the reversed
+	 */
 	public static <T> Reversed<T> reversed(List<T> original) {
 		return new Reversed<T>(original);
 	}
 
+	/**
+	 * Show dialog to desctop.
+	 *
+	 * @param frameType the frame type
+	 * @param invalid the invalid
+	 * @param invalid2 the invalid 2
+	 * @param dash the dash
+	 * @param tree the tree
+	 * @param theTree the the tree
+	 * @param obj the obj
+	 * @param node the node
+	 * @param tabbedPane the tabbed pane
+	 * @param addUser the add user
+	 */
 	public static void showDialogToDesctop(String frameType, int invalid, int invalid2, Dashboard dash, JTree tree, CustomTree theTree, Object obj,
 			DefaultMutableTreeNode node, JTabbedPane tabbedPane, JMenuItem addUser) {
 		JDialog dialog = null;
@@ -348,6 +505,12 @@ public class UtilMethodsFactory {
 		dialog.setVisible(true);
 	}
 
+	/**
+	 * Table to image.
+	 *
+	 * @param table the table
+	 * @param imagePath the image path
+	 */
 	public static void tableToImage(CustomTable table, String imagePath) {
 		int w = Math.max(table.getWidth(), table.getTableHeader().getWidth());
 		int h = table.getHeight() + table.getTableHeader().getHeight();
@@ -366,6 +529,12 @@ public class UtilMethodsFactory {
 		}
 	}
 
+	/**
+	 * Un zip update.
+	 *
+	 * @param pathToUpdateZip the path to update zip
+	 * @param destinationPath the destination path
+	 */
 	public static void unZipUpdate(String pathToUpdateZip, String destinationPath) {
 		byte[] byteBuffer = new byte[1024];
 		try {
@@ -394,6 +563,12 @@ public class UtilMethodsFactory {
 		}
 	}
 	
+	/**
+	 * Gets the file names.
+	 *
+	 * @param location the location
+	 * @return the file names
+	 */
 	private static String[] getFileNames(String location) {
 		File folder = new File(getConfigPath() + location);
 		String[] files = folder.list();

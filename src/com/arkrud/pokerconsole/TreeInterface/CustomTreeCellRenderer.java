@@ -15,9 +15,18 @@ import com.arkrud.pokerconsole.Poker.PokerPosition;
 import com.arkrud.pokerconsole.Poker.PokerStrategy;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CustomTreeCellRenderer.
+ */
 public class CustomTreeCellRenderer extends DefaultTreeCellRenderer {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/* (non-Javadoc)
+	 * @see javax.swing.tree.DefaultTreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int, boolean)
+	 */
 	// Change tree node icons and text
 	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -52,16 +61,25 @@ public class CustomTreeCellRenderer extends DefaultTreeCellRenderer {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.tree.DefaultTreeCellRenderer#getBackgroundNonSelectionColor()
+	 */
 	@Override
 	public Color getBackgroundNonSelectionColor() {
 		return Color.WHITE;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.tree.DefaultTreeCellRenderer#getBackgroundSelectionColor()
+	 */
 	@Override
 	public Color getBackgroundSelectionColor() {
 		return Color.LIGHT_GRAY;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Component#getBackground()
+	 */
 	@Override
 	public Color getBackground() {
 		return Color.WHITE;

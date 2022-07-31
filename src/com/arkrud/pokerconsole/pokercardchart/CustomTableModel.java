@@ -20,15 +20,28 @@ import com.arkrud.pokerconsole.Util.INIFilesFactory;
 import com.arkrud.pokerconsole.Util.MongoDBFactory;
 import com.arkrud.pokerconsole.Util.UtilMethodsFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CustomTableModel.
+ */
 public class CustomTableModel extends AbstractTableModel {
-	/**
-	 *
-	 */
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The data. */
 	private ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
+	
+	/** The ini data. */
 	private HashMap<String, HashMap<String, String>> iniData = new HashMap<String, HashMap<String, String>>();
+	
+	/** The columns. */
 	private ArrayList<String> columns = new ArrayList<String>();
+	
+	/** The chart. */
 	private TableChartPanel chart;
+	
+	/** The poker hands. */
 	private String[][] pokerHands = { { "AA", "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s" }, { "AKo", "KK", "KQs", "KJs", "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s" },
 			{ "AQo", "KQo", "QQ", "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s", "Q4s", "Q3s", "Q2s" }, { "AJo", "KJO", "QJO", "JJ", "JTs", "J9s", "J8s", "J7s", "J6s", "J5s", "J4s", "J3s", "J2s" },
 			{ "ATo", "KTo", "QTO", "JTo", "TT", "T9s", "T8s", "T7s", "T6s", "T5s", "T4s", "T3s", "T2s" }, { "A9o", "K9o", "Q9o", "J9o", "T9o", "99", "98s", "97s", "96s", "95s", "94s", "93s", "92s" },
@@ -36,23 +49,41 @@ public class CustomTableModel extends AbstractTableModel {
 			{ "A6o", "K6o", "Q6o", "J6o", "T6o", "96o", "86o", "76o", "66", "65s", "64s", "63s", "62s" }, { "A5o", "5Ko", "Q5o", "J5o", "T5o", "95o", "85o", "75o", "65o", "55", "54s", "53s", "52s" },
 			{ "A4o", "K4o", "Q4o", "J4o", "T4o", "94o", "84o", "74o", "64o", "54o", "44", "43s", "42s" }, { "A3o", "K3o", "Q3o", "J3o", "T3o", "93o", "83o", "73o", "63o", "53o", "43o", "33", "32s" },
 			{ "A2o", "K2o", "Q2o", "J2o", "T2o", "92o", "82o", "72o", "62o", "52o", "42o", "32o", "22" } };
+	
+	/** The colors map. */
 	private HashMap<String, HashMap<String, String>> colorsMap;
+	
+	/** The use INI. */
 	private boolean useINI = true;
 
+	/**
+	 * Instantiates a new custom table model.
+	 *
+	 * @param chart the chart
+	 */
 	public CustomTableModel(TableChartPanel chart) {
 		this.chart = chart;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.TableModel#getColumnCount()
+	 */
 	@Override
 	public int getColumnCount() {
 		return columns.size();
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.TableModel#getRowCount()
+	 */
 	@Override
 	public int getRowCount() {
 		return data.size();
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.TableModel#getValueAt(int, int)
+	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		try {
@@ -62,6 +93,9 @@ public class CustomTableModel extends AbstractTableModel {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+	 */
 	@Override
 	public void setValueAt(Object value, int row, int col) {
 		int x = 0;
@@ -71,6 +105,9 @@ public class CustomTableModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * Generate table headers.
+	 */
 	public void generateTableHeaders() {
 		ArrayList<String> columnHeaderData = new ArrayList<String>();
 		int n = 0;
@@ -85,6 +122,11 @@ public class CustomTableModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * Generate table data.
+	 *
+	 * @param imagePath the image path
+	 */
 	public void generateTableData(String imagePath) {
 		BufferedImage image = null;
 		try {
@@ -162,6 +204,11 @@ public class CustomTableModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * Adjust column preferred widths.
+	 *
+	 * @param table the table
+	 */
 	public void adjustColumnPreferredWidths(JTable table) {
 		TableColumnModel columnModel = table.getColumnModel();
 		for (int col = 0; col < table.getColumnCount(); col++) {
@@ -170,6 +217,11 @@ public class CustomTableModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * Generate chart INI file.
+	 *
+	 * @param filePath the file path
+	 */
 	public void generateChartINIFile(String filePath) {
 		File inifile = new File(UtilMethodsFactory.getConfigPath() + filePath);
 		UtilMethodsFactory.createChartINIFile(inifile);

@@ -9,6 +9,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JRadioButtonMenuItem;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides the optional "Window" menu for the scrollable desktop.
  *
@@ -16,33 +17,37 @@ import javax.swing.JRadioButtonMenuItem;
  * @version 1.0 11-Aug-2001
  */
 public class DesktopMenu extends JMenu implements ActionListener {
-	/**
-	*
-	*/
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The desktop mediator. */
 	private DesktopMediator desktopMediator;
+	
+	/** The tile mode. */
 	@SuppressWarnings("unused")
 	private boolean tileMode;
+	
+	/** The base items end index. */
 	private int baseItemsEndIndex;
+	
+	/** The frame radio button menu item group. */
 	private ButtonGroup frameRadioButtonMenuItemGroup;
 
 	/**
-	 * creates the DesktopMenu object
+	 * creates the DesktopMenu object.
 	 *
-	 * @param desktopMediator
-	 *            a reference to the DesktopMediator object
+	 * @param desktopMediator            a reference to the DesktopMediator object
 	 */
 	public DesktopMenu(DesktopMediator desktopMediator) { // NO_UCD (unused code)
 		this(desktopMediator, false);
 	}
 
 	/**
-	 * creates the DesktopMenu object with the specified tileMode
+	 * creates the DesktopMenu object with the specified tileMode.
 	 *
-	 * @param desktopMediator
-	 *            a reference to the DesktopMediator object
-	 * @param tileMode
-	 *            the tile mode to use (<code>true</code> = tile internal frames, <code>false</code> = cascade internal frames)
+	 * @param desktopMediator            a reference to the DesktopMediator object
+	 * @param tileMode            the tile mode to use (<code>true</code> = tile internal frames, <code>false</code> = cascade internal frames)
 	 */
 	public DesktopMenu(DesktopMediator desktopMediator, boolean tileMode) {
 		super("Window");
@@ -79,10 +84,9 @@ public class DesktopMenu extends JMenu implements ActionListener {
 	}
 
 	/**
-	 * removes the specified radio menu button from the menu
+	 * removes the specified radio menu button from the menu.
 	 *
-	 * @param menuButton
-	 *            the JRadioButtonMenuItem to remove
+	 * @param menuButton            the JRadioButtonMenuItem to remove
 	 */
 	public void remove(JRadioButtonMenuItem menuButton) {
 		frameRadioButtonMenuItemGroup.remove(menuButton);
@@ -92,6 +96,9 @@ public class DesktopMenu extends JMenu implements ActionListener {
 		refreshMenu(); // refresh the mnemonics associated with the other items
 	}
 
+	/**
+	 * Refresh menu.
+	 */
 	private void refreshMenu() {
 		// refresh the associated mnemonics, so that the keyboard shortcut
 		// keys are properly renumbered...
@@ -113,10 +120,9 @@ public class DesktopMenu extends JMenu implements ActionListener {
 	}
 
 	/**
-	 * propogates the actionPerformed menu event to DesktopMediator
+	 * propogates the actionPerformed menu event to DesktopMediator.
 	 *
-	 * @param e
-	 *            the ActionEvent to propogate
+	 * @param e            the ActionEvent to propogate
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {

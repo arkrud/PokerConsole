@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides the resizable toolbar for the scrollable desktop.
  *
@@ -16,15 +17,15 @@ import java.awt.event.ActionListener;
 public class DesktopResizableToolBar extends ResizableToolBar
             implements DesktopConstants, ActionListener  {
 
-      /**
-	 *
-	 */
+      /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The desktop mediator. */
 	private DesktopMediator desktopMediator;
 
 
     /**
-     * creates the DesktopResizableToolBar object
+     * creates the DesktopResizableToolBar object.
      *
      * @param desktopMediator a reference to the DesktopMediator object
      */
@@ -44,12 +45,11 @@ public class DesktopResizableToolBar extends ResizableToolBar
       }
 
      /**
-       * creates a BaseToggleButton and adds it to the toolbar
-       *
-       * @param title the title of the toggle button
-       *
-       * @return the toggle button that was created
-       */
+      * creates a BaseToggleButton and adds it to the toolbar.
+      *
+      * @param title the title of the toggle button
+      * @return the toggle button that was created
+      */
       public BaseToggleButton add(String title) {
 
             BaseToggleButton toolButton =
@@ -64,10 +64,10 @@ public class DesktopResizableToolBar extends ResizableToolBar
 
 
       /**
-        * propogates actionPerformed button event to DesktopMediator
-        *
-        * @param e the ActionEvent to propogate
-        */
+       * propogates actionPerformed button event to DesktopMediator.
+       *
+       * @param e the ActionEvent to propogate
+       */
       @Override
 	public void actionPerformed(ActionEvent e) {
             desktopMediator.actionPerformed(e);

@@ -6,15 +6,27 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.tree.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TreeTransferHandler.
+ */
 class TreeTransferHandler extends TransferHandler {
-    /**
-	 * 
-	 */
+    
+    /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The nodes flavor. */
 	DataFlavor nodesFlavor;
+    
+    /** The flavors. */
     DataFlavor[] flavors = new DataFlavor[1];
+    
+    /** The nodes to remove. */
     DefaultMutableTreeNode[] nodesToRemove;
 
+    /**
+     * Instantiates a new tree transfer handler.
+     */
     public TreeTransferHandler() {
         try {
         	
@@ -29,6 +41,9 @@ class TreeTransferHandler extends TransferHandler {
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.swing.TransferHandler#canImport(javax.swing.TransferHandler.TransferSupport)
+     */
     public boolean canImport(TransferHandler.TransferSupport support) {
         if(!support.isDrop()) {
             return false;
@@ -69,6 +84,12 @@ class TreeTransferHandler extends TransferHandler {
         return true;
     }
 
+    /**
+     * Have complete node.
+     *
+     * @param tree the tree
+     * @return true, if successful
+     */
     private boolean haveCompleteNode(JTree tree) {
         int[] selRows = tree.getSelectionRows();
         TreePath path = tree.getPathForRow(selRows[0]);
@@ -94,6 +115,9 @@ class TreeTransferHandler extends TransferHandler {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see javax.swing.TransferHandler#createTransferable(javax.swing.JComponent)
+     */
     protected Transferable createTransferable(JComponent c) {
         JTree tree = (JTree)c;
         TreePath[] paths = tree.getSelectionPaths();
@@ -133,11 +157,19 @@ class TreeTransferHandler extends TransferHandler {
         return null;
     }
 
-    /** Defensive copy used in createTransferable. */
+    /**
+     *  Defensive copy used in createTransferable.
+     *
+     * @param node the node
+     * @return the default mutable tree node
+     */
     private DefaultMutableTreeNode copy(TreeNode node) {
         return new DefaultMutableTreeNode(node);
     }
 
+    /* (non-Javadoc)
+     * @see javax.swing.TransferHandler#exportDone(javax.swing.JComponent, java.awt.datatransfer.Transferable, int)
+     */
     protected void exportDone(JComponent source, Transferable data, int action) {
         if((action & MOVE) == MOVE) {
             JTree tree = (JTree)source;
@@ -149,10 +181,16 @@ class TreeTransferHandler extends TransferHandler {
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.swing.TransferHandler#getSourceActions(javax.swing.JComponent)
+     */
     public int getSourceActions(JComponent c) {
         return COPY_OR_MOVE;
     }
 
+    /* (non-Javadoc)
+     * @see javax.swing.TransferHandler#importData(javax.swing.TransferHandler.TransferSupport)
+     */
     public boolean importData(TransferHandler.TransferSupport support) {
         if(!canImport(support)) {
             return false;
@@ -189,17 +227,33 @@ class TreeTransferHandler extends TransferHandler {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         return getClass().getName();
     }
 
+    /**
+     * The Class NodesTransferable.
+     */
     public class NodesTransferable implements Transferable {
+        
+        /** The nodes. */
         DefaultMutableTreeNode[] nodes;
 
+        /**
+         * Instantiates a new nodes transferable.
+         *
+         * @param nodes the nodes
+         */
         public NodesTransferable(DefaultMutableTreeNode[] nodes) {
             this.nodes = nodes;
          }
 
+        /* (non-Javadoc)
+         * @see java.awt.datatransfer.Transferable#getTransferData(java.awt.datatransfer.DataFlavor)
+         */
         public Object getTransferData(DataFlavor flavor)
                                  throws UnsupportedFlavorException {
             if(!isDataFlavorSupported(flavor))
@@ -207,10 +261,16 @@ class TreeTransferHandler extends TransferHandler {
             return nodes;
         }
 
+        /* (non-Javadoc)
+         * @see java.awt.datatransfer.Transferable#getTransferDataFlavors()
+         */
         public DataFlavor[] getTransferDataFlavors() {
             return flavors;
         }
 
+        /* (non-Javadoc)
+         * @see java.awt.datatransfer.Transferable#isDataFlavorSupported(java.awt.datatransfer.DataFlavor)
+         */
         public boolean isDataFlavorSupported(DataFlavor flavor) {
             return nodesFlavor.equals(flavor);
         }

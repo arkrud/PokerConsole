@@ -6,6 +6,7 @@ import java.awt.Insets;
 
 import javax.swing.JToggleButton;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class creates a base toggle button. A
  * {@link com.tomtessier.scrollabledesktop.BaseInternalFrame BaseInternalFrame}
@@ -18,16 +19,18 @@ import javax.swing.JToggleButton;
 public class BaseToggleButton extends JToggleButton
             implements DesktopConstants, FrameAccessorInterface {
 
-      /**
-	 *
-	 */
+      /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The associated frame. */
 	private BaseInternalFrame associatedFrame;
+      
+      /** The default color. */
       private Color defaultColor;
 
 
     /**
-     * creates the BaseToggleButton
+     * creates the BaseToggleButton.
      *
      * @param title the title of the button
      */
@@ -42,6 +45,9 @@ public class BaseToggleButton extends JToggleButton
 
       }
 
+      /**
+       * Sets the button format.
+       */
       private void setButtonFormat() {
             Font buttonFont = getFont();
             setFont(new Font(buttonFont.getFontName(),
@@ -51,21 +57,21 @@ public class BaseToggleButton extends JToggleButton
       }
 
      /**
-       *  sets the associated frame
-       *
-       * @param associatedFrame the BaseInternalFrame object to associate with
-       * the menu item
-       */
+      *  sets the associated frame.
+      *
+      * @param associatedFrame the BaseInternalFrame object to associate with
+      * the menu item
+      */
       @Override
 	public void setAssociatedFrame(BaseInternalFrame associatedFrame) {
             this.associatedFrame = associatedFrame;
       }
 
      /**
-       *  returns the associated frame
-       *
-       * @return the BaseInternalFrame object associated with this menu item
-       */
+      *  returns the associated frame.
+      *
+      * @return the BaseInternalFrame object associated with this menu item
+      */
       @Override
 	public BaseInternalFrame getAssociatedFrame() {
             return associatedFrame;

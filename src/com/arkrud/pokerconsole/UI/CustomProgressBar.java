@@ -7,21 +7,43 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CustomProgressBar.
+ */
 public class CustomProgressBar extends JDialog {
-	/**
-	 * 
-	 */
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The pb. */
 	private JProgressBar pb;
 
+	/**
+	 * Gets the pb.
+	 *
+	 * @return the pb
+	 */
 	public JProgressBar getPb() {
 		return pb;
 	}
 
+	/**
+	 * Sets the pb.
+	 *
+	 * @param pb the new pb
+	 */
 	public void setPb(JProgressBar pb) {
 		this.pb = pb;
 	}
 
+	/**
+	 * Instantiates a new custom progress bar.
+	 *
+	 * @param modalState the modal state
+	 * @param decorationState the decoration state
+	 * @param title the title
+	 */
 	public CustomProgressBar(boolean modalState, boolean decorationState, String title) {
 		setUndecorated(decorationState);
 		int x, y;

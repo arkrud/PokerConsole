@@ -6,6 +6,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.DesktopIconUI;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides an empty DesktopIconUI for 
  * {@link com.tomtessier.scrollabledesktop.BaseDesktopPane BaseDesktopPane}.
@@ -25,10 +26,11 @@ public class EmptyDesktopIconUI extends DesktopIconUI {
 
 
   /**
-    * creates the EmptyDesktopIconUI object
-    *
-    * @param c the reference to the JComponent object required by createUI
-    */
+   * creates the EmptyDesktopIconUI object.
+   *
+   * @param c the reference to the JComponent object required by createUI
+   * @return the component UI
+   */
   public static ComponentUI createUI (JComponent c) {
     if (desktopIconUI == null) {
       desktopIconUI = new EmptyDesktopIconUI();
@@ -38,11 +40,11 @@ public class EmptyDesktopIconUI extends DesktopIconUI {
 
 
   /**
-    * overrides the paint method with a blank routine so that no 
-    * component is displayed when an internal frame is iconified
-    *
-    * @param g the reference to the Graphics object used to paint the desktop
-    */
+   * overrides the paint method with a blank routine so that no 
+   * component is displayed when an internal frame is iconified.
+   *
+   * @param g the reference to the Graphics object used to paint the desktop
+   */
   protected void paint(Graphics g) {}
 
 }

@@ -24,19 +24,28 @@ import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 
+// TODO: Auto-generated Javadoc
 /**
  * Static methods used to work with MongoDB.<br>
  *
  */
 public class MongoDBFactory {
+	
+	/** The mongo. */
 	private static MongoClient mongo;
 
+	/**
+	 * Crate mongo connection.
+	 */
 	public static void crateMongoConnection() {
 		Logger mongoLogger = Logger.getLogger("org.mongodb.driver"); // Suppress warnings
 		mongoLogger.setLevel(Level.SEVERE);
 		mongo = new MongoClient("localhost", 27017); // Initiate client on default port to locally hosted server
 	}
 
+	/**
+	 * List all mongo documents.
+	 */
 	public static void listAllMongoDocuments() {
 		MongoDatabase database = mongo.getDatabase("POKER_CHARTS");
 		MongoCollection<Document> collection = database.getCollection("charts");
@@ -48,6 +57,12 @@ public class MongoDBFactory {
 		}
 	}
 
+	/**
+	 * Adds the document.
+	 *
+	 * @param iniData the ini data
+	 * @param imagePath the image path
+	 */
 	public static void addDocument(HashMap<String, HashMap<String, String>> iniData, String imagePath) {
 		MongoDatabase database = mongo.getDatabase("POKER_CHARTS");
 		MongoCollection<Document> collection = database.getCollection("charts");
@@ -55,6 +70,12 @@ public class MongoDBFactory {
 		collection.insertOne(document);
 	}
 
+	/**
+	 * Update documents.
+	 *
+	 * @param filterString the filter string
+	 * @param file the file
+	 */
 	public static void updateDocuments(String filterString, File file) {
 		MongoDatabase database = mongo.getDatabase("POKER_CHARTS");
 		MongoCollection<Document> collection = database.getCollection("charts");
@@ -72,6 +93,12 @@ public class MongoDBFactory {
 		collection.updateMany(Filters.eq("imagepath", filterString), Updates.set("pngfile", gfsFile));
 	}
 
+	/**
+	 * Gets the image.
+	 *
+	 * @param newFileName the new file name
+	 * @return the image
+	 */
 	public static void getImage(String newFileName) {
 		@SuppressWarnings("deprecation")
 		DB db = mongo.getDB("POKER_CHARTS");
@@ -84,6 +111,12 @@ public class MongoDBFactory {
 		}
 	}
 
+	/**
+	 * Gets the color map.
+	 *
+	 * @param imagePath the image path
+	 * @return the color map
+	 */
 	public static HashMap<String, HashMap<String, String>> getColorMap(String imagePath) {
 		HashMap<String, HashMap<String, String>> colorMap = new HashMap<String, HashMap<String, String>>();
 		MongoDatabase database = mongo.getDatabase("POKER_CHARTS");
@@ -108,6 +141,9 @@ public class MongoDBFactory {
 		return colorMap;
 	}
 
+	/**
+	 * Close mongo connection.
+	 */
 	public static void closeMongoConnection() {
 		mongo.close();
 	}
