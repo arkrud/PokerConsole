@@ -138,7 +138,7 @@ public class FramePositioning implements DesktopConstants {
 	 * <BR>
 	 * <code>
 	 *     while (frames) { <BR>
-	 *           numCols = (int)sqrt(totalFrames); <BR>
+	 *           numCols  = (int)sqrt(totalFrames); <BR>
 	 *           numRows = totalFrames / numCols; <BR>
 	 *           remainder = totalFrames % numCols <BR>
 	 *           if ((numCols-curCol) <= remainder) { <BR>
