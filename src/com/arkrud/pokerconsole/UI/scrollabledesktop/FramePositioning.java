@@ -142,7 +142,7 @@ public class FramePositioning implements DesktopConstants {
 	 *           numRows = totalFrames / numCols; <BR>
 	 *           remainder = totalFrames % numCols <BR>
 	 *           if ((numCols-curCol) <= remainder) { <BR>
-	 *                 numRows++; // add an extra row for this column <BR>
+	 *                   numRows++; // add an extra row for this column <BR>
 	 *           } <BR>
 	 *     }  </code><BR>
 	 */
